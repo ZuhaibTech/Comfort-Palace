@@ -1,0 +1,16 @@
+console.log("Testing fetch from browser..."); 
+fetch("/api/products")
+  .then(response => {
+    console.log("Response status:", response.status);
+    console.log("Response headers:", response.headers);
+    return response.json();
+  })
+  .then(data => {
+    console.log("Products data:", data);
+    console.log("Number of products:", data.data ? data.data.length : 0);
+    document.body.innerHTML = "<h1>API Test</h1><p>Products: " + (data.data ? data.data.length : 0) + "</p><pre>" + JSON.stringify(data, null, 2) + "</pre>";
+  })
+  .catch(error => {
+    console.error("Fetch error:", error);
+    document.body.innerHTML = "<h1>API Error</h1><p>Error: " + error.message + "</p>";
+  });

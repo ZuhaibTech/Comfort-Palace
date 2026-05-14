@@ -1,0 +1,173 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+@layer base {
+  :root {
+    /* Primary: Sophisticated deep teal/forest that scales to light */
+    --color-primary-50: 97% 0.01 160;
+    --color-primary-100: 94% 0.02 160;
+    --color-primary-200: 88% 0.04 160;
+    --color-primary-300: 80% 0.06 160;
+    --color-primary-400: 70% 0.08 160;
+    --color-primary-500: 60% 0.10 160;
+    --color-primary-600: 50% 0.10 160;
+    --color-primary-700: 40% 0.09 160;
+    --color-primary-800: 30% 0.08 160; /* Deep Apex Signature */
+    --color-primary-900: 20% 0.06 160;
+    --color-primary-950: 12% 0.04 160;
+
+    /* Surface: Ultra-premium warm neutrals (The "Luminous" base) */
+    --color-surface-50: 99% 0.002 85;   /* Near white pristine */
+    --color-surface-100: 97% 0.005 85;  /* Subtle section separation */
+    --color-surface-200: 94% 0.01 85;   /* Crisp borders */
+    --color-surface-300: 90% 0.015 85;
+    --color-surface-400: 75% 0.02 85;   /* Muted subtext */
+    --color-surface-500: 60% 0.025 85;
+    --color-surface-600: 45% 0.03 85;
+    --color-surface-700: 30% 0.025 85;  /* High contrast text */
+    --color-surface-800: 18% 0.02 85;   /* Rich body text */
+    --color-surface-900: 10% 0.015 85;  /* Deepest contrast */
+    --color-surface-950: 5% 0.01 85;    /* Absolute depth */
+
+    /* Accent: Technical Cyan for high-end feedback */
+    --color-accent-500: 75% 0.15 190;
+    --color-accent-600: 65% 0.15 190;
+
+    background-color: oklch(var(--color-surface-50));
+    color: oklch(var(--color-surface-800));
+  }
+
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    min-height: 100dvh;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  body {
+    font-family: var(--font-inter), sans-serif;
+  }
+  body ::selection, body::selection {
+    background-color: oklch(var(--color-primary-200));
+    color: oklch(var(--color-primary-900));
+  }
+}
+
+@layer components {
+  /* Premium Glassmorphism */
+  .glass-light {
+    background-color: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  }
+
+  .glass-dark {
+    background-color: oklch(var(--color-surface-900) / 0.1);
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Sophisticated Technical Buttons */
+  .btn-apex {
+    position: relative;
+    overflow: hidden;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-radius: 9999px;
+    font-family: var(--font-raleway), sans-serif;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition-property: all;
+    transition-duration: 500ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .btn-apex:hover {
+    transform: scale(1.02);
+  }
+  .btn-apex:active {
+    transform: scale(0.98);
+  }
+
+  .btn-apex-primary {
+    background-color: oklch(var(--color-primary-800));
+    color: #fff;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  }
+  .btn-apex-primary:hover {
+    box-shadow: 0 20px 25px -5px oklch(var(--color-primary-800) / 0.3), 0 8px 10px -6px oklch(var(--color-primary-800) / 0.3);
+  }
+
+  .btn-apex-secondary {
+    background-color: #fff;
+    color: oklch(var(--color-surface-900));
+    border: 1px solid oklch(var(--color-surface-200));
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  }
+  .btn-apex-secondary:hover {
+    border-color: oklch(var(--color-surface-900));
+  }
+
+  /* Fluid Hero Typography */
+  .text-hero {
+    font-family: var(--font-raleway), sans-serif;
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+    font-size: clamp(2.5rem, 4vw + 1rem, 4rem);
+  }
+  @media (min-width: 768px) {
+    .text-hero {
+      font-size: clamp(3rem, 5vw + 1.5rem, 6rem);
+    }
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-gradient {
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    background-image: linear-gradient(to right, oklch(var(--color-primary-800)), oklch(var(--color-accent-600)));
+  }
+
+  .mask-radial {
+    mask-image: radial-gradient(circle, black, transparent);
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: oklch(var(--color-surface-50));
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: oklch(var(--color-surface-200));
+  border-radius: 9999px;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: oklch(var(--color-surface-300));
+}

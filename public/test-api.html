@@ -1,0 +1,1 @@
+console.log("Testing API..."); fetch("/api/products").then(r => { console.log("Response status:", r.status); return r.json(); }).then(d => { console.log("Products data:", d); console.log("Number of products:", d.data ? d.data.length : 0); }).catch(e => console.error("Fetch error:", e));

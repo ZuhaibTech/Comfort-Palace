@@ -1,0 +1,70 @@
+# Systemd Service for Inventory Artisans Backend
+# Alternative to PM2 for managing the Node.js backend
+#
+# Installation:
+# 1. Copy this file to /etc/systemd/system/
+#    sudo cp inventory-artisans.service /etc/systemd/system/
+#
+# 2. Update paths in this file to match your installation
+#
+# 3. Enable and start the service:
+#    sudo systemctl daemon-reload
+#    sudo systemctl enable inventory-artisans
+#    sudo systemctl start inventory-artisans
+#
+# 4. Check status:
+#    sudo systemctl status inventory-artisans
+#
+# 5. View logs:
+#    sudo journalctl -u inventory-artisans -f
+
+[Unit]
+Description=Inventory Artisans Backend API
+Documentation=https://github.com/yourusername/inventory-artisans
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/inventory-artisans/backend
+ExecStart=/usr/bin/node server.js
+Restart=on-failure
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=inventory-artisans
+Environment=NODE_ENV=production
+Environment=PORT=3001
+
+# Security
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/www/inventory-artisans/backend/database.sqlite
+ReadWritePaths=/var/www/inventory-artisans/backend/uploads
+
+# Resource limits
+LimitNOFILE=65535
+MemoryLimit=512M
+
+[Install]
+WantedBy=multi-user.target
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
