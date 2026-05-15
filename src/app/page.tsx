@@ -110,10 +110,10 @@ export default function Home() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
             {[
-              { id: '01', name: 'Chair', img: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?q=80&w=1000&auto=format&fit=crop' },
-              { id: '02', name: 'Side Drawers', img: 'https://images.unsplash.com/photo-1533090161767-e6ffed986c88?q=80&w=1000&auto=format&fit=crop' },
-              { id: '03', name: 'Lamp', img: 'https://images.unsplash.com/photo-1534073828943-f801091bb18c?q=80&w=1000&auto=format&fit=crop' },
-              { id: '04', name: 'Side Table', img: 'https://images.unsplash.com/photo-1532323544230-7191fd51bc1b?q=80&w=1000&auto=format&fit=crop' }
+              { id: '01', name: 'Chair', img: '/uploads/product-1761200640202-452760173.jpg' },
+              { id: '02', name: 'Side Drawers', img: '/uploads/product-1761200725499-128002699.jpg' },
+              { id: '03', name: 'Lamp', img: '/uploads/product-1761213277130-473371506.jpg' },
+              { id: '04', name: 'Side Table', img: '/uploads/product-1757443197145-250697742.jpg' }
             ].map((cat) => (
               <Link href={`/collection?category=${cat.name.toLowerCase().replace(' ', '-')}`} key={cat.id} className="group relative aspect-[3/4] flex flex-col pt-6 px-6 transition-transform duration-700 hover:-translate-y-2">
                 
@@ -239,19 +239,19 @@ export default function Home() {
                {/* Left Column */}
                <div className="flex-1 flex flex-col gap-fluid-3xs">
                  <div className="aspect-square relative rounded-fluid-sm overflow-hidden border border-surface-200/50 shadow-sm">
-                   <Image src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1000" fill className="object-cover" alt="Detail 1" />
+                   <Image src="/images/Consoles.jpg" fill className="object-cover" alt="Detail 1" />
                  </div>
                  <div className="aspect-[3/4] relative rounded-fluid-sm overflow-hidden border border-surface-200/50 shadow-sm">
-                   <Image src="https://images.unsplash.com/photo-1594026112284-02bb6f3352fe?q=80&w=1000" fill className="object-cover" alt="Detail 3" />
+                   <Image src="/images/Wallmirror.jpg" fill className="object-cover" alt="Detail 3" />
                  </div>
                </div>
                {/* Right Column (Staggered) */}
                <div className="flex-1 flex flex-col gap-fluid-3xs pt-fluid-lg">
                  <div className="aspect-[3/4] relative rounded-fluid-sm overflow-hidden border border-surface-200/50 shadow-sm">
-                   <Image src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=1000" fill className="object-cover" alt="Detail 2" />
+                   <Image src="/images/interior-modern-living-room-wall-mockup-2025-01-07-23-12-33-utc.jpg" fill className="object-cover" alt="Detail 2" />
                  </div>
                  <div className="aspect-square relative rounded-fluid-sm overflow-hidden border border-surface-200/50 shadow-sm">
-                   <Image src="https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?q=80&w=1000" fill className="object-cover" alt="Detail 4" />
+                   <Image src="/images/empty-conference-room-with-black-chairs-and-wooden-2024-09-15-12-48-09-utc.jpg" fill className="object-cover" alt="Detail 4" />
                  </div>
                </div>
             </div>
@@ -284,7 +284,7 @@ export default function Home() {
       {/* 6. FINAL CTA: APEX JOIN */}
       <section className="w-full pb-fluid-2xl px-fluid-md lg:px-fluid-lg">
         <div className="mx-auto max-w-[1400px] rounded-fluid-lg overflow-hidden bg-primary-800/60 relative max-h-[80vh] flex items-center justify-center text-center shadow-3xl py-fluid-xl">
-          <Image src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?q=80&w=2000" fill className="object-cover opacity-40 scale-110 hover:scale-100 transition-transform duration-[3s]" alt="Background" />
+          <Image src="/images/Sofa.jpg" fill className="object-cover opacity-40 scale-110 hover:scale-100 transition-transform duration-[3s]" alt="Background" />
           <div className="relative z-10 max-w-2xl mx-auto px-fluid-md">
             <h2 className="text-white text-fluid-4xl font-display font-light text-balance tracking-tighter mb-fluid-sm">Elevate Your System.</h2>
             <p className="text-white/70 text-fluid-lg font-light mb-fluid-lg leading-relaxed">

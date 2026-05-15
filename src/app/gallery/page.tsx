@@ -1,34 +1,57 @@
+'use client';
+
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import ProductInquiryModal from '@/components/ProductInquiryModal';
+
+interface Product {
+  id: string;
+  item_code: string;
+  name: string;
+  description: string | null;
+  price: number;
+  category: string | null;
+  image_url: string | null;
+  quantity_in_stock: number;
+}
+
+const galleryItems = [
+  { id: 1, type: 'video', src: '/Gallery/Gallery (1).mp4', span: 'md:col-span-8', aspect: 'aspect-[16/9]', product: { id: 'gallery-1', item_code: 'GAL-001', name: 'Premium Living Room Set', description: 'Elegant living room ensemble featuring contemporary design with premium upholstery.', price: 85000, category: 'Living Room', image_url: '/Gallery/Gallery (1).jpeg', quantity_in_stock: 5 } },
+  { id: 2, type: 'image', src: '/Gallery/Gallery (1).jpeg', span: 'md:col-span-4', aspect: 'aspect-[3/4]', product: { id: 'gallery-1', item_code: 'GAL-001', name: 'Premium Living Room Set', description: 'Elegant living room ensemble featuring contemporary design with premium upholstery.', price: 85000, category: 'Living Room', image_url: '/Gallery/Gallery (1).jpeg', quantity_in_stock: 5 } },
+  { id: 3, type: 'image', src: '/Gallery/Gallery (2).jpeg', span: 'md:col-span-4', aspect: 'aspect-square', product: { id: 'gallery-2', item_code: 'GAL-002', name: 'Modern Accent Collection', description: 'Curated accent pieces that bring sophistication to any interior space.', price: 32000, category: 'Decor', image_url: '/Gallery/Gallery (2).jpeg', quantity_in_stock: 8 } },
+  { id: 4, type: 'video', src: '/Gallery/Gallery (2).mp4', span: 'md:col-span-4', aspect: 'aspect-square', product: { id: 'gallery-3', item_code: 'GAL-003', name: 'Designer Lounge Setup', description: 'Artisan-crafted lounge furniture for the discerning homeowner.', price: 120000, category: 'Living Room', image_url: '/Gallery/Gallery (3).jpeg', quantity_in_stock: 3 } },
+  { id: 5, type: 'image', src: '/Gallery/Gallery (3).jpeg', span: 'md:col-span-4', aspect: 'aspect-square', product: { id: 'gallery-3', item_code: 'GAL-003', name: 'Designer Lounge Setup', description: 'Artisan-crafted lounge furniture for the discerning homeowner.', price: 120000, category: 'Living Room', image_url: '/Gallery/Gallery (3).jpeg', quantity_in_stock: 3 } },
+  { id: 6, type: 'image', src: '/Gallery/Gallery (4).jpeg', span: 'md:col-span-6', aspect: 'aspect-[4/3]', product: { id: 'gallery-4', item_code: 'GAL-004', name: 'Classic Wooden Ensemble', description: 'Handcrafted wooden furniture set with rich natural grain finish.', price: 67000, category: 'Dining Sets', image_url: '/Gallery/Gallery (4).jpeg', quantity_in_stock: 6 } },
+  { id: 7, type: 'image', src: '/Gallery/Gallery (5).jpeg', span: 'md:col-span-6', aspect: 'aspect-[4/3]', product: { id: 'gallery-5', item_code: 'GAL-005', name: 'Minimalist Side Unit', description: 'Clean-lined minimalist storage unit crafted from sustainable hardwood.', price: 28000, category: 'Storage', image_url: '/Gallery/Gallery (5).jpeg', quantity_in_stock: 12 } },
+  { id: 8, type: 'image', src: '/Gallery/Gallery (6).jpeg', span: 'md:col-span-4', aspect: 'aspect-square', product: { id: 'gallery-6', item_code: 'GAL-006', name: 'Heritage Craft Cabinet', description: 'Traditional cabinet with intricate detailing and modern functionality.', price: 45000, category: 'Storage', image_url: '/Gallery/Gallery (6).jpeg', quantity_in_stock: 4 } },
+  { id: 9, type: 'image', src: '/Gallery/Gallery (7).jpeg', span: 'md:col-span-4', aspect: 'aspect-square', product: { id: 'gallery-7', item_code: 'GAL-007', name: 'Artisan Bookshelf Unit', description: 'Open-shelf bookcase designed for both display and storage.', price: 38000, category: 'Storage', image_url: '/Gallery/Gallery (7).jpeg', quantity_in_stock: 7 } },
+  { id: 10, type: 'image', src: '/Gallery/Gallery (8).jpeg', span: 'md:col-span-4', aspect: 'aspect-square', product: { id: 'gallery-8', item_code: 'GAL-008', name: 'Executive Desk Collection', description: 'Luxurious executive desk with ergonomic design and premium finish.', price: 55000, category: 'Study Tables', image_url: '/Gallery/Gallery (8).jpeg', quantity_in_stock: 5 } },
+  { id: 11, type: 'image', src: '/Gallery/Gallery (9).jpeg', span: 'md:col-span-12', aspect: 'aspect-[21/9]', product: { id: 'gallery-9', item_code: 'GAL-009', name: 'Statement Dining Set', description: 'Grand dining table with matching chairs for memorable gatherings.', price: 95000, category: 'Dining Sets', image_url: '/Gallery/Gallery (9).jpeg', quantity_in_stock: 3 } },
+  { id: 12, type: 'image', src: '/Gallery/Gallery (10).jpeg', span: 'md:col-span-4', aspect: 'aspect-[3/4]', product: { id: 'gallery-10', item_code: 'GAL-010', name: 'Velvet Accent Chair', description: 'Plush velvet accent chair with sculptural silhouette.', price: 22000, category: 'Seating', image_url: '/Gallery/Gallery (10).jpeg', quantity_in_stock: 15 } },
+  { id: 13, type: 'image', src: '/Gallery/Gallery (11).jpeg', span: 'md:col-span-4', aspect: 'aspect-[3/4]', product: { id: 'gallery-11', item_code: 'GAL-011', name: 'Carved Wood Console', description: 'Intricately carved console table that serves as a focal point.', price: 41000, category: 'Tables', image_url: '/Gallery/Gallery (11).jpeg', quantity_in_stock: 6 } },
+  { id: 14, type: 'image', src: '/Gallery/Gallery (12).jpeg', span: 'md:col-span-4', aspect: 'aspect-[3/4]', product: { id: 'gallery-12', item_code: 'GAL-012', name: 'Royal Bed Frame', description: 'King-size bed frame with ornate headboard and solid construction.', price: 78000, category: 'Bedroom', image_url: '/Gallery/Gallery (12).jpeg', quantity_in_stock: 4 } },
+  { id: 15, type: 'image', src: '/Gallery/Gallery (13).jpeg', span: 'md:col-span-6', aspect: 'aspect-video', product: { id: 'gallery-13', item_code: 'GAL-013', name: 'Contemporary Sofa Set', description: 'L-shaped sofa set with premium fabric and deep seating comfort.', price: 110000, category: 'Living Room', image_url: '/Gallery/Gallery (13).jpeg', quantity_in_stock: 3 } },
+  { id: 16, type: 'image', src: '/Gallery/Gallery (14).jpeg', span: 'md:col-span-6', aspect: 'aspect-video', product: { id: 'gallery-14', item_code: 'GAL-014', name: 'Rustic Center Table', description: 'Reclaimed wood center table with industrial metal accents.', price: 35000, category: 'Tables', image_url: '/Gallery/Gallery (14).jpeg', quantity_in_stock: 8 } },
+  { id: 17, type: 'image', src: '/Gallery/Gallery (15).jpeg', span: 'md:col-span-4', aspect: 'aspect-square', product: { id: 'gallery-15', item_code: 'GAL-015', name: 'Designer TV Unit', description: 'Wall-mounted entertainment unit with concealed cable management.', price: 48000, category: 'Storage', image_url: '/Gallery/Gallery (15).jpeg', quantity_in_stock: 6 } },
+  { id: 18, type: 'image', src: '/Gallery/Gallery (16).jpeg', span: 'md:col-span-4', aspect: 'aspect-square', product: { id: 'gallery-16', item_code: 'GAL-016', name: 'Luxury Wardrobe System', description: 'Full-height wardrobe with mirror panels and soft-close mechanisms.', price: 92000, category: 'Bedroom', image_url: '/Gallery/Gallery (16).jpeg', quantity_in_stock: 4 } },
+  { id: 19, type: 'image', src: '/Gallery/Gallery (17).jpeg', span: 'md:col-span-4', aspect: 'aspect-square', product: { id: 'gallery-17', item_code: 'GAL-017', name: 'Compact Study Desk', description: 'Space-efficient study desk perfect for home offices.', price: 24000, category: 'Study Tables', image_url: '/Gallery/Gallery (17).jpeg', quantity_in_stock: 10 } },
+  { id: 20, type: 'image', src: '/Gallery/Gallery (18).jpeg', span: 'md:col-span-3', aspect: 'aspect-[3/4]', product: { id: 'gallery-18', item_code: 'GAL-018', name: 'Ornamental Side Table', description: 'Decorative side table with hand-painted motifs.', price: 18000, category: 'Tables', image_url: '/Gallery/Gallery (18).jpeg', quantity_in_stock: 14 } },
+  { id: 21, type: 'image', src: '/Gallery/Gallery (19).jpeg', span: 'md:col-span-6', aspect: 'aspect-video', product: { id: 'gallery-19', item_code: 'GAL-019', name: 'Grand Living Room Suite', description: 'Complete living room furniture suite with coordinated design language.', price: 165000, category: 'Living Room', image_url: '/Gallery/Gallery (19).jpeg', quantity_in_stock: 2 } },
+  { id: 22, type: 'image', src: '/Gallery/Gallery (20).jpeg', span: 'md:col-span-3', aspect: 'aspect-[3/4]', product: { id: 'gallery-20', item_code: 'GAL-020', name: 'Artisan Dining Chair Set', description: 'Set of 6 handcrafted dining chairs with cushioned seats.', price: 54000, category: 'Seating', image_url: '/Gallery/Gallery (20).jpeg', quantity_in_stock: 5 } },
+  { id: 23, type: 'image', src: '/Gallery/Gallery (21).jpeg', span: 'md:col-span-4', aspect: 'aspect-square', product: { id: 'gallery-21', item_code: 'GAL-021', name: 'Modern Display Cabinet', description: 'Glass-fronted display cabinet with ambient lighting.', price: 62000, category: 'Storage', image_url: '/Gallery/Gallery (21).jpeg', quantity_in_stock: 4 } },
+  { id: 24, type: 'image', src: '/Gallery/Gallery (22).jpeg', span: 'md:col-span-4', aspect: 'aspect-square', product: { id: 'gallery-22', item_code: 'GAL-022', name: 'Sculptural Lounge Chair', description: 'Statement lounge chair combining art and ergonomic comfort.', price: 43000, category: 'Seating', image_url: '/Gallery/Gallery (22).jpeg', quantity_in_stock: 7 } },
+  { id: 25, type: 'image', src: '/Gallery/Gallery (23).jpeg', span: 'md:col-span-4', aspect: 'aspect-square', product: { id: 'gallery-23', item_code: 'GAL-023', name: 'Heritage Bedroom Suite', description: 'Classic bedroom furniture set with timeless silhouettes.', price: 135000, category: 'Bedroom', image_url: '/Gallery/Gallery (23).jpeg', quantity_in_stock: 2 } },
+];
 
 export default function GalleryPage() {
-  const galleryItems = [
-    { id: 1, type: 'video', src: '/Gallery/Gallery (1).mp4', span: 'md:col-span-8', aspect: 'aspect-[16/9]' },
-    { id: 2, type: 'image', src: '/Gallery/Gallery (1).jpeg', span: 'md:col-span-4', aspect: 'aspect-[3/4]' },
-    { id: 3, type: 'image', src: '/Gallery/Gallery (2).jpeg', span: 'md:col-span-4', aspect: 'aspect-square' },
-    { id: 4, type: 'video', src: '/Gallery/Gallery (2).mp4', span: 'md:col-span-4', aspect: 'aspect-square' },
-    { id: 5, type: 'image', src: '/Gallery/Gallery (3).jpeg', span: 'md:col-span-4', aspect: 'aspect-square' },
-    { id: 6, type: 'image', src: '/Gallery/Gallery (4).jpeg', span: 'md:col-span-6', aspect: 'aspect-[4/3]' },
-    { id: 7, type: 'image', src: '/Gallery/Gallery (5).jpeg', span: 'md:col-span-6', aspect: 'aspect-[4/3]' },
-    { id: 8, type: 'image', src: '/Gallery/Gallery (6).jpeg', span: 'md:col-span-4', aspect: 'aspect-square' },
-    { id: 9, type: 'image', src: '/Gallery/Gallery (7).jpeg', span: 'md:col-span-4', aspect: 'aspect-square' },
-    { id: 10, type: 'image', src: '/Gallery/Gallery (8).jpeg', span: 'md:col-span-4', aspect: 'aspect-square' },
-    { id: 11, type: 'image', src: '/Gallery/Gallery (9).jpeg', span: 'md:col-span-12', aspect: 'aspect-[21/9]' },
-    { id: 12, type: 'image', src: '/Gallery/Gallery (10).jpeg', span: 'md:col-span-4', aspect: 'aspect-[3/4]' },
-    { id: 13, type: 'image', src: '/Gallery/Gallery (11).jpeg', span: 'md:col-span-4', aspect: 'aspect-[3/4]' },
-    { id: 14, type: 'image', src: '/Gallery/Gallery (12).jpeg', span: 'md:col-span-4', aspect: 'aspect-[3/4]' },
-    { id: 15, type: 'image', src: '/Gallery/Gallery (13).jpeg', span: 'md:col-span-6', aspect: 'aspect-video' },
-    { id: 16, type: 'image', src: '/Gallery/Gallery (14).jpeg', span: 'md:col-span-6', aspect: 'aspect-video' },
-    { id: 17, type: 'image', src: '/Gallery/Gallery (15).jpeg', span: 'md:col-span-4', aspect: 'aspect-square' },
-    { id: 18, type: 'image', src: '/Gallery/Gallery (16).jpeg', span: 'md:col-span-4', aspect: 'aspect-square' },
-    { id: 19, type: 'image', src: '/Gallery/Gallery (17).jpeg', span: 'md:col-span-4', aspect: 'aspect-square' },
-    { id: 20, type: 'image', src: '/Gallery/Gallery (18).jpeg', span: 'md:col-span-3', aspect: 'aspect-[3/4]' },
-    { id: 21, type: 'image', src: '/Gallery/Gallery (19).jpeg', span: 'md:col-span-6', aspect: 'aspect-video' },
-    { id: 22, type: 'image', src: '/Gallery/Gallery (20).jpeg', span: 'md:col-span-3', aspect: 'aspect-[3/4]' },
-    { id: 23, type: 'image', src: '/Gallery/Gallery (21).jpeg', span: 'md:col-span-4', aspect: 'aspect-square' },
-    { id: 24, type: 'image', src: '/Gallery/Gallery (22).jpeg', span: 'md:col-span-4', aspect: 'aspect-square' },
-    { id: 25, type: 'image', src: '/Gallery/Gallery (23).jpeg', span: 'md:col-span-4', aspect: 'aspect-square' },
-  ];
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleItemClick = (product: Product) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
 
   return (
     <div className="flex flex-col w-full bg-surface-50 min-h-screen font-sans overflow-x-hidden pt-[12dvh]">
@@ -52,7 +75,7 @@ export default function GalleryPage() {
             
             <div className="flex flex-col items-start lg:items-end max-w-md animate-[revealUp_0.8s_0.6s_forwards] opacity-0">
               <p className="text-surface-500 text-fluid-lg leading-relaxed text-left lg:text-right text-balance mb-8">
-                A technical exploration of space, light, and material. Our visual gallery documents the intersection of architectural precision and lived comfort.
+                A technical exploration of space, light, and material. Click on any piece to inquire about pricing and availability.
               </p>
               <div className="flex flex-wrap items-center justify-start lg:justify-end gap-3">
                 {['All Moments', 'Living', 'Architecture', 'Details'].map((tab, i) => (
@@ -74,17 +97,18 @@ export default function GalleryPage() {
         <div className="mx-auto max-w-[1400px]">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4 lg:gap-6">
             {galleryItems.map((item, index) => (
-              <div 
-                key={item.id} 
-                className={`group relative ${item.span} ${item.aspect} rounded-[2rem] overflow-hidden bg-surface-200 border border-surface-200/50 shadow-sm hover:shadow-2xl transition-all duration-700 animate-[revealUp_1s_forwards] opacity-0`}
+              <button 
+                key={item.id}
+                onClick={() => handleItemClick(item.product as Product)}
+                className={`group relative ${item.span} ${item.aspect} rounded-[2rem] overflow-hidden bg-surface-200 border border-surface-200/50 shadow-sm hover:shadow-2xl transition-all duration-700 animate-[revealUp_1s_forwards] opacity-0 text-left cursor-pointer`}
                 style={{ animationDelay: `${(index % 12) * 0.1}s` }}
               >
                 {item.type === 'image' ? (
                   <Image 
                     src={item.src} 
-                    alt={`Gallery Item ${item.id}`} 
+                    alt={item.product.name} 
                     fill 
-                    className="object-cover transition-transform duration-[2s] cubic-bezier(0.2, 0, 0.2, 1) group-hover:scale-110"
+                    className="object-cover transition-transform duration-[2s] group-hover:scale-110"
                   />
                 ) : (
                   <video 
@@ -98,10 +122,16 @@ export default function GalleryPage() {
                 )}
                 
                 {/* Technical Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-surface-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
-                  <div className="absolute bottom-8 left-8 flex flex-col gap-1">
-                    <span className="text-[10px] font-bold text-white/60 uppercase tracking-[0.3em]">Perspective</span>
-                    <span className="text-white text-xl font-display font-light">0{item.id} / System</span>
+                <div className="absolute inset-0 bg-gradient-to-t from-surface-900/70 via-surface-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                  <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end">
+                    <div className="flex flex-col gap-1">
+                      <span className="text-[10px] font-bold text-white/60 uppercase tracking-[0.3em]">{item.product.category}</span>
+                      <span className="text-white text-xl font-display font-light">{item.product.name}</span>
+                      <span className="text-white/80 text-sm font-medium">₹{item.product.price.toLocaleString()}</span>
+                    </div>
+                    <span className="bg-white/90 backdrop-blur-md text-surface-900 text-[9px] font-bold uppercase tracking-widest px-4 py-2 rounded-full shadow-lg flex-shrink-0">
+                      Inquire
+                    </span>
                   </div>
                 </div>
 
@@ -111,7 +141,7 @@ export default function GalleryPage() {
                     <path d="M0,0 A 24,24 0 0,0 24,24 H 88 A 24,24 0 0,1 112,48 V 80 H 0 Z" />
                   </svg>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         </div>
@@ -135,6 +165,12 @@ export default function GalleryPage() {
         </div>
       </section>
 
+      {/* Product Inquiry Modal */}
+      <ProductInquiryModal
+        product={selectedProduct}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 }
