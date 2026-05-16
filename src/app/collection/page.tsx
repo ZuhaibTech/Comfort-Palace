@@ -1,8 +1,10 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import ProductInquiryModal from '@/components/ProductInquiryModal';
+import Reveal from '@/components/motion/Reveal';
 
+// Gallery collection items - real furniture pieces from the gallery
 interface Product {
   id: string;
   item_code: string;
@@ -99,7 +101,6 @@ export default function CollectionPage() {
         }
       } catch (err) {
         console.error('Failed to fetch products:', err);
-        // Don't show error - gallery items will still display
       } finally {
         setLoading(false);
       }
@@ -107,13 +108,13 @@ export default function CollectionPage() {
     fetchProducts();
   }, []);
 
-  // Merge backend products + gallery items (backend first, then gallery)
+  // Merge backend products + gallery items
   const allProducts: Product[] = [...backendProducts, ...galleryCollectionItems];
 
-  // Extract unique categories for filter tabs
+  // Extract unique categories
   const categories = ['All', ...Array.from(new Set(allProducts.map(p => p.category).filter(Boolean) as string[]))];
 
-  // Filter products by category
+  // Filter products
   const filteredProducts = activeFilter === 'All'
     ? allProducts
     : allProducts.filter(p => p.category?.toLowerCase() === activeFilter.toLowerCase());
@@ -135,6 +136,39 @@ export default function CollectionPage() {
     setIsModalOpen(true);
   };
 
+  // Logic for handling deep-linking from Gallery (Initial Entry Only)
+  const hasInitialScrolled = useRef(false);
+
+  useEffect(() => {
+    const handleInitialHashScroll = () => {
+      const hash = window.location.hash;
+      if (!loading && hash && hash.startsWith('#product-') && !hasInitialScrolled.current) {
+        const id = hash.replace('#product-', '');
+        const productIndex = allProducts.findIndex(p => p.id === id);
+        
+        if (productIndex !== -1) {
+          // Force visibility for the target piece if it's beyond initial load
+          if (productIndex >= visibleCount) {
+            setVisibleCount(productIndex + 1);
+          }
+          
+          hasInitialScrolled.current = true;
+          
+          setTimeout(() => {
+            const element = document.getElementById(`product-${id}`);
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }, 600);
+        }
+      }
+    };
+
+    if (!loading) {
+      handleInitialHashScroll();
+    }
+  }, [loading, allProducts]); // Only react to initial load completion
+
   const getProductImage = (product: Product) => {
     if (product.image_url) {
       return product.image_url.startsWith('/') ? product.image_url : `/uploads/${product.image_url}`;
@@ -146,38 +180,42 @@ export default function CollectionPage() {
     <div className="flex flex-col w-full bg-[#f8f7f4] min-h-screen font-sans">
 
       {/* Editorial Header Section */}
-      <section className="w-full pt-32 lg:pt-48 pb-20 px-6 lg:px-12">
+      <section className="w-full pt-32 lg:pt-48 pb-20 px-6 lg:px-12 overflow-hidden">
         <div className="mx-auto max-w-[1400px] flex flex-col lg:flex-row lg:items-end justify-between gap-12">
-          <div className="max-w-3xl">
-            <div className="flex items-center gap-4 mb-8">
-              <span className="w-12 h-[1px] bg-surface-400 block" />
-              <span className="text-[12px] font-medium tracking-[0.2em] text-surface-500 uppercase">Archive / 2026</span>
+          <Reveal direction="right" once={true} delay={0.2} distance="100px">
+            <div className="max-w-3xl">
+              <div className="flex items-center gap-4 mb-8">
+                <span className="w-12 h-[1px] bg-surface-400 block" />
+                <span className="text-[12px] font-medium tracking-[0.2em] text-surface-500 uppercase">Archive / 2026</span>
+              </div>
+              <h1 className="font-display text-6xl lg:text-[6.5rem] text-surface-900 font-light tracking-tighter leading-[0.95]">
+                The Master <br /> Collection.
+              </h1>
             </div>
-            <h1 className="font-display text-6xl lg:text-[6.5rem] text-surface-900 font-light tracking-tighter leading-[0.95]">
-              The Master <br /> Collection.
-            </h1>
-          </div>
+          </Reveal>
 
-          <div className="flex flex-col items-start lg:items-end max-w-sm">
-            <p className="text-surface-500 text-lg lg:text-xl leading-relaxed text-left lg:text-right text-balance mb-8">
-              A curated selection of timeless pieces. Each form follows function, creating harmony in your modern living spaces.
-            </p>
-            <div className="flex flex-wrap items-center justify-start lg:justify-end gap-2">
-              {categories.map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => handleFilterChange(tab)}
-                  className={`px-5 py-2 rounded-full text-[13px] font-medium tracking-wide transition-all duration-300 ${
-                    activeFilter === tab
-                      ? 'bg-primary-800 text-white shadow-md'
-                      : 'bg-transparent text-surface-600 hover:bg-surface-200 border border-surface-300'
-                  }`}
-                >
-                  {tab}
-                </button>
-              ))}
+          <Reveal direction="left" once={true} delay={0.4} distance="100px">
+            <div className="flex flex-col items-start lg:items-end max-w-sm">
+              <p className="text-surface-500 text-lg lg:text-xl leading-relaxed text-left lg:text-right text-balance mb-8">
+                A curated selection of timeless pieces. Each form follows function, creating harmony in your modern living spaces.
+              </p>
+              <div className="flex flex-wrap items-center justify-start lg:justify-end gap-2">
+                {categories.map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => handleFilterChange(tab)}
+                    className={`px-5 py-2 rounded-full text-[13px] font-medium tracking-wide transition-all duration-300 ${
+                      activeFilter === tab
+                        ? 'bg-primary-800 text-white shadow-md'
+                        : 'bg-transparent text-surface-600 hover:bg-surface-200 border border-surface-300'
+                    }`}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
@@ -221,71 +259,75 @@ export default function CollectionPage() {
                     const image = getProductImage(product);
 
                     return (
-                      <button
-                        key={product.id}
-                        onClick={() => handleProductClick(product)}
-                        className={`group flex flex-col gap-5 ${layout.span} text-left cursor-pointer`}
+                      <Reveal 
+                        key={product.id} 
+                        id={`product-${product.id}`}
+                        delay={(index % 3) * 0.1} 
+                        distance="40px" 
+                        className={layout.span}
                       >
-                        {/* Image Card with Advanced Cutout */}
-                        <div className={`relative w-full ${layout.aspect} ${bg} rounded-[2rem] lg:rounded-[3rem] overflow-hidden p-6 lg:p-10 transition-all duration-700 hover:shadow-2xl hover:-translate-y-2`}>
-
-                          {/* Floating Frosted Glass Badge */}
-                          <div className="absolute top-6 right-6 lg:top-10 lg:right-10 z-30 bg-white/30 backdrop-blur-xl border border-white/40 px-5 py-2 rounded-full text-[11px] uppercase tracking-[0.15em] text-surface-900 font-semibold shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
-                            {product.category || 'Furniture'}
-                          </div>
-
-                          {/* High-Res Product Image */}
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="relative w-full h-full drop-shadow-2xl group-hover:scale-105 transition-transform duration-[1.2s]">
-                              <Image
-                                src={image}
-                                alt={product.name}
-                                fill
-                                className="object-cover object-center rounded-none"
-                              />
+                        <button
+                          onClick={() => handleProductClick(product)}
+                          className="group flex flex-col gap-5 text-left cursor-pointer w-full"
+                        >
+                          {/* Image Card with Advanced Cutout */}
+                          <div className={`relative w-full ${layout.aspect} ${bg} rounded-[2rem] lg:rounded-[3rem] overflow-hidden p-6 lg:p-10 transition-all duration-700 hover:shadow-2xl hover:-translate-y-2`}>
+  
+                            {/* Floating Frosted Glass Badge */}
+                            <div className="absolute top-6 right-6 lg:top-10 lg:right-10 z-30 bg-white/30 backdrop-blur-xl border border-white/40 px-5 py-2 rounded-full text-[11px] uppercase tracking-[0.15em] text-surface-900 font-semibold shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
+                              {product.category || 'Furniture'}
+                            </div>
+  
+                            {/* High-Res Product Image */}
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <div className="relative w-full h-full drop-shadow-2xl group-hover:scale-105 transition-transform duration-[1.2s]">
+                                <Image
+                                  src={image}
+                                  alt={product.name}
+                                  fill
+                                  className="object-cover object-center rounded-none"
+                                />
+                              </div>
+                            </div>
+  
+                            {/* Hover Overlay */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
+  
+                            {/* Intricate Bottom-Left Cutout */}
+                            <div className="absolute bottom-0 left-0 w-28 h-24 bg-[#f8f7f4] rounded-tr-[2.5rem] flex items-end justify-start pb-6 pl-8 z-20">
+                              <span className="text-surface-900 text-3xl font-medium leading-none">{displayIndex}</span>
+                              {/* Outer curve top */}
+                              <div className="absolute -top-10 left-0 w-10 h-10 bg-transparent rounded-bl-[2.5rem] shadow-[-20px_20px_0_20px_#f8f7f4]" />
+                              {/* Outer curve right */}
+                              <div className="absolute bottom-0 -right-10 w-10 h-10 bg-transparent rounded-bl-[2.5rem] shadow-[-20px_20px_0_20px_#f8f7f4]" />
+                            </div>
+  
+                            {/* Hover CTA */}
+                            <div className="absolute bottom-8 right-8 z-20 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+                              <span className="bg-white/90 backdrop-blur-md text-surface-900 text-[10px] font-bold uppercase tracking-widest px-5 py-2.5 rounded-full shadow-lg">
+                                Inquire Now
+                              </span>
                             </div>
                           </div>
-
-                          {/* Hover Overlay */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
-
-                          {/* Intricate Bottom-Left Cutout */}
-                          <div className="absolute bottom-0 left-0 w-28 h-24 bg-[#f8f7f4] rounded-tr-[2.5rem] flex items-end justify-start pb-6 pl-8 z-20">
-                            <span className="text-surface-900 text-3xl font-medium leading-none">{displayIndex}</span>
-                            {/* Outer curve top */}
-                            <div className="absolute -top-10 left-0 w-10 h-10 bg-transparent rounded-bl-[2.5rem] shadow-[-20px_20px_0_20px_#f8f7f4]" />
-                            {/* Outer curve right */}
-                            <div className="absolute bottom-0 -right-10 w-10 h-10 bg-transparent rounded-bl-[2.5rem] shadow-[-20px_20px_0_20px_#f8f7f4]" />
+  
+                          {/* Minimalist Meta Data */}
+                          <div className="flex items-start justify-between px-2">
+                            <div>
+                              <h3 className="font-display text-2xl lg:text-3xl text-surface-900 font-light group-hover:text-primary-800 transition-colors tracking-tight">
+                                {product.name}
+                              </h3>
+                              {product.description && (
+                                <p className="text-surface-400 text-sm mt-1 line-clamp-1 max-w-[300px]">{product.description}</p>
+                              )}
+                            </div>
+                            <div className="flex flex-col items-end flex-shrink-0">
+                              <span className="text-sm text-primary-800 opacity-0 group-hover:opacity-100 transition-opacity -translate-y-2 group-hover:translate-y-0 duration-500">
+                                Inquire &rarr;
+                              </span>
+                            </div>
                           </div>
-
-                          {/* Hover CTA */}
-                          <div className="absolute bottom-8 right-8 z-20 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-                            <span className="bg-white/90 backdrop-blur-md text-surface-900 text-[10px] font-bold uppercase tracking-widest px-5 py-2.5 rounded-full shadow-lg">
-                              Inquire Now
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Minimalist Meta Data */}
-                        <div className="flex items-start justify-between px-2">
-                          <div>
-                            <h3 className="font-display text-2xl lg:text-3xl text-surface-900 font-light group-hover:text-primary-800 transition-colors tracking-tight">
-                              {product.name}
-                            </h3>
-                            {product.description && (
-                              <p className="text-surface-400 text-sm mt-1 line-clamp-1 max-w-[300px]">{product.description}</p>
-                            )}
-                          </div>
-                          <div className="flex flex-col items-end flex-shrink-0">
-                            <span className="font-sans text-lg lg:text-xl font-medium text-surface-900">
-                              ₹{product.price.toLocaleString()}
-                            </span>
-                            <span className="text-sm text-primary-800 opacity-0 group-hover:opacity-100 transition-opacity -translate-y-2 group-hover:translate-y-0 duration-500">
-                              Inquire &rarr;
-                            </span>
-                          </div>
-                        </div>
-                      </button>
+                        </button>
+                      </Reveal>
                     );
                   })}
                 </div>

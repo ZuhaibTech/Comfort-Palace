@@ -1,9 +1,8 @@
 'use client';
 
-import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import ProductInquiryModal from '@/components/ProductInquiryModal';
+import Reveal from '@/components/motion/Reveal';
 
 interface Product {
   id: string;
@@ -45,14 +44,6 @@ const galleryItems = [
 ];
 
 export default function GalleryPage() {
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleItemClick = (product: Product) => {
-    setSelectedProduct(product);
-    setIsModalOpen(true);
-  };
-
   return (
     <div className="flex flex-col w-full bg-surface-50 min-h-screen font-sans overflow-x-hidden pt-[12dvh]">
       
@@ -62,32 +53,36 @@ export default function GalleryPage() {
           <div className="absolute -top-10 -left-10 w-40 h-40 bg-primary-800/5 rounded-full blur-3xl -z-10"></div>
           
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-10">
-            <div className="max-w-4xl">
-              <div className="flex items-center gap-4 mb-6 animate-[revealUp_0.8s_0.2s_forwards] opacity-0">
-                <span className="w-12 h-[1px] bg-primary-800"></span>
-                <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-surface-500">Visual Archive / 2026</span>
+            <Reveal direction="right" once={true} delay={0.2} distance="100px">
+              <div className="max-w-4xl">
+                <div className="flex items-center gap-4 mb-6">
+                  <span className="w-12 h-[1px] bg-primary-800"></span>
+                  <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-surface-500">Visual Archive / 2026</span>
+                </div>
+                <h1 className="font-display text-[clamp(3.5rem,8vw,8rem)] text-surface-900 font-light tracking-tighter leading-[0.9]">
+                  Curated <br />
+                  <span className="italic text-primary-800">Atmospheres.</span>
+                </h1>
               </div>
-              <h1 className="font-display text-[clamp(3.5rem,8vw,8rem)] text-surface-900 font-light tracking-tighter leading-[0.9] animate-[revealUp_0.8s_0.4s_forwards] opacity-0">
-                Curated <br />
-                <span className="italic text-primary-800">Atmospheres.</span>
-              </h1>
-            </div>
+            </Reveal>
             
-            <div className="flex flex-col items-start lg:items-end max-w-md animate-[revealUp_0.8s_0.6s_forwards] opacity-0">
-              <p className="text-surface-500 text-fluid-lg leading-relaxed text-left lg:text-right text-balance mb-8">
-                A technical exploration of space, light, and material. Click on any piece to inquire about pricing and availability.
-              </p>
-              <div className="flex flex-wrap items-center justify-start lg:justify-end gap-3">
-                {['All Moments', 'Living', 'Architecture', 'Details'].map((tab, i) => (
-                  <button 
-                    key={tab} 
-                    className={`px-6 py-2 rounded-full text-[11px] font-bold uppercase tracking-widest transition-all duration-500 ${i === 0 ? 'bg-primary-800 text-white shadow-xl scale-105' : 'bg-white text-surface-500 hover:bg-surface-100 border border-surface-200 shadow-sm'}`}
-                  >
-                    {tab}
-                  </button>
-                ))}
+            <Reveal direction="left" once={true} delay={0.4} distance="100px">
+              <div className="flex flex-col items-start lg:items-end max-w-md">
+                <p className="text-surface-500 text-fluid-lg leading-relaxed text-left lg:text-right text-balance mb-8">
+                  A technical exploration of space, light, and material. Click on any piece to inquire about pricing and availability.
+                </p>
+                <div className="flex flex-wrap items-center justify-start lg:justify-end gap-3">
+                  {['All Moments', 'Living', 'Architecture', 'Details'].map((tab, i) => (
+                    <button 
+                      key={tab} 
+                      className={`px-6 py-2 rounded-full text-[11px] font-bold uppercase tracking-widest transition-all duration-500 ${i === 0 ? 'bg-primary-800 text-white shadow-xl scale-105' : 'bg-white text-surface-500 hover:bg-surface-100 border border-surface-200 shadow-sm'}`}
+                    >
+                      {tab}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            </Reveal>
           </div>
         </div>
       </section>
@@ -97,51 +92,51 @@ export default function GalleryPage() {
         <div className="mx-auto max-w-[1400px]">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4 lg:gap-6">
             {galleryItems.map((item, index) => (
-              <button 
-                key={item.id}
-                onClick={() => handleItemClick(item.product as Product)}
-                className={`group relative ${item.span} ${item.aspect} rounded-[2rem] overflow-hidden bg-surface-200 border border-surface-200/50 shadow-sm hover:shadow-2xl transition-all duration-700 animate-[revealUp_1s_forwards] opacity-0 text-left cursor-pointer`}
-                style={{ animationDelay: `${(index % 12) * 0.1}s` }}
-              >
-                {item.type === 'image' ? (
-                  <Image 
-                    src={item.src} 
-                    alt={item.product.name} 
-                    fill 
-                    className="object-cover transition-transform duration-[2s] group-hover:scale-110"
-                  />
-                ) : (
-                  <video 
-                    src={item.src} 
-                    autoPlay 
-                    loop 
-                    muted 
-                    playsInline 
-                    className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105"
-                  />
-                )}
-                
-                {/* Technical Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-surface-900/70 via-surface-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700">
-                  <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end">
-                    <div className="flex flex-col gap-1">
-                      <span className="text-[10px] font-bold text-white/60 uppercase tracking-[0.3em]">{item.product.category}</span>
-                      <span className="text-white text-xl font-display font-light">{item.product.name}</span>
-                      <span className="text-white/80 text-sm font-medium">₹{item.product.price.toLocaleString()}</span>
+              <Reveal key={item.id} delay={(index % 6) * 0.1} distance="40px" className={item.span}>
+                <Link 
+                  href={`/collection#product-${item.product.id}`}
+                  className={`group relative block w-full ${item.aspect} rounded-[2rem] overflow-hidden bg-surface-200 border border-surface-200/50 shadow-sm hover:shadow-2xl transition-all duration-700 text-left cursor-pointer`}
+                >
+                  {item.type === 'image' ? (
+                    <Image 
+                      src={item.src} 
+                      alt={item.product.name} 
+                      fill 
+                      className="object-cover transition-transform duration-[2s] group-hover:scale-110"
+                    />
+                  ) : (
+                    <video 
+                      src={item.src} 
+                      autoPlay 
+                      loop 
+                      muted 
+                      playsInline 
+                      className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105"
+                    />
+                  )}
+                  
+                  {/* Technical Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-surface-900/70 via-surface-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                    <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end">
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[10px] font-bold text-white/60 uppercase tracking-[0.3em]">{item.product.category}</span>
+                        <span className="text-white text-xl font-display font-light">{item.product.name}</span>
+                        <span className="text-white/80 text-sm font-medium">₹{item.product.price.toLocaleString()}</span>
+                      </div>
+                      <span className="bg-white/90 backdrop-blur-md text-surface-900 text-[9px] font-bold uppercase tracking-widest px-4 py-2 rounded-full shadow-lg flex-shrink-0">
+                        View Detail
+                      </span>
                     </div>
-                    <span className="bg-white/90 backdrop-blur-md text-surface-900 text-[9px] font-bold uppercase tracking-widest px-4 py-2 rounded-full shadow-lg flex-shrink-0">
-                      Inquire
-                    </span>
                   </div>
-                </div>
-
-                {/* The Inverted Notch Pattern (Apex Signature) */}
-                <div className="absolute top-0 right-0 z-20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  <svg className="w-20 h-20 text-white/20 rotate-180" viewBox="0 0 112 80" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0,0 A 24,24 0 0,0 24,24 H 88 A 24,24 0 0,1 112,48 V 80 H 0 Z" />
-                  </svg>
-                </div>
-              </button>
+  
+                  {/* The Inverted Notch Pattern (Apex Signature) */}
+                  <div className="absolute top-0 right-0 z-20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    <svg className="w-20 h-20 text-white/20 rotate-180" viewBox="0 0 112 80" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M0,0 A 24,24 0 0,0 24,24 H 88 A 24,24 0 0,1 112,48 V 80 H 0 Z" />
+                    </svg>
+                  </div>
+                </Link>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -153,24 +148,20 @@ export default function GalleryPage() {
           <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1),transparent)]"></div>
         </div>
         
-        <div className="mx-auto max-w-[1400px] relative z-10 flex flex-col items-center text-center">
-          <div className="text-[10px] font-bold tracking-[0.5em] text-primary-400 mb-8 uppercase">Experience the System</div>
-          <h2 className="text-white text-[clamp(2rem,5vw,4rem)] font-display font-light tracking-tighter leading-none mb-12 max-w-3xl">
-            Beyond the frame, <br />
-            <span className="italic text-primary-300">lies absolute comfort.</span>
-          </h2>
-          <Link href="/collection" className="btn-apex bg-white text-surface-900 hover:bg-primary-300 hover:text-white border-transparent px-12 py-5 text-sm">
-            View Pieces
-          </Link>
-        </div>
+        <Reveal delay={0.2} direction="up" distance="40px">
+          <div className="mx-auto max-w-[1400px] relative z-10 flex flex-col items-center text-center">
+            <div className="text-[10px] font-bold tracking-[0.5em] text-primary-400 mb-8 uppercase">Experience the System</div>
+            <h2 className="text-white text-[clamp(2rem,5vw,4rem)] font-display font-light tracking-tighter leading-none mb-12 max-w-3xl">
+              Beyond the frame, <br />
+              <span className="italic text-primary-300">lies absolute comfort.</span>
+            </h2>
+            <Link href="/collection" className="btn-apex bg-white text-surface-900 hover:bg-primary-300 hover:text-white border-transparent px-12 py-5 text-sm">
+              View Pieces
+            </Link>
+          </div>
+        </Reveal>
       </section>
 
-      {/* Product Inquiry Modal */}
-      <ProductInquiryModal
-        product={selectedProduct}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
     </div>
   );
 }

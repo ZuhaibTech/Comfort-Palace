@@ -30,7 +30,7 @@ export default function Header() {
       <header className="w-full h-[12dvh] glass-light fixed top-0 left-0 z-50 flex items-center justify-between px-fluid-md lg:px-fluid-lg transition-all duration-500 border-b border-surface-200/40">
         {/* Branding: Left Aligned */}
         <Link href="/" className="flex items-center gap-fluid-3xs group">
-          <div className="relative h-10 w-40 lg:h-12 lg:w-48 flex items-center transition-transform duration-500 group-hover:scale-105">
+          <div className="relative h-12 w-48 lg:h-16 lg:w-64 flex items-center transition-transform duration-500 group-hover:scale-105">
             <Image 
               src="/Logo/LOGO main.png" 
               alt="Comfort Palace" 

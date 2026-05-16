@@ -165,9 +165,6 @@ export default function ProductInquiryModal({ product, isOpen, onClose }: Produc
               {product.name}
             </h3>
             <div className="flex items-baseline gap-3">
-              <span className="text-white text-2xl md:text-3xl font-display font-light">
-                ₹{product.price.toLocaleString()}
-              </span>
               <span className="text-white/50 text-xs font-bold uppercase tracking-widest">
                 {product.item_code}
               </span>

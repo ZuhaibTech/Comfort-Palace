@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Reveal from '@/components/motion/Reveal';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -51,43 +52,45 @@ export default function ContactPage() {
           <div className="flex flex-col lg:flex-row gap-24">
             
             {/* Info Column */}
-            <div className="flex-1">
-              <div className="flex items-center gap-4 mb-8">
-                <span className="w-12 h-[1px] bg-primary-800"></span>
-                <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-surface-500">Contact / Studio Inquiry</span>
+            <Reveal direction="right" once={true} delay={0.2} distance="80px" className="flex-1">
+              <div>
+                <div className="flex items-center gap-4 mb-8">
+                  <span className="w-12 h-[1px] bg-primary-800"></span>
+                  <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-surface-500">Contact / Studio Inquiry</span>
+                </div>
+                <h1 className="font-display text-[clamp(2.5rem,6vw,5rem)] text-surface-900 font-light tracking-tighter leading-none mb-12">
+                  Let&apos;s discuss <br />
+                  <span className="italic text-primary-800">Your Vision.</span>
+                </h1>
+                
+                <div className="space-y-12">
+                  <div>
+                    <h3 className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-4">Location</h3>
+                    <p className="text-xl text-surface-800 leading-relaxed font-light">
+                      Premium Furniture District, <br />
+                      Studio Avenue, Suite 2026
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-4">Connect</h3>
+                    <p className="text-xl text-surface-800 leading-relaxed font-light">
+                      hello@thecomfortpalace.com <br />
+                      +1 (800) COMFORT
+                    </p>
+                  </div>
+                  <div className="pt-8 flex gap-6">
+                    {['Instagram', 'Pinterest', 'LinkedIn'].map(social => (
+                      <a key={social} href="#" className="text-[11px] font-bold uppercase tracking-widest text-primary-800 hover:text-surface-900 transition-colors underline underline-offset-8 decoration-primary-800/20 hover:decoration-surface-900">
+                        {social}
+                      </a>
+                    ))}
+                  </div>
+                </div>
               </div>
-              <h1 className="font-display text-[clamp(2.5rem,6vw,5rem)] text-surface-900 font-light tracking-tighter leading-none mb-12">
-                Let&apos;s discuss <br />
-                <span className="italic text-primary-800">Your Vision.</span>
-              </h1>
-              
-              <div className="space-y-12">
-                <div>
-                  <h3 className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-4">Location</h3>
-                  <p className="text-xl text-surface-800 leading-relaxed font-light">
-                    Premium Furniture District, <br />
-                    Studio Avenue, Suite 2026
-                  </p>
-                </div>
-                <div>
-                  <h3 className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-4">Connect</h3>
-                  <p className="text-xl text-surface-800 leading-relaxed font-light">
-                    hello@thecomfortpalace.com <br />
-                    +1 (800) COMFORT
-                  </p>
-                </div>
-                <div className="pt-8 flex gap-6">
-                  {['Instagram', 'Pinterest', 'LinkedIn'].map(social => (
-                    <a key={social} href="#" className="text-[11px] font-bold uppercase tracking-widest text-primary-800 hover:text-surface-900 transition-colors underline underline-offset-8 decoration-primary-800/20 hover:decoration-surface-900">
-                      {social}
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </div>
+            </Reveal>
 
             {/* Form Column */}
-            <div className="flex-1">
+            <Reveal direction="left" once={true} delay={0.4} distance="80px" className="flex-1">
               <div className="bg-white rounded-[4rem] p-10 lg:p-16 shadow-2xl border border-surface-200/60 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-40 h-40 bg-primary-800/5 rounded-full blur-3xl -z-0"></div>
                 
@@ -176,7 +179,7 @@ export default function ContactPage() {
                     <button 
                       type="submit" 
                       disabled={status === 'submitting'}
-                      className={`w-full py-6 rounded-3xl font-bold uppercase tracking-widest transition-all duration-500 ${status === 'submitting' ? 'bg-surface-200 text-surface-400 cursor-not-allowed' : 'bg-primary-900 text-white hover:bg-surface-900 shadow-xl hover:shadow-2xl active:scale-95'}`}
+                      className={`w-full py-6 rounded-3xl font-bold uppercase tracking-widest transition-all duration-500 ${status === 'submitting' ? 'bg-surface-200 text-surface-400 cursor-not-allowed' : 'bg-primary-900 text-white hover:bg-primary-600 shadow-xl hover:shadow-2xl active:scale-95'}`}
                     >
                       {status === 'submitting' ? (
                         <span className="flex items-center justify-center gap-3">
@@ -193,8 +196,57 @@ export default function ContactPage() {
                   </form>
                 )}
               </div>
-            </div>
+            </Reveal>
           </div>
+        </div>
+      </section>
+
+      {/* Map Placeholder Section */}
+      <section className="w-full pb-24 px-fluid-md lg:px-fluid-lg">
+        <div className="mx-auto max-w-[1400px]">
+          <Reveal delay={0.2} direction="up" distance="40px">
+            <div className="relative w-full h-[450px] bg-white rounded-[3rem] lg:rounded-[4rem] overflow-hidden border border-surface-200/60 shadow-2xl group">
+               {/* Architectural Grid Overlay */}
+               <div className="absolute inset-0 opacity-[0.02] bg-[url('https://www.transparenttextures.com/patterns/graphy.png')] pointer-events-none"></div>
+               
+               {/* Subtle Gradient Accent */}
+               <div className="absolute inset-0 bg-gradient-to-br from-primary-800/5 via-transparent to-transparent"></div>
+  
+               {/* Animated Centerpiece */}
+               <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-12 relative z-10">
+                  <div className="relative mb-8">
+                    {/* Pulsing ring */}
+                    <div className="absolute inset-0 rounded-full bg-primary-800/10 animate-ping scale-150 opacity-20"></div>
+                    <div className="w-20 h-20 bg-surface-50 rounded-full flex items-center justify-center shadow-xl relative z-10 border border-surface-100 group-hover:scale-110 transition-transform duration-700 ease-apex-expo">
+                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="oklch(var(--color-primary-800))" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+                        <circle cx="12" cy="10" r="3" />
+                      </svg>
+                    </div>
+                  </div>
+  
+                  <div className="max-w-md">
+                    <h3 className="text-3xl font-display font-light text-surface-900 mb-4 tracking-tighter leading-none">
+                      Location <span className="italic text-primary-800">Reveal Soon.</span>
+                    </h3>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-surface-400 mb-8 max-w-xs mx-auto leading-relaxed">
+                      We are currently curating a high-performance space for your personal consultation.
+                    </p>
+                    
+                    {/* Technical Coordinates Decor */}
+                    <div className="flex items-center justify-center gap-8 pt-8 border-t border-surface-100/60">
+                      <div className="text-[9px] font-mono uppercase tracking-widest text-surface-300">Lat: --.----</div>
+                      <div className="w-1 h-1 rounded-full bg-primary-800/20"></div>
+                      <div className="text-[9px] font-mono uppercase tracking-widest text-surface-300">Long: --.----</div>
+                    </div>
+                  </div>
+               </div>
+               
+               {/* Decorative Corner Elements */}
+               <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-primary-800/5 rounded-full blur-3xl"></div>
+               <div className="absolute -top-10 -left-10 w-32 h-32 bg-primary-800/5 rounded-full blur-2xl"></div>
+            </div>
+          </Reveal>
         </div>
       </section>
     </div>
