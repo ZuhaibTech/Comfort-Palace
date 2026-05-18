@@ -85,7 +85,6 @@ export default function Footer() {
             <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-surface-900 border-b border-surface-200 pb-2">Experience</h3>
             <ul className="flex flex-col gap-3">
               <li><Link href="/collection" className="text-fluid-sm text-surface-500 hover:text-primary-800 transition-colors">Collections</Link></li>
-              <li><Link href="/gallery" className="text-fluid-sm text-surface-500 hover:text-primary-800 transition-colors">Gallery</Link></li>
             </ul>
           </div>
         </div>
