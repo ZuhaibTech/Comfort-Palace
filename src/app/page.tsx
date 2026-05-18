@@ -2,6 +2,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import Reveal from '@/components/motion/Reveal';
+import HeroShowcase from '@/components/HeroShowcase';
 
 export default function Home() {
   return (
@@ -38,52 +39,9 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Right Image Area (Asymmetrical Editorial Layout) */}
-        <div className="w-full lg:w-7/12 relative h-[60dvh] lg:h-[80dvh] mt-10 lg:mt-0 flex items-end justify-end group z-10">
-          
-          {/* Main Large Image */}
-          <div className="relative w-full lg:w-[90%] h-full rounded-tl-[8rem] lg:rounded-tl-[16rem] rounded-bl-2xl rounded-tr-2xl rounded-br-2xl overflow-hidden shadow-2xl">
-            <Image 
-              src="/images/interior-of-a-rich-house-cozy-living-room-2025-03-25-15-21-37-utc.jpg" 
-              alt="Premium Furniture Design" 
-              fill 
-              className="object-cover transition-transform duration-[3s] ease-out group-hover:scale-105"
-              priority
-            />
-            {/* Overlay Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-surface-900/40 via-transparent to-transparent"></div>
-          </div>
+        {/* Right Image Area (Asymmetrical Editorial Layout) - Dynamic */}
+        <HeroShowcase />
 
-          {/* Floating Secondary Image (The Editorial Touch) */}
-          <div className="absolute left-0 bottom-[10%] w-[45%] lg:w-[40%] aspect-[3/4] rounded-tr-[5rem] rounded-bl-2xl rounded-br-2xl rounded-tl-2xl overflow-hidden shadow-2xl border-4 border-white translate-y-10 group-hover:translate-y-0 transition-transform duration-[1.5s] ease-out z-20 hidden md:block">
-             <Image 
-              src="/images/white-leather-sofa-against-a-wooden-wall-in-a-cont-2025-02-11-19-44-23-utc.jpg" 
-              alt="Detail Shot" 
-              fill 
-              className="object-cover"
-            />
-          </div>
-
-          {/* Floating Accent Badge */}
-          <div className="absolute top-[10%] lg:top-[5%] right-5 lg:right-10 w-28 h-28 lg:w-32 lg:h-32 bg-white rounded-full flex flex-col items-center justify-center shadow-xl z-30">
-            <svg viewBox="0 0 100 100" className="w-full h-full text-surface-900 animate-[spin_20s_linear_infinite]">
-              <path id="curve" d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" fill="transparent"/>
-              <text className="text-[11px] font-bold uppercase tracking-[0.2em] fill-current">
-                <textPath href="#curve" startOffset="0%">• premium artisan quality • comfort palace</textPath>
-              </text>
-            </svg>
-            <div className="absolute inset-0 flex items-center justify-center p-6">
-               <div className="relative w-full h-full">
-                 <Image 
-                   src="/Logo/Logo.png" 
-                   alt="Logo Icon" 
-                   fill 
-                   className="object-contain"
-                 />
-               </div>
-            </div>
-          </div>
-        </div>
       </section>
 
 
