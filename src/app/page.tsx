@@ -21,13 +21,13 @@ export default function Home() {
           </div>
           
           <h1 className="text-surface-900 text-[clamp(3rem,5vw+1.5rem,5.5rem)] font-display text-balance leading-[0.95] tracking-tighter mb-fluid-sm translate-y-[-30px] opacity-0 animate-[revealUp_0.8s_0.4s_forwards]">
-            Artisan <br/>
-            <span className="italic font-light text-primary-800">Crafted.</span> <br/>
-            Timeless.
+            Premium <br/>
+            <span className="italic font-light text-primary-800">Furniture</span> <br/>
+            Collection
           </h1>
           
           <p className="text-surface-500 text-fluid-base max-w-md font-light leading-relaxed mb-fluid-md translate-y-[-20px] opacity-0 animate-[revealUp_0.8s_0.6s_forwards]">
-            Experience the intersection of architectural precision and organic comfort. Our collection elevates everyday spaces into living galleries.
+            Experience timeless comfort with furniture crafted for modern living. Elegant designs, premium quality, and lasting impressions for every space.
           </p>
           
           <div className="flex items-center gap-6 translate-y-[-10px] opacity-0 animate-[revealUp_0.8s_0.8s_forwards]">
