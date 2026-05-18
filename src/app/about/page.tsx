@@ -5,8 +5,8 @@ import Reveal from '@/components/motion/Reveal';
 export default function AboutPage() {
   const values = [
     { title: 'Craftsmanship', desc: 'Every piece is a testament to timeless techniques merged with modern precision.' },
-    { title: 'Innovation', desc: 'Pushing the boundaries of ergonomic design and material science.' },
-    { title: 'Heritage', desc: 'Built on a foundation of quality that spans generations of comfort.' },
+    { title: 'Ergonomic', desc: 'Pushing the boundaries of ergonomic design and material science.' },
+    { title: 'Heritage', desc: 'Almost three and a half decades of trusted quality and timeless comfort.' },
   ];
 
   return (
@@ -82,18 +82,7 @@ export default function AboutPage() {
                 <h2 className="font-display text-5xl font-light text-surface-900 mb-8 leading-tight">A legacy of <span className="italic">uncompromising</span> standards.</h2>
                 <div className="space-y-6 text-surface-600 text-lg leading-relaxed">
                   <p>Comfort Palace isn't just a furniture brand; it's a commitment to the art of living well. Every curve, material choice, and joint is analyzed for both durability and aesthetic harmony.</p>
-                  <p>From our premium deep teal palettes to the hand-selected timber, we ensure that every interaction with our pieces feels like a return to absolute tranquility.</p>
-                </div>
-                <div className="mt-12 flex gap-8">
-                  <div>
-                    <div className="text-3xl font-display text-primary-800 mb-1">500+</div>
-                    <div className="text-[10px] font-bold uppercase tracking-widest text-surface-400">Unique Designs</div>
-                  </div>
-                  <div className="w-px h-12 bg-surface-200"></div>
-                  <div>
-                    <div className="text-3xl font-display text-primary-800 mb-1">2026</div>
-                    <div className="text-[10px] font-bold uppercase tracking-widest text-surface-400">Launch Year</div>
-                  </div>
+                  <p>From carefully selected materials to expertly crafted finishes, every detail is designed to bring lasting comfort, elegance, and warmth into your home.</p>
                 </div>
               </div>
             </Reveal>

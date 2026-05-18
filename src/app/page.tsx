@@ -86,24 +86,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 2. STATS / TRUST BAR */}
-      <section className="w-full py-fluid-md px-fluid-md lg:px-fluid-lg border-b border-surface-200/40 bg-white/50 backdrop-blur-sm">
-        <div className="mx-auto max-w-[1400px] flex flex-wrap justify-between items-center gap-fluid-md">
-          {[
-            { label: 'Founded', value: '2012' },
-            { label: 'Crafted Pieces', value: '14k+' },
-            { label: 'Global Studios', value: '08' },
-            { label: 'Materials', value: 'Sustainably Sourced' }
-          ].map((stat, i) => (
-            <Reveal key={i} delay={i * 0.1} distance="20px">
-              <div className="flex flex-col">
-                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-surface-400 mb-1">{stat.label}</span>
-                <span className="text-fluid-base font-display text-surface-900 font-light">{stat.value}</span>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
 
       {/* 3. CATEGORIES: THE GRID SYSTEM */}
       <section className="w-full py-fluid-xl px-fluid-md lg:px-fluid-lg bg-surface-50">
@@ -126,10 +108,14 @@ export default function Home() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
             {[
-              { id: '01', name: 'Chair', img: '/uploads/product-1761200640202-452760173.jpg' },
-              { id: '02', name: 'Side Drawers', img: '/uploads/product-1761200725499-128002699.jpg' },
-              { id: '03', name: 'Lamp', img: '/uploads/product-1761213277130-473371506.jpg' },
-              { id: '04', name: 'Side Table', img: '/uploads/product-1757443197145-250697742.jpg' }
+              { id: '01', name: 'Sofa', img: '/images/Sofa.jpg' },
+              { id: '02', name: 'Bed', img: '/images/Double Bed.jpg' },
+              { id: '03', name: 'Dining Table', img: '/images/Dining Table.jpg' },
+              { id: '04', name: 'Chair', img: '/images/WoodenChairs.jpg' },
+              { id: '05', name: 'Center Table', img: '/Gallery/Gallery (14).jpeg' },
+              { id: '06', name: 'Consoles', img: '/images/Consoles.jpg' },
+              { id: '07', name: 'Wall Mirror Antique', img: '/images/Wallmirror.jpg' },
+              { id: '08', name: 'Side Table', img: '/images/SideTables.jpg' }
             ].map((cat, i) => (
               <Reveal key={cat.id} delay={0.2 + (i * 0.15)} distance="40px">
                 <Link href={`/collection?category=${cat.name.toLowerCase().replace(' ', '-')}`} className="group relative aspect-[3/4] flex flex-col pt-6 px-6 transition-transform duration-700 hover:-translate-y-2">
@@ -185,11 +171,11 @@ export default function Home() {
                 </p>
               </Reveal>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                 {[
-                  { title: 'Premium Timber', desc: 'Hand-selected sustainable hardwoods.' },
+                  { title: 'premium wood furniture', desc: 'Hand-selected sustainable hardwoods.' },
                   { title: 'Ergonomic Design', desc: 'Engineered for the human form.' },
-                  { title: 'Luxury Finishes', desc: 'Bespoke textures and palettes.' },
+                  { title: 'Luxury Finishes', desc: 'At Bespoke, we use premium-based polish.' },
                   { title: 'Direct Access', desc: 'Studio quality, accessible pricing.' }
                 ].map((item, i) => (
                   <Reveal key={item.title} delay={0.4 + (i * 0.1)} distance="30px">
@@ -248,22 +234,6 @@ export default function Home() {
                   We believe true premium quality lies in the details that are often overlooked. Every joint, every finish, and every silhouette is analyzed through a lens of technical excellence.
                 </p>
               </Reveal>
-              <div className="space-y-fluid-xs">
-                {[
-                  { title: 'Finite Element Analysis', desc: 'Ensuring structural integrity for generations.' },
-                  { title: 'Bespoke Metallurgy', desc: 'Custom alloys developed in our private foundries.' },
-                  { title: 'Optical Clarity Glass', desc: 'Precision engineered surfaces with zero distortion.' }
-                ].map((item, i) => (
-                  <Reveal key={i} direction="right" delay={0.4 + (i * 0.1)} distance="40px">
-                    <div className="flex gap-fluid-xs border-l border-surface-200 pl-fluid-xs hover:border-primary-800 transition-colors cursor-default group">
-                      <div>
-                        <h4 className="text-surface-900 text-fluid-sm font-bold uppercase tracking-widest group-hover:text-primary-800 transition-colors">{item.title}</h4>
-                        <p className="text-surface-500 text-fluid-xs font-light">{item.desc}</p>
-                      </div>
-                    </div>
-                  </Reveal>
-                ))}
-              </div>
             </div>
             <div className="lg:col-span-7 flex gap-fluid-3xs">
                {/* Left Column */}

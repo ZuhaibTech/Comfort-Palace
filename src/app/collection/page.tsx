@@ -108,6 +108,32 @@ export default function CollectionPage() {
     fetchProducts();
   }, []);
 
+  // Handle deep-linking from homepage categories
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const catParam = params.get('category');
+      if (catParam) {
+        const mapping: { [key: string]: string } = {
+          'sofa': 'Sofa',
+          'bed': 'Bed',
+          'dining-table': 'Dining Table',
+          'chair': 'Chair',
+          'center-table': 'Center Table',
+          'consoles': 'Consoles',
+          'wall-mirror-antique': 'Wall Mirror Antique',
+          'side-table': 'Side Table'
+        };
+        const mappedFilter = mapping[catParam.toLowerCase()];
+        if (mappedFilter) {
+          setActiveFilter(mappedFilter);
+        } else {
+          setActiveFilter(catParam.charAt(0).toUpperCase() + catParam.slice(1));
+        }
+      }
+    }
+  }, [loading]);
+
   // Merge backend products + gallery items
   const allProducts: Product[] = [...backendProducts, ...galleryCollectionItems];
 
@@ -117,7 +143,26 @@ export default function CollectionPage() {
   // Filter products
   const filteredProducts = activeFilter === 'All'
     ? allProducts
-    : allProducts.filter(p => p.category?.toLowerCase() === activeFilter.toLowerCase());
+    : allProducts.filter(p => {
+        const cat = p.category?.toLowerCase() || '';
+        const name = p.name?.toLowerCase() || '';
+        const filter = activeFilter.toLowerCase();
+        
+        // Direct category match
+        if (cat === filter) return true;
+        
+        // Custom subcategory matches
+        if (filter === 'sofa') return name.includes('sofa') || cat === 'living room';
+        if (filter === 'bed') return name.includes('bed') || cat === 'bedroom';
+        if (filter === 'dining table') return name.includes('dining') || name.includes('dinner') || cat === 'dining sets';
+        if (filter === 'chair') return name.includes('chair') || name.includes('lounge') || cat === 'seating';
+        if (filter === 'center table') return name.includes('center table') || name.includes('coffee table') || cat === 'tables';
+        if (filter === 'consoles') return name.includes('console') || cat === 'tables';
+        if (filter === 'wall mirror antique') return name.includes('mirror') || name.includes('wallmirror') || cat === 'decor';
+        if (filter === 'side table') return name.includes('side table') || name.includes('sidetables') || cat === 'tables';
+        
+        return false;
+      });
 
   const visibleItems = filteredProducts.slice(0, visibleCount);
   const hasMore = visibleCount < filteredProducts.length;
