@@ -45,7 +45,7 @@ export default function AboutPage() {
       </section>
 
       {/* The Values Grid */}
-      <section className="w-full py-24 px-fluid-md lg:px-fluid-lg bg-white border-y border-surface-200/60">
+      <section className="w-full py-24 px-fluid-md lg:px-fluid-lg bg-surface-50 border-y border-surface-200/60">
         <div className="mx-auto max-w-[1400px]">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16 lg:gap-24">
             {values.map((v, i) => (
@@ -91,12 +91,12 @@ export default function AboutPage() {
       </section>
 
       {/* CTA */}
-      <section className="w-full py-24 px-fluid-md lg:px-fluid-lg bg-primary-900 text-white text-center">
+      <section className="w-full py-24 px-fluid-md lg:px-fluid-lg bg-primary-900 text-surface-50 text-center">
         <Reveal delay={0.2} direction="up" distance="40px">
           <h2 className="font-display text-4xl font-light mb-12">Discover our curated selection.</h2>
           <Link 
             href="/collection" 
-            className="btn-apex relative bg-white text-primary-900 px-12 py-5 text-sm group overflow-hidden inline-flex items-center justify-center gap-3 transition-all duration-500 shadow-xl hover:shadow-2xl active:scale-95"
+            className="btn-apex relative bg-surface-50 text-primary-900 px-12 py-5 text-sm group overflow-hidden inline-flex items-center justify-center gap-3 transition-all duration-500 shadow-xl hover:shadow-2xl active:scale-95"
           >
             {/* Animated Background Overlay */}
             <span className="absolute inset-0 bg-primary-50 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out"></span>

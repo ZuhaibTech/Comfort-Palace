@@ -30,7 +30,7 @@ export default function WhyChoosePage() {
   ];
 
   return (
-    <div className="flex flex-col w-full bg-white min-h-screen font-sans pt-[12dvh]">
+    <div className="flex flex-col w-full bg-surface-50 min-h-screen font-sans pt-[12dvh]">
       {/* Dynamic Header */}
       <section className="w-full py-24 px-fluid-md lg:px-fluid-lg bg-surface-50">
         <div className="mx-auto max-w-[1400px] text-center">
@@ -84,20 +84,20 @@ export default function WhyChoosePage() {
       <section className="w-full py-32 px-fluid-md lg:px-fluid-lg mt-24">
         <div className="mx-auto max-w-[1400px] bg-surface-900 rounded-[4rem] p-16 lg:p-24 relative overflow-hidden text-center">
           <div className="absolute top-0 right-0 w-96 h-96 bg-primary-800/20 rounded-full blur-[120px] -z-10"></div>
-          <h2 className="text-white font-display text-4xl lg:text-5xl font-light mb-12">Built for life. <span className="italic text-primary-300">Guaranteed for comfort.</span></h2>
-          <div className="flex flex-wrap justify-center gap-12 text-white/60">
+          <h2 className="text-surface-50 font-display text-4xl lg:text-5xl font-light mb-12">Built for life. <span className="italic text-primary-300">Guaranteed for comfort.</span></h2>
+          <div className="flex flex-wrap justify-center gap-12 text-surface-50/60">
             <div className="flex flex-col items-center gap-2">
-              <span className="text-white font-bold text-xl uppercase tracking-tighter">10 Year</span>
+              <span className="text-surface-50 font-bold text-xl uppercase tracking-tighter">10 Year</span>
               <span className="text-[10px] uppercase tracking-widest">Warranty</span>
             </div>
-            <div className="w-px h-12 bg-white/10 hidden md:block"></div>
+            <div className="w-px h-12 bg-surface-50/10 hidden md:block"></div>
             <div className="flex flex-col items-center gap-2">
-              <span className="text-white font-bold text-xl uppercase tracking-tighter">Global</span>
+              <span className="text-surface-50 font-bold text-xl uppercase tracking-tighter">Global</span>
               <span className="text-[10px] uppercase tracking-widest">Shipping</span>
             </div>
-            <div className="w-px h-12 bg-white/10 hidden md:block"></div>
+            <div className="w-px h-12 bg-surface-50/10 hidden md:block"></div>
             <div className="flex flex-col items-center gap-2">
-              <span className="text-white font-bold text-xl uppercase tracking-tighter">Eco-Certified</span>
+              <span className="text-surface-50 font-bold text-xl uppercase tracking-tighter">Eco-Certified</span>
               <span className="text-[10px] uppercase tracking-widest">Materials</span>
             </div>
           </div>
@@ -106,7 +106,7 @@ export default function WhyChoosePage() {
 
       {/* Final CTA */}
       <section className="w-full py-24 text-center">
-        <Link href="/collection" className="btn-apex bg-primary-800 text-white hover:bg-surface-900 px-16 py-6 text-sm">
+        <Link href="/collection" className="btn-apex bg-primary-800 text-surface-50 hover:bg-surface-900 dark:bg-primary-100 dark:text-surface-900 dark:hover:bg-primary-200 px-16 py-6 text-sm">
           Experience the Difference
         </Link>
       </section>

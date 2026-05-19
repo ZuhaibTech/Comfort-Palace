@@ -222,7 +222,7 @@ export default function CollectionPage() {
   };
 
   return (
-    <div className="flex flex-col w-full bg-[#f8f7f4] min-h-screen font-sans">
+    <div className="flex flex-col w-full bg-surface-50 min-h-screen font-sans">
 
       {/* Editorial Header Section */}
       <section className="w-full pt-32 lg:pt-48 pb-20 px-6 lg:px-12 overflow-hidden">
@@ -251,7 +251,7 @@ export default function CollectionPage() {
                     onClick={() => handleFilterChange(tab)}
                     className={`px-5 py-2 rounded-full text-[13px] font-medium tracking-wide transition-all duration-300 ${
                       activeFilter === tab
-                        ? 'bg-primary-800 text-white shadow-md'
+                        ? 'bg-primary-800 text-surface-50 shadow-md'
                         : 'bg-transparent text-surface-600 hover:bg-surface-200 border border-surface-300'
                     }`}
                   >
@@ -319,7 +319,7 @@ export default function CollectionPage() {
                           <div className={`relative w-full ${layout.aspect} ${bg} rounded-[2rem] lg:rounded-[3rem] overflow-hidden p-6 lg:p-10 transition-all duration-700 hover:shadow-2xl hover:-translate-y-2`}>
   
                             {/* Floating Frosted Glass Badge */}
-                            <div className="absolute top-6 right-6 lg:top-10 lg:right-10 z-30 bg-white/30 backdrop-blur-xl border border-white/40 px-5 py-2 rounded-full text-[11px] uppercase tracking-[0.15em] text-surface-900 font-semibold shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
+                            <div className="absolute top-6 right-6 lg:top-10 lg:right-10 z-30 bg-surface-50/30 backdrop-blur-xl border border-surface-50/40 px-5 py-2 rounded-full text-[11px] uppercase tracking-[0.15em] text-surface-900 font-semibold shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
                               {product.category || 'Furniture'}
                             </div>
   
@@ -339,17 +339,17 @@ export default function CollectionPage() {
                             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
   
                             {/* Intricate Bottom-Left Cutout */}
-                            <div className="absolute bottom-0 left-0 w-28 h-24 bg-[#f8f7f4] rounded-tr-[2.5rem] flex items-end justify-start pb-6 pl-8 z-20">
+                            <div className="absolute bottom-0 left-0 w-28 h-24 bg-surface-50 rounded-tr-[2.5rem] flex items-end justify-start pb-6 pl-8 z-20">
                               <span className="text-surface-900 text-3xl font-medium leading-none">{displayIndex}</span>
                               {/* Outer curve top */}
-                              <div className="absolute -top-10 left-0 w-10 h-10 bg-transparent rounded-bl-[2.5rem] shadow-[-20px_20px_0_20px_#f8f7f4]" />
+                              <div className="absolute -top-10 left-0 w-10 h-10 bg-transparent rounded-bl-[2.5rem] shadow-[-20px_20px_0_20px_oklch(var(--color-surface-50))]" />
                               {/* Outer curve right */}
-                              <div className="absolute bottom-0 -right-10 w-10 h-10 bg-transparent rounded-bl-[2.5rem] shadow-[-20px_20px_0_20px_#f8f7f4]" />
+                              <div className="absolute bottom-0 -right-10 w-10 h-10 bg-transparent rounded-bl-[2.5rem] shadow-[-20px_20px_0_20px_oklch(var(--color-surface-50))]" />
                             </div>
   
                             {/* Hover CTA */}
                             <div className="absolute bottom-8 right-8 z-20 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-                              <span className="bg-white/90 backdrop-blur-md text-surface-900 text-[10px] font-bold uppercase tracking-widest px-5 py-2.5 rounded-full shadow-lg">
+                              <span className="bg-surface-50/90 backdrop-blur-md text-surface-900 text-[10px] font-bold uppercase tracking-widest px-5 py-2.5 rounded-full shadow-lg">
                                 Inquire Now
                               </span>
                             </div>
@@ -386,7 +386,7 @@ export default function CollectionPage() {
                       onClick={handleLoadMore}
                       className="relative group overflow-hidden bg-transparent border border-surface-900 text-surface-900 px-12 py-5 rounded-full font-medium text-sm transition-colors"
                     >
-                      <span className="relative z-10 group-hover:text-white transition-colors duration-500">Load More Collection</span>
+                      <span className="relative z-10 group-hover:text-surface-50 transition-colors duration-500">Load More Collection</span>
                       <div className="absolute inset-0 bg-surface-900 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out z-0" />
                     </button>
                   )}

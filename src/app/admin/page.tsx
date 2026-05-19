@@ -45,23 +45,23 @@ export default function Admin() {
     <div className="flex flex-col w-full bg-surface-50 min-h-screen font-sans pt-[12dvh]">
       
       {/* 1. ADMIN HEADER */}
-      <section className="w-full py-fluid-md px-fluid-md lg:px-fluid-lg bg-surface-900 border-b border-white/5">
+      <section className="w-full py-fluid-md px-fluid-md lg:px-fluid-lg bg-surface-900 border-b border-surface-50/5">
         <div className="mx-auto max-w-[1400px] flex flex-col md:flex-row justify-between items-start md:items-center gap-fluid-xs">
           <div>
             <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-primary-400 mb-2">
               <span>Apex / Control</span>
               <span>/</span>
-              <span className="text-white">v4.0.0</span>
+              <span className="text-surface-50">v4.0.0</span>
             </div>
-            <h1 className="text-fluid-2xl font-display font-light text-white tracking-tighter">System Orchestration</h1>
+            <h1 className="text-fluid-2xl font-display font-light text-surface-50 tracking-tighter">System Orchestration</h1>
           </div>
           
           <div className="flex gap-fluid-3xs">
-             <div className="glass-dark px-4 py-2 rounded-fluid-3xs border border-white/10 flex flex-col">
+             <div className="glass-dark px-4 py-2 rounded-fluid-3xs border border-surface-50/10 flex flex-col">
                <span className="text-[8px] font-bold uppercase tracking-widest text-surface-400">System Load</span>
                <span className="text-fluid-xs text-primary-400 font-technical">0.042 ms</span>
              </div>
-             <div className="glass-dark px-4 py-2 rounded-fluid-3xs border border-white/10 flex flex-col">
+             <div className="glass-dark px-4 py-2 rounded-fluid-3xs border border-surface-50/10 flex flex-col">
                <span className="text-[8px] font-bold uppercase tracking-widest text-surface-400">Database</span>
                <span className="text-fluid-xs text-green-400 font-technical">Encrypted</span>
              </div>
@@ -70,7 +70,7 @@ export default function Admin() {
       </section>
 
       {/* 2. TAB NAVIGATION */}
-      <section className="w-full bg-white border-b border-surface-200/40 px-fluid-md lg:px-fluid-lg">
+      <section className="w-full bg-surface-50 border-b border-surface-200/40 px-fluid-md lg:px-fluid-lg">
         <div className="mx-auto max-w-[1400px] flex gap-fluid-md">
           {[
             { id: 'inventory', label: 'Inventory / Units' },
@@ -150,12 +150,12 @@ export default function Admin() {
                      { label: 'Units Transacted', value: sales.length, color: 'text-surface-900' },
                      { label: 'Pending Logistics', value: '04', color: 'text-accent-600' }
                    ].map((stat, i) => (
-                     <div key={i} className="bg-white p-fluid-md rounded-fluid-sm border border-surface-200 shadow-sm">
+                     <div key={i} className="bg-surface-50 p-fluid-md rounded-fluid-sm border border-surface-200 shadow-sm">
                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-surface-400 mb-2 block">{stat.label}</span>
                        <span className={`text-fluid-xl font-display font-light ${stat.color}`}>{stat.value}</span>
                      </div>
                    ))}
-                   <div className="md:col-span-3 bg-white p-fluid-md rounded-fluid-sm border border-surface-200">
+                   <div className="md:col-span-3 bg-surface-50 p-fluid-md rounded-fluid-sm border border-surface-200">
                       <p className="text-surface-400 text-center py-20 italic">Global sales visualization module initializing...</p>
                    </div>
                 </div>
@@ -164,7 +164,7 @@ export default function Admin() {
               {activeTab === 'feedback' && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-fluid-sm">
                   {testimonials.map((t: any) => (
-                    <div key={t.id} className="bg-white p-fluid-sm rounded-fluid-sm border border-surface-200 flex gap-fluid-xs">
+                    <div key={t.id} className="bg-surface-50 p-fluid-sm rounded-fluid-sm border border-surface-200 flex gap-fluid-xs">
                       <div className="w-12 h-12 bg-surface-100 rounded-full flex-shrink-0"></div>
                       <div className="flex-1">
                          <div className="flex justify-between">

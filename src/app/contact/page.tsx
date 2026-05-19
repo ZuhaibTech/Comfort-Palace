@@ -91,7 +91,7 @@ export default function ContactPage() {
 
             {/* Form Column */}
             <Reveal direction="left" once={true} delay={0.4} distance="80px" className="flex-1">
-              <div className="bg-white rounded-[4rem] p-10 lg:p-16 shadow-2xl border border-surface-200/60 relative overflow-hidden">
+              <div className="bg-surface-50 rounded-[4rem] p-10 lg:p-16 shadow-2xl border border-surface-200/60 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-40 h-40 bg-primary-800/5 rounded-full blur-3xl -z-0"></div>
                 
                 {status === 'success' ? (
@@ -109,7 +109,7 @@ export default function ContactPage() {
                     </p>
                     <button
                       onClick={() => setStatus('idle')}
-                      className="btn-apex bg-primary-800 text-white hover:bg-surface-900 px-8 py-3 text-[10px]"
+                      className="btn-apex bg-primary-800 text-surface-50 hover:bg-surface-900 px-8 py-3 text-[10px]"
                     >
                       Send Another Inquiry
                     </button>
@@ -122,7 +122,7 @@ export default function ContactPage() {
                         <input 
                           type="text" 
                           required
-                          className="w-full bg-surface-50 border-none rounded-2xl px-6 py-4 text-surface-900 focus:ring-2 focus:ring-primary-800/20 outline-none transition-all"
+                          className="w-full bg-surface-100 border border-surface-200/80 rounded-2xl px-6 py-4 text-surface-900 focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all"
                           placeholder="John Doe"
                           value={formData.name}
                           onChange={e => setFormData({...formData, name: e.target.value})}
@@ -133,7 +133,7 @@ export default function ContactPage() {
                         <input 
                           type="email" 
                           required
-                          className="w-full bg-surface-50 border-none rounded-2xl px-6 py-4 text-surface-900 focus:ring-2 focus:ring-primary-800/20 outline-none transition-all"
+                          className="w-full bg-surface-100 border border-surface-200/80 rounded-2xl px-6 py-4 text-surface-900 focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all"
                           placeholder="john@example.com"
                           value={formData.email}
                           onChange={e => setFormData({...formData, email: e.target.value})}
@@ -146,7 +146,7 @@ export default function ContactPage() {
                       <input 
                         type="tel" 
                         required
-                        className="w-full bg-surface-50 border-none rounded-2xl px-6 py-4 text-surface-900 focus:ring-2 focus:ring-primary-800/20 outline-none transition-all"
+                        className="w-full bg-surface-100 border border-surface-200/80 rounded-2xl px-6 py-4 text-surface-900 focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all"
                         placeholder="+91 XXXXX XXXXX"
                         value={formData.phone}
                         onChange={e => setFormData({...formData, phone: e.target.value})}
@@ -158,7 +158,7 @@ export default function ContactPage() {
                       <textarea 
                         rows={5}
                         required
-                        className="w-full bg-surface-50 border-none rounded-2xl px-6 py-4 text-surface-900 focus:ring-2 focus:ring-primary-800/20 outline-none transition-all resize-none"
+                        className="w-full bg-surface-100 border border-surface-200/80 rounded-2xl px-6 py-4 text-surface-900 focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all resize-none"
                         placeholder="Tell us about your space, preferred furniture styles, dimensions..."
                         value={formData.requirement}
                         onChange={e => setFormData({...formData, requirement: e.target.value})}
@@ -179,7 +179,7 @@ export default function ContactPage() {
                     <button 
                       type="submit" 
                       disabled={status === 'submitting'}
-                      className={`w-full py-6 rounded-3xl font-bold uppercase tracking-widest transition-all duration-500 ${status === 'submitting' ? 'bg-surface-200 text-surface-400 cursor-not-allowed' : 'bg-primary-900 text-white hover:bg-primary-600 shadow-xl hover:shadow-2xl active:scale-95'}`}
+                      className={`w-full py-6 rounded-3xl font-bold uppercase tracking-widest transition-all duration-500 ${status === 'submitting' ? 'bg-surface-200 text-surface-400 cursor-not-allowed' : 'bg-primary-900 text-surface-50 hover:bg-primary-600 dark:bg-primary-100 dark:text-surface-900 dark:hover:bg-primary-200 shadow-xl hover:shadow-2xl active:scale-95'}`}
                     >
                       {status === 'submitting' ? (
                         <span className="flex items-center justify-center gap-3">
@@ -205,7 +205,7 @@ export default function ContactPage() {
       <section className="w-full pb-24 px-fluid-md lg:px-fluid-lg">
         <div className="mx-auto max-w-[1400px]">
           <Reveal delay={0.2} direction="up" distance="40px">
-            <div className="relative w-full h-[450px] bg-white rounded-[3rem] lg:rounded-[4rem] overflow-hidden border border-surface-200/60 shadow-2xl group">
+            <div className="relative w-full h-[450px] bg-surface-50 rounded-[3rem] lg:rounded-[4rem] overflow-hidden border border-surface-200/60 shadow-2xl group">
                {/* Architectural Grid Overlay */}
                <div className="absolute inset-0 opacity-[0.02] bg-[url('https://www.transparenttextures.com/patterns/graphy.png')] pointer-events-none"></div>
                

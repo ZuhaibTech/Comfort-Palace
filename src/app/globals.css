@@ -38,6 +38,34 @@
     color: oklch(var(--color-surface-800));
   }
 
+  html.dark {
+    /* Primary: slightly more electric and glowing in dark mode */
+    --color-primary-50: 15% 0.03 160;
+    --color-primary-100: 22% 0.05 160;
+    --color-primary-200: 32% 0.07 160;
+    --color-primary-300: 42% 0.08 160;
+    --color-primary-400: 52% 0.09 160;
+    --color-primary-500: 62% 0.10 160;
+    --color-primary-600: 72% 0.09 160;
+    --color-primary-700: 80% 0.08 160;
+    --color-primary-800: 86% 0.07 160; /* Glowing signature */
+    --color-primary-900: 92% 0.05 160;
+    --color-primary-950: 96% 0.03 160;
+
+    /* Surface: Ultra-premium dark warm slate (obsidian with bronze warmth) */
+    --color-surface-50: 8% 0.01 85;     /* Dark obsidian base */
+    --color-surface-100: 12% 0.01 85;   /* Subtle slate block separation */
+    --color-surface-200: 18% 0.015 85;  /* Soft dark borders */
+    --color-surface-300: 24% 0.015 85;
+    --color-surface-400: 48% 0.02 85;    /* Luxury muted text */
+    --color-surface-500: 62% 0.02 85;
+    --color-surface-600: 74% 0.02 85;
+    --color-surface-700: 86% 0.015 85;  /* Clean high contrast dark text */
+    --color-surface-800: 93% 0.01 85;   /* Body text */
+    --color-surface-900: 97% 0.005 85;  /* Dark high contrast base elements */
+    --color-surface-950: 99% 0.002 85;  /* Crisp accents */
+  }
+
   html, body {
     height: 100%;
     margin: 0;
@@ -51,7 +79,9 @@
 
   body {
     font-family: var(--font-inter), sans-serif;
+    transition: background-color 0.5s cubic-bezier(0.16, 1, 0.3, 1), color 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   }
+
   body ::selection, body::selection {
     background-color: oklch(var(--color-primary-200));
     color: oklch(var(--color-primary-900));
@@ -149,6 +179,19 @@
 
   .mask-radial {
     mask-image: radial-gradient(circle, black, transparent);
+  }
+
+  @keyframes spin-slow {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-spin-slow {
+    animation: spin-slow 15s linear infinite;
   }
 }
 

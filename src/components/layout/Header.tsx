@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import Toogle from './Toogle';
 
 const navItems = [
   { name: 'Home', href: '/' },
@@ -26,7 +27,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="w-full h-[12dvh] glass-light fixed top-0 left-0 z-50 flex items-center justify-between px-fluid-md lg:px-fluid-lg transition-all duration-500 border-b border-surface-200/40">
+      <header className="w-full h-[12dvh] bg-surface-50/80 backdrop-blur-2xl fixed top-0 left-0 z-50 flex items-center justify-between px-fluid-md lg:px-fluid-lg transition-all duration-500 border-b border-surface-200/40">
         {/* Branding: Left Aligned */}
         <Link href="/" className="flex items-center gap-fluid-3xs group">
           <div className="relative h-14 w-56 lg:h-20 lg:w-80 flex items-center transition-transform duration-500 group-hover:scale-105">
@@ -34,7 +35,7 @@ export default function Header() {
               src="/Logo/LOGO main.png" 
               alt="Comfort Palace" 
               fill 
-              className="object-contain object-left"
+              className="object-contain object-left dark:invert"
               priority
             />
           </div>
@@ -54,6 +55,11 @@ export default function Header() {
               </Link>
             ))}
           </nav>
+
+          {/* Theme Toggle */}
+          <div className="flex items-center justify-center">
+            <Toogle />
+          </div>
 
           {/* Hamburger Menu Toggle */}
           <button 
@@ -80,7 +86,7 @@ export default function Header() {
         
         {/* Sidebar Panel */}
         <div 
-          className={`absolute top-0 right-0 h-full w-[85%] max-w-[400px] bg-white shadow-2xl transition-transform duration-700 ease-apex-expo p-10 flex flex-col ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+          className={`absolute top-0 right-0 h-full w-[85%] max-w-[400px] bg-surface-50 shadow-2xl transition-transform duration-700 ease-apex-expo p-10 flex flex-col ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
         >
           {/* Header in Sidebar */}
           <div className="flex items-center justify-between mb-20">

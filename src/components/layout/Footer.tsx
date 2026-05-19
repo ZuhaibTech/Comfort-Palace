@@ -10,12 +10,12 @@ export default function Footer() {
           {/* Brand Identity */}
           <div className="md:col-span-5 flex flex-col items-start gap-fluid-xs">
             <Link href="/" className="flex items-center gap-fluid-3xs group">
-              <div className="relative h-12 w-48 lg:h-16 lg:w-56 flex items-center transition-transform duration-500 group-hover:scale-105 opacity-80 group-hover:opacity-100 mix-blend-multiply">
+              <div className="relative h-12 w-48 lg:h-16 lg:w-56 flex items-center transition-transform duration-500 group-hover:scale-105 opacity-80 group-hover:opacity-100">
                 <Image 
                   src="/Logo/LOGO main.png" 
                   alt="Comfort Palace" 
                   fill 
-                  className="object-contain object-left"
+                  className="object-contain object-left dark:invert"
                 />
               </div>
             </Link>

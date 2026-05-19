@@ -118,7 +118,7 @@ export default function ProductInquiryModal({ product, isOpen, onClose }: Produc
       style={{ backgroundColor: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)' }}
     >
       <div
-        className="relative w-full max-w-[1000px] max-h-[90vh] bg-white rounded-[2rem] md:rounded-[3rem] shadow-2xl overflow-hidden flex flex-col md:flex-row animate-[revealUp_0.5s_ease-out_forwards]"
+        className="relative w-full max-w-[1000px] max-h-[90vh] bg-surface-50 rounded-[2rem] md:rounded-[3rem] shadow-2xl overflow-hidden flex flex-col md:flex-row animate-[revealUp_0.5s_ease-out_forwards]"
       >
         {/* Close Button */}
         <button
@@ -148,7 +148,7 @@ export default function ProductInquiryModal({ product, isOpen, onClose }: Produc
           {/* Product Info Overlay */}
           <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 z-10">
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-[9px] font-bold uppercase tracking-widest text-white/70 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full">
+              <span className="text-[9px] font-bold uppercase tracking-widest text-surface-50/70 bg-surface-50/20 backdrop-blur-md px-3 py-1 rounded-full">
                 {product.category || 'Furniture'}
               </span>
               {product.quantity_in_stock > 0 ? (
@@ -161,16 +161,16 @@ export default function ProductInquiryModal({ product, isOpen, onClose }: Produc
                 </span>
               )}
             </div>
-            <h3 className="text-white text-xl md:text-2xl font-display font-light tracking-tight mb-1">
+            <h3 className="text-surface-50 text-xl md:text-2xl font-display font-light tracking-tight mb-1">
               {product.name}
             </h3>
             <div className="flex items-baseline gap-3">
-              <span className="text-white/50 text-xs font-bold uppercase tracking-widest">
+              <span className="text-surface-50/50 text-xs font-bold uppercase tracking-widest">
                 {product.item_code}
               </span>
             </div>
             {product.description && (
-              <p className="text-white/60 text-sm mt-3 line-clamp-2 leading-relaxed">
+              <p className="text-surface-50/60 text-sm mt-3 line-clamp-2 leading-relaxed">
                 {product.description}
               </p>
             )}
@@ -194,7 +194,7 @@ export default function ProductInquiryModal({ product, isOpen, onClose }: Produc
               </p>
               <button
                 onClick={onClose}
-                className="mt-8 btn-apex bg-primary-800 text-white hover:bg-surface-900 px-8 py-3 text-[10px]"
+                className="mt-8 btn-apex bg-primary-800 text-surface-50 hover:bg-surface-900 px-8 py-3 text-[10px]"
               >
                 Close
               </button>
@@ -225,7 +225,7 @@ export default function ProductInquiryModal({ product, isOpen, onClose }: Produc
                     <input
                       type="text"
                       required
-                      className="w-full bg-surface-50 border border-surface-200 rounded-xl px-5 py-3.5 text-surface-900 text-sm focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/30 outline-none transition-all placeholder:text-surface-300"
+                      className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-5 py-3.5 text-surface-900 text-sm focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all placeholder:text-surface-400"
                       placeholder="Your name"
                       value={formData.name}
                       onChange={e => setFormData({ ...formData, name: e.target.value })}
@@ -238,7 +238,7 @@ export default function ProductInquiryModal({ product, isOpen, onClose }: Produc
                     <input
                       type="tel"
                       required
-                      className="w-full bg-surface-50 border border-surface-200 rounded-xl px-5 py-3.5 text-surface-900 text-sm focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/30 outline-none transition-all placeholder:text-surface-300"
+                      className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-5 py-3.5 text-surface-900 text-sm focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all placeholder:text-surface-400"
                       placeholder="+91 XXXXX XXXXX"
                       value={formData.phone}
                       onChange={e => setFormData({ ...formData, phone: e.target.value })}
@@ -253,7 +253,7 @@ export default function ProductInquiryModal({ product, isOpen, onClose }: Produc
                   <input
                     type="email"
                     required
-                    className="w-full bg-surface-50 border border-surface-200 rounded-xl px-5 py-3.5 text-surface-900 text-sm focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/30 outline-none transition-all placeholder:text-surface-300"
+                    className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-5 py-3.5 text-surface-900 text-sm focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all placeholder:text-surface-400"
                     placeholder="you@example.com"
                     value={formData.email}
                     onChange={e => setFormData({ ...formData, email: e.target.value })}
@@ -267,7 +267,7 @@ export default function ProductInquiryModal({ product, isOpen, onClose }: Produc
                   <textarea
                     rows={4}
                     required
-                    className="w-full bg-surface-50 border border-surface-200 rounded-xl px-5 py-3.5 text-surface-900 text-sm focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/30 outline-none transition-all resize-none placeholder:text-surface-300"
+                    className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-5 py-3.5 text-surface-900 text-sm focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all resize-none placeholder:text-surface-400"
                     placeholder="Tell us about your needs, preferred dimensions, delivery location..."
                     value={formData.requirement}
                     onChange={e => setFormData({ ...formData, requirement: e.target.value })}
@@ -291,7 +291,7 @@ export default function ProductInquiryModal({ product, isOpen, onClose }: Produc
                   className={`w-full py-4 rounded-2xl font-bold uppercase tracking-widest text-[11px] transition-all duration-500 ${
                     status === 'submitting'
                       ? 'bg-surface-200 text-surface-400 cursor-not-allowed'
-                      : 'bg-primary-800 text-white hover:bg-surface-900 shadow-xl hover:shadow-2xl active:scale-[0.98]'
+                      : 'bg-primary-800 text-surface-50 hover:bg-surface-900 dark:bg-primary-100 dark:text-surface-900 dark:hover:bg-primary-200 shadow-xl hover:shadow-2xl active:scale-[0.98]'
                   }`}
                 >
                   {status === 'submitting' ? (

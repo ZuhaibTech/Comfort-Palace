@@ -34,7 +34,7 @@ export default function Home() {
           <div className="flex items-center gap-6 translate-y-[-10px] opacity-0 animate-[revealUp_0.8s_0.8s_forwards]">
             <Link href="/collection" className="btn-apex-primary flex items-center gap-3 group px-10 py-4 text-[10px]">
               Explore Collection
-              <span className="w-8 h-[1px] bg-white transition-all group-hover:w-12 group-hover:translate-x-2"></span>
+              <span className="w-8 h-[1px] bg-surface-50 transition-all group-hover:w-12 group-hover:translate-x-2"></span>
             </Link>
           </div>
         </div>
@@ -92,7 +92,7 @@ export default function Home() {
                   
                   {/* Text Content overlay */}
                   <div className="relative z-10 flex flex-col h-full pointer-events-none">
-                    <h3 className="text-white text-xl font-sans font-normal tracking-wide drop-shadow-sm">{cat.name}</h3>
+                    <h3 className="text-surface-50 text-xl font-sans font-normal tracking-wide drop-shadow-sm">{cat.name}</h3>
                   </div>
 
                   {/* The Inverted Notch at Bottom Left */}
@@ -111,7 +111,7 @@ export default function Home() {
       </section>
 
       {/* 4. WHY CHOOSE US: THE COMFORT ADVANTAGE */}
-      <section className="w-full py-fluid-xl px-fluid-md lg:px-fluid-lg bg-white relative overflow-hidden">
+      <section className="w-full py-fluid-xl px-fluid-md lg:px-fluid-lg bg-surface-50 relative overflow-hidden">
         <div className="mx-auto max-w-[1400px]">
           <div className="flex flex-col lg:flex-row gap-20 items-center">
             <div className="flex-1">
@@ -147,7 +147,7 @@ export default function Home() {
               
               <Reveal delay={0.8}>
                 <div className="mt-16">
-                  <Link href="/why-choose-us" className="btn-apex bg-primary-800 text-white hover:bg-surface-900 px-10 py-4 text-[11px]">
+                  <Link href="/why-choose-us" className="btn-apex bg-primary-800 text-surface-50 hover:bg-surface-900 dark:bg-primary-100 dark:text-surface-900 dark:hover:bg-primary-200 px-10 py-4 text-[11px]">
                     Learn More
                   </Link>
                 </div>
@@ -165,7 +165,7 @@ export default function Home() {
                   />
                 </div>
                 {/* Floating technical tag */}
-                <div className="absolute -bottom-10 -left-10 bg-white p-8 rounded-3xl shadow-xl border border-surface-100 hidden md:block animate-bounce">
+                <div className="absolute -bottom-10 -left-10 bg-surface-50 p-8 rounded-3xl shadow-xl border border-surface-100 hidden md:block animate-bounce">
                   <div className="text-[10px] font-bold text-primary-800 uppercase tracking-widest mb-1">Quality Check</div>
                   <div className="text-surface-900 font-display text-xl">100% Certified</div>
                 </div>
@@ -252,18 +252,18 @@ export default function Home() {
       {/* 6. FINAL CTA: APEX JOIN */}
       <section className="w-full pb-fluid-2xl px-fluid-md lg:px-fluid-lg">
         <Reveal direction="up" distance="60px" delay={0.2}>
-          <div className="mx-auto max-w-[1400px] rounded-fluid-lg overflow-hidden bg-primary-800/60 relative max-h-[80vh] flex items-center justify-center text-center shadow-3xl py-fluid-xl">
+          <div className="mx-auto max-w-[1400px] rounded-fluid-lg overflow-hidden bg-surface-900/60 relative max-h-[80vh] flex items-center justify-center text-center shadow-3xl py-fluid-xl">
             <Image src="/images/Sofa-Elevate.jpeg" fill className="object-cover opacity-40 scale-110 hover:scale-100 transition-transform duration-[3s]" alt="Background" />
             <div className="relative z-10 max-w-2xl mx-auto px-fluid-md">
-              <h2 className="text-white text-fluid-4xl font-display font-light text-balance tracking-tighter mb-fluid-sm">Elevate Your System.</h2>
-              <p className="text-white/70 text-fluid-lg font-light mb-fluid-lg leading-relaxed">
+              <h2 className="text-surface-50 text-fluid-4xl font-display font-light text-balance tracking-tighter mb-fluid-sm">Elevate Your System.</h2>
+              <p className="text-surface-50/70 text-fluid-lg font-light mb-fluid-lg leading-relaxed">
                 Join the Comfort Palace ecosystem and transform your living space into a high-performance environment.
               </p>
               <div className="flex flex-col sm:flex-row gap-fluid-3xs justify-center">
-                <Link href="/collection" className="btn-apex bg-white text-surface-900 hover:bg-accent-500 hover:text-white border-transparent">
+                <Link href="/collection" className="btn-apex bg-surface-50 text-surface-900 hover:bg-accent-500 hover:text-surface-50 border-transparent">
                   Acquire Pieces
                 </Link>
-                <Link href="/contact" className="btn-apex border-white/20 text-white hover:bg-white/10">
+                <Link href="/contact" className="btn-apex border-surface-50/20 text-surface-50 hover:bg-surface-50/10">
                   Studio Inquiry
                 </Link>
               </div>

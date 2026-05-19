@@ -78,7 +78,7 @@ export default function HeroShowcase() {
       </div>
 
       {/* Floating Secondary Image (The Editorial Touch) / Card */}
-      <div className="absolute left-0 bottom-[10%] w-[45%] lg:w-[40%] aspect-[3/4] rounded-tr-[5rem] rounded-bl-2xl rounded-br-2xl rounded-tl-2xl overflow-hidden shadow-2xl border-4 border-white z-20 hidden md:block bg-surface-50 group-hover:-translate-y-2 transition-transform duration-[1.5s] ease-out">
+      <div className="absolute left-0 bottom-[10%] w-[45%] lg:w-[40%] aspect-[3/4] rounded-tr-[5rem] rounded-bl-2xl rounded-br-2xl rounded-tl-2xl overflow-hidden shadow-2xl border-4 border-surface-50 z-20 hidden md:block bg-surface-50 group-hover:-translate-y-2 transition-transform duration-[1.5s] ease-out">
         {showcaseItems.map((item, index) => {
           const isActive = index === activeIndex;
           return (
@@ -94,7 +94,7 @@ export default function HeroShowcase() {
                   className="object-cover"
                 />
               </div>
-              <div className="bg-white p-5 flex flex-col justify-center border-t border-surface-100 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] z-10 relative">
+              <div className="bg-surface-50 p-5 flex flex-col justify-center border-t border-surface-100 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] z-10 relative">
                 <div className="text-[10px] font-bold text-primary-800 uppercase tracking-widest mb-1">{item.category}</div>
                 <h3 className="text-surface-900 font-display text-xl tracking-tight truncate mb-1">{item.name}</h3>
                 <div className="flex items-center mt-2 pt-2 border-t border-surface-100">
@@ -107,7 +107,7 @@ export default function HeroShowcase() {
       </div>
 
       {/* Floating Accent Badge */}
-      <div className="absolute top-[10%] lg:top-[5%] right-5 lg:right-10 w-28 h-28 lg:w-32 lg:h-32 bg-white rounded-full flex flex-col items-center justify-center shadow-xl z-30">
+      <div className="absolute top-[10%] lg:top-[5%] right-5 lg:right-10 w-28 h-28 lg:w-32 lg:h-32 bg-surface-50 rounded-full flex flex-col items-center justify-center shadow-xl z-30">
         <svg viewBox="0 0 100 100" className="w-full h-full text-surface-900 animate-[spin_20s_linear_infinite]">
           <path id="curve" d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" fill="transparent"/>
           <text className="text-[11px] font-bold uppercase tracking-[0.2em] fill-current">
@@ -120,7 +120,7 @@ export default function HeroShowcase() {
                src="/Logo/Logo.png" 
                alt="Logo Icon" 
                fill 
-               className="object-contain"
+               className="object-contain dark:invert"
              />
            </div>
         </div>
@@ -134,8 +134,8 @@ export default function HeroShowcase() {
             onClick={() => setActiveIndex(index)}
             className={`transition-all duration-500 rounded-full ${
               index === activeIndex 
-                ? 'w-8 h-2 bg-white' 
-                : 'w-2 h-2 bg-white/50 hover:bg-white/80'
+                ? 'w-8 h-2 bg-surface-50' 
+                : 'w-2 h-2 bg-surface-50/50 hover:bg-surface-50/80'
             }`}
             aria-label={`Go to slide ${index + 1}`}
           />

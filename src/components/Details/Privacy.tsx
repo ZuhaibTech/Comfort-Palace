@@ -58,7 +58,7 @@ export default function Privacy() {
         </div>
 
         {/* Introduction */}
-        <div className="mb-16 bg-white border border-surface-200/60 p-8 md:p-12 rounded-[2rem] shadow-sm">
+        <div className="mb-16 bg-surface-50 border border-surface-200/60 p-8 md:p-12 rounded-[2rem] shadow-sm">
           <Reveal direction="up" once={true} delay={0.3} distance="40px">
             <h2 className="text-lg font-bold uppercase tracking-wider text-surface-900 mb-4">Introduction</h2>
             <p className="text-surface-600 leading-relaxed text-base">
@@ -72,7 +72,7 @@ export default function Privacy() {
           {sections.map((section, index) => (
             <div 
               key={section.title} 
-              className="bg-white border border-surface-200/60 p-8 md:p-10 rounded-[2rem] shadow-sm transition-all duration-300 hover:shadow-md hover:border-primary-800/30"
+              className="bg-surface-50 border border-surface-200/60 p-8 md:p-10 rounded-[2rem] shadow-sm transition-all duration-300 hover:shadow-md hover:border-primary-800/30"
             >
               <Reveal direction="up" once={true} delay={0.1 * index} distance="30px">
                 <h3 className="text-base font-bold uppercase tracking-widest text-surface-900 mb-4 flex items-center gap-3">
