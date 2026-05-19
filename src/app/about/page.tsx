@@ -33,7 +33,7 @@ export default function AboutPage() {
             <Reveal direction="left" once={true} delay={0.4} distance="100px">
               <div className="relative aspect-video lg:aspect-[4/3] rounded-[3rem] overflow-hidden shadow-2xl">
                 <Image 
-                  src="/images/interior-of-modern-light-bedroom-with-lamps-and-br-2024-11-17-10-48-17-utc.jpg" 
+                  src="/images/Bed-About-1.jpeg" 
                   alt="Our Design Studio" 
                   fill 
                   className="object-cover"
@@ -69,7 +69,7 @@ export default function AboutPage() {
               <div className="relative">
                 <div className="absolute -inset-10 bg-primary-800/5 rounded-full blur-3xl -z-10 animate-pulse"></div>
                 <Image 
-                  src="/images/white-leather-sofa-against-a-wooden-wall-in-a-cont-2025-02-11-19-44-23-utc.jpg" 
+                  src="/images/Sofa-About-2.jpeg" 
                   alt="Signature Piece" 
                   width={800} 
                   height={600} 
