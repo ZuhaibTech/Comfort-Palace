@@ -8,6 +8,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "clean": "npx rimraf .next",
+    "clean:dev": "npx rimraf .next && next dev",
+    "clean:build": "npx rimraf .next && next build",
     "backend": "nodemon src/backend/server.js"
   },
   "keywords": [

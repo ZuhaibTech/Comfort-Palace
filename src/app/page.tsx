@@ -66,14 +66,14 @@ export default function Home() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
             {[
-              { id: '01', name: 'Sofa', img: '/images/Sofa.jpg' },
-              { id: '02', name: 'Bed', img: '/images/Double Bed.jpg' },
-              { id: '03', name: 'Dining Table', img: '/images/Dining Table.jpg' },
-              { id: '04', name: 'Chair', img: '/images/WoodenChairs.jpg' },
-              { id: '05', name: 'Center Table', img: '/Gallery/Gallery (14).jpeg' },
-              { id: '06', name: 'Consoles', img: '/images/Consoles.jpg' },
-              { id: '07', name: 'Wall Mirror Antique', img: '/images/Wallmirror.jpg' },
-              { id: '08', name: 'Side Table', img: '/images/SideTables.jpg' }
+              { id: '01', name: 'Sofa', img: '/images/Sofa.jpeg' },
+              { id: '02', name: 'Bed', img: '/images/Bed.jpeg' },
+              { id: '03', name: 'Dining Table', img: '/images/Dinning Table.jpeg' },
+              { id: '04', name: 'Chair', img: '/images/Chair.jpeg' },
+              { id: '05', name: 'Center Table', img: '/images/Center Table.jpeg' },
+              { id: '06', name: 'Consoles', img: '/images/Console.jpeg' },
+              { id: '07', name: 'Wall Mirror Antique', img: '/images/Wall Mirror Anitique.jpeg' },
+              { id: '08', name: 'Side Table', img: '/images/Side Table.jpeg' }
             ].map((cat, i) => (
               <Reveal key={cat.id} delay={0.2 + (i * 0.15)} distance="40px">
                 <Link href={`/collection?category=${cat.name.toLowerCase().replace(' ', '-')}`} className="group relative aspect-[3/4] flex flex-col pt-6 px-6 transition-transform duration-700 hover:-translate-y-2">
@@ -154,11 +154,11 @@ export default function Home() {
               </Reveal>
             </div>
             
-            <div className="flex-1 w-full relative">
+            <div className="w-full lg:max-w-[480px] relative mx-auto lg:mx-0 lg:flex-shrink-0">
               <Reveal direction="left" delay={0.4} distance="100px">
-                <div className="relative aspect-square rounded-[4rem] overflow-hidden shadow-2xl rotate-[2deg]">
+                <div className="relative aspect-square rounded-[3rem] overflow-hidden shadow-2xl rotate-[2deg]">
                   <Image 
-                    src="/images/wooden-table-with-chairs-modern-interior-design-2025-04-02-01-47-59-utc.jpg" 
+                    src="/images/Sofa-Advanced.jpeg" 
                     alt="Our Craftsmanship" 
                     fill 
                     className="object-cover"
@@ -198,12 +198,12 @@ export default function Home() {
                <div className="flex-1 flex flex-col gap-fluid-3xs">
                  <Reveal direction="down" delay={0.2} distance="80px">
                    <div className="aspect-square relative rounded-fluid-sm overflow-hidden border border-surface-200/50 shadow-sm">
-                     <Image src="/images/Consoles.jpg" fill className="object-cover" alt="Detail 1" />
+                     <Image src="/images/Console-Quality.jpeg" fill className="object-cover" alt="Detail 1" />
                    </div>
                  </Reveal>
                  <Reveal direction="up" delay={0.4} distance="80px">
                    <div className="aspect-[3/4] relative rounded-fluid-sm overflow-hidden border border-surface-200/50 shadow-sm">
-                     <Image src="/images/Wallmirror.jpg" fill className="object-cover" alt="Detail 3" />
+                     <Image src="/images/Mirror-Quality.jpeg" fill className="object-cover" alt="Detail 3" />
                    </div>
                  </Reveal>
                </div>
@@ -211,12 +211,12 @@ export default function Home() {
                <div className="flex-1 flex flex-col gap-fluid-3xs pt-fluid-lg">
                  <Reveal direction="down" delay={0.3} distance="80px">
                    <div className="aspect-[3/4] relative rounded-fluid-sm overflow-hidden border border-surface-200/50 shadow-sm">
-                     <Image src="/images/interior-modern-living-room-wall-mockup-2025-01-07-23-12-33-utc.jpg" fill className="object-cover" alt="Detail 2" />
+                     <Image src="/images/Sofa-Quality.jpeg" fill className="object-cover" alt="Detail 2" />
                    </div>
                  </Reveal>
                  <Reveal direction="up" delay={0.5} distance="80px">
                    <div className="aspect-square relative rounded-fluid-sm overflow-hidden border border-surface-200/50 shadow-sm">
-                     <Image src="/images/empty-conference-room-with-black-chairs-and-wooden-2024-09-15-12-48-09-utc.jpg" fill className="object-cover" alt="Detail 4" />
+                     <Image src="/images/Chair-Quality.jpeg" fill className="object-cover" alt="Detail 4" />
                    </div>
                  </Reveal>
                </div>
@@ -253,7 +253,7 @@ export default function Home() {
       <section className="w-full pb-fluid-2xl px-fluid-md lg:px-fluid-lg">
         <Reveal direction="up" distance="60px" delay={0.2}>
           <div className="mx-auto max-w-[1400px] rounded-fluid-lg overflow-hidden bg-primary-800/60 relative max-h-[80vh] flex items-center justify-center text-center shadow-3xl py-fluid-xl">
-            <Image src="/images/Sofa.jpg" fill className="object-cover opacity-40 scale-110 hover:scale-100 transition-transform duration-[3s]" alt="Background" />
+            <Image src="/images/Sofa-Elevate.jpeg" fill className="object-cover opacity-40 scale-110 hover:scale-100 transition-transform duration-[3s]" alt="Background" />
             <div className="relative z-10 max-w-2xl mx-auto px-fluid-md">
               <h2 className="text-white text-fluid-4xl font-display font-light text-balance tracking-tighter mb-fluid-sm">Elevate Your System.</h2>
               <p className="text-white/70 text-fluid-lg font-light mb-fluid-lg leading-relaxed">

@@ -6,8 +6,8 @@ import Image from 'next/image';
 const showcaseItems = [
   {
     id: 1,
-    mainImage: "/images/interior-of-a-rich-house-cozy-living-room-2025-03-25-15-21-37-utc.jpg",
-    secondaryImage: "/images/white-leather-sofa-against-a-wooden-wall-in-a-cont-2025-02-11-19-44-23-utc.jpg",
+    mainImage: "/images/Hero-Sofa-main.jpeg",
+    secondaryImage: "/images/Hero-Sofa-Detail.jpeg",
     name: "Aero Modular Sofa",
     category: "Living Room",
     price: "$3,200",
@@ -15,8 +15,8 @@ const showcaseItems = [
   },
   {
     id: 2,
-    mainImage: "/images/Double Bed.jpg",
-    secondaryImage: "/images/interior-modern-living-room-wall-mockup-2025-01-07-23-12-33-utc.jpg",
+    mainImage: "/images/Hero-Bed-main.jpeg",
+    secondaryImage: "/images/Hero-Bed-Detail.jpeg",
     name: "Lumina Grand Bed",
     category: "Bedroom",
     price: "$2,850",
@@ -24,17 +24,17 @@ const showcaseItems = [
   },
   {
     id: 3,
-    mainImage: "/images/Dining Table.jpg",
-    secondaryImage: "/images/wooden-table-with-chairs-modern-interior-design-2025-04-02-01-47-59-utc.jpg",
-    name: "Eclipse Dining Set",
-    category: "Dining",
-    price: "$4,500",
-    highlights: "Marble Top • Seating for 8"
+    mainImage: "/images/Hero-CenterTable-main.jpeg",
+    secondaryImage: "/images/Hero-CenterTable-Detail.jpeg",
+    name: "Eclipse Center Table",
+    category: "Tables",
+    price: "$1,450",
+    highlights: "Premium Wood • Elegant"
   },
   {
     id: 4,
-    mainImage: "/images/Consoles.jpg",
-    secondaryImage: "/images/SideTables.jpg",
+    mainImage: "/images/Hero-Console-main.jpeg",
+    secondaryImage: "/images/Hero-Console-Detail.jpeg",
     name: "Vertex Console",
     category: "Entryway",
     price: "$1,150",
@@ -48,7 +48,7 @@ export default function HeroShowcase() {
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % showcaseItems.length);
-    }, 7000);
+    }, 4000);
     return () => clearInterval(interval);
   }, []);
 
