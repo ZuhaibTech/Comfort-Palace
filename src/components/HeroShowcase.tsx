@@ -68,6 +68,7 @@ export default function HeroShowcase() {
                 src={item.mainImage} 
                 alt={item.name} 
                 fill 
+                sizes="(max-width: 1024px) 100vw, 60vw"
                 className={`object-cover transition-transform duration-[7s] ease-out ${isActive ? 'scale-105' : 'scale-100'}`}
                 priority={index === 0}
               />
@@ -78,7 +79,7 @@ export default function HeroShowcase() {
       </div>
 
       {/* Floating Secondary Image (The Editorial Touch) / Card */}
-      <div className="absolute left-0 bottom-[10%] w-[45%] lg:w-[40%] aspect-[3/4] rounded-tr-[5rem] rounded-bl-2xl rounded-br-2xl rounded-tl-2xl overflow-hidden shadow-2xl border-4 border-surface-50 z-20 hidden md:block bg-surface-50 group-hover:-translate-y-2 transition-transform duration-[1.5s] ease-out">
+      <div className="absolute left-0 bottom-[10%] w-[45%] lg:w-[40%] aspect-[3/4] rounded-tr-[5rem] rounded-bl-2xl rounded-br-2xl rounded-tl-2xl overflow-hidden shadow-2xl border-4 border-surface-50 dark:border-surface-200 z-20 hidden md:block bg-surface-50 dark:bg-surface-100 group-hover:-translate-y-2 transition-transform duration-[1.5s] ease-out">
         {showcaseItems.map((item, index) => {
           const isActive = index === activeIndex;
           return (
@@ -91,13 +92,15 @@ export default function HeroShowcase() {
                   src={item.secondaryImage} 
                   alt={`${item.name} Detail`} 
                   fill 
+                  sizes="(max-width: 768px) 0vw, (max-width: 1024px) 45vw, 30vw"
                   className="object-cover"
+                  priority={index === 0}
                 />
               </div>
-              <div className="bg-surface-50 p-5 flex flex-col justify-center border-t border-surface-100 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] z-10 relative">
+              <div className="bg-surface-50 dark:bg-surface-100 p-5 flex flex-col justify-center border-t border-surface-100 dark:border-surface-200 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] z-10 relative">
                 <div className="text-[10px] font-bold text-primary-800 uppercase tracking-widest mb-1">{item.category}</div>
                 <h3 className="text-surface-900 font-display text-xl tracking-tight truncate mb-1">{item.name}</h3>
-                <div className="flex items-center mt-2 pt-2 border-t border-surface-100">
+                <div className="flex items-center mt-2 pt-2 border-t border-surface-100 dark:border-surface-200">
                   <span className="text-surface-500 text-xs truncate w-full">{item.highlights}</span>
                 </div>
               </div>

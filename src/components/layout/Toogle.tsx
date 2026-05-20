@@ -38,7 +38,7 @@ export default function Toogle() {
   return (
     <button
       onClick={toggleTheme}
-      className="relative w-14 h-7 rounded-full p-0.5 cursor-pointer flex items-center justify-between bg-surface-200 dark:bg-surface-800 border border-surface-300/40 dark:border-surface-700/40 transition-colors duration-500 ease-apex-expo shadow-inner focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 group"
+      className="relative w-14 h-7 rounded-full p-0.5 cursor-pointer flex items-center justify-between bg-surface-200 dark:bg-primary-600 border border-surface-300/40 dark:border-primary-500 transition-colors duration-500 ease-apex-expo shadow-inner focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 group"
       aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
     >
       {/* Visual background elements */}
