@@ -32,7 +32,7 @@ export default function Header() {
         <Link href="/" className="flex items-center gap-fluid-3xs group">
           <div className="relative h-14 w-56 lg:h-20 lg:w-80 flex items-center transition-transform duration-500 group-hover:scale-105">
             <Image 
-              src="/Logo/LOGO main.png" 
+              src="/Logo/LOGO main.svg" 
               alt="Comfort Palace" 
               fill 
               className="object-contain object-left dark:invert"

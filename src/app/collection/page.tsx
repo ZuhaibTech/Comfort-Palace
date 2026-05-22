@@ -137,8 +137,9 @@ export default function CollectionPage() {
   // Merge backend products + gallery items
   const allProducts: Product[] = [...backendProducts, ...galleryCollectionItems];
 
-  // Extract unique categories
-  const categories = ['All', ...Array.from(new Set(allProducts.map(p => p.category).filter(Boolean) as string[]))];
+  // Extract unique categories (exclude Decor and Storage from filter buttons)
+  const hiddenCategories = ['Decor', 'Storage'];
+  const categories = ['All', ...Array.from(new Set(allProducts.map(p => p.category).filter(Boolean) as string[])).filter(cat => !hiddenCategories.includes(cat))];
 
   // Filter products
   const filteredProducts = activeFilter === 'All'

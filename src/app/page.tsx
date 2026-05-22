@@ -69,11 +69,11 @@ export default function Home() {
               { id: '01', name: 'Sofa', img: '/images/Sofa.jpeg' },
               { id: '02', name: 'Bed', img: '/images/Bed.jpeg' },
               { id: '03', name: 'Dining Table', img: '/images/Dinning Table.jpeg' },
-              { id: '04', name: 'Chair', img: '/images/Chair.jpeg' },
-              { id: '05', name: 'Center Table', img: '/images/Center Table.jpeg' },
+              { id: '04', name: 'Dining Chair', img: '/images/Chair.jpeg' },
+              { id: '05', name: 'Center Table', img: '/images/Center-Table.jpeg' },
               { id: '06', name: 'Consoles', img: '/images/Console.jpeg' },
               { id: '07', name: 'Wall Mirror Antique', img: '/images/Wall Mirror Anitique.jpeg' },
-              { id: '08', name: 'Side Table', img: '/images/Side Table.jpeg' }
+              { id: '08', name: 'Side Table', img: '/images/Side-Table.jpeg' }
             ].map((cat, i) => (
               <Reveal key={cat.id} delay={0.2 + (i * 0.15)} distance="40px">
                 <Link href={`/collection?category=${cat.name.toLowerCase().replace(' ', '-')}`} className="group relative aspect-[3/4] flex flex-col pt-6 px-6 transition-transform duration-700 hover:-translate-y-2">
@@ -134,8 +134,8 @@ export default function Home() {
                 {[
                   { title: 'premium wood furniture', desc: 'Hand-selected sustainable hardwoods.' },
                   { title: 'Ergonomic Design', desc: 'Engineered for the human form.' },
-                  { title: 'Luxury Finishes', desc: 'At Bespoke, we use premium-based polish.' },
-                  { title: 'Direct Access', desc: 'Studio quality, accessible pricing.' }
+                  { title: 'Luxury Finishes', desc: 'At Bespoke, we use premium-based Materials.' },
+                  { title: 'Direct Pricing', desc: 'Studio quality, Affordable pricing.' }
                 ].map((item, i) => (
                   <Reveal key={item.title} delay={0.4 + (i * 0.1)} distance="30px">
                     <div className="group">
@@ -165,11 +165,6 @@ export default function Home() {
                     loading="lazy"
                     className="object-cover"
                   />
-                </div>
-                {/* Floating technical tag */}
-                <div className="absolute -bottom-10 -left-10 bg-surface-50 dark:bg-surface-100 p-8 rounded-3xl shadow-xl border border-surface-100 dark:border-surface-200 hidden md:block animate-bounce">
-                  <div className="text-[10px] font-bold text-primary-800 uppercase tracking-widest mb-1">Quality Check</div>
-                  <div className="text-surface-900 font-display text-xl">100% Certified</div>
                 </div>
               </Reveal>
             </div>
@@ -205,7 +200,7 @@ export default function Home() {
                  </Reveal>
                  <Reveal direction="up" delay={0.4} distance="80px">
                    <div className="aspect-[3/4] relative rounded-fluid-sm overflow-hidden border border-surface-200/50 shadow-sm">
-                     <Image src="/images/Mirror-Quality.jpeg" fill loading="lazy" className="object-cover" alt="Detail 3" />
+                     <Image src="/images/Mirror Quality.jpeg" fill loading="lazy" className="object-cover" alt="Detail 3" />
                    </div>
                  </Reveal>
                </div>
@@ -259,7 +254,7 @@ export default function Home() {
             <div className="relative z-10 max-w-2xl mx-auto px-fluid-md">
               <h2 className="text-white text-fluid-4xl font-display font-light text-balance tracking-tighter mb-fluid-sm">Elevate Your System.</h2>
               <p className="text-white/70 text-fluid-lg font-light mb-fluid-lg leading-relaxed">
-                Join the Comfort Palace ecosystem and transform your living space into a high-performance environment.
+                Join the Comfort Palace ecosystem and transform your living space into a elegant and comfort environment.
               </p>
               <div className="flex flex-col sm:flex-row gap-fluid-3xs justify-center">
                 <Link href="/collection" className="btn-apex bg-white text-black hover:bg-accent-500 hover:text-white border-transparent">

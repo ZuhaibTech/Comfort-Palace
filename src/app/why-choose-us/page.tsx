@@ -7,25 +7,25 @@ export default function WhyChoosePage() {
       id: '01', 
       title: 'Premium Materials', 
       desc: 'We source only the finest sustainable timbers and high-grade leathers, ensuring your furniture lasts for decades.',
-      img: '/images/wooden-table-with-chairs-modern-interior-design-2025-04-02-01-47-59-utc.jpg'
+      img: '/images/Hero-CenterTable-main.jpeg'
     },
     { 
       id: '02', 
       title: 'Ergonomic Precision', 
       desc: 'Every piece is engineered to support the human form, blending luxury aesthetics with technical comfort.',
-      img: '/images/white-leather-sofa-against-a-wooden-wall-in-a-cont-2025-02-11-19-44-23-utc.jpg'
+      img: '/images/Sofa-Elevate.jpeg'
     },
     { 
       id: '03', 
       title: 'Direct To Consumer', 
       desc: 'By eliminating middle-men, we provide studio-quality furniture at a fraction of traditional showroom prices.',
-      img: '/images/dinner-tea-table-with-chairs-on-the-balcony-in-bri-2025-03-09-18-28-59-utc.jpg'
+      img: '/images/Hero-Console-main.jpeg'
     },
     { 
       id: '04', 
       title: 'Custom Inquiries', 
       desc: 'Our design studio works with you to tailor specific pieces to your architectural requirements.',
-      img: '/images/Consoles.jpg'
+      img: '/images/Sofa-Advanced.jpeg'
     }
   ];
 

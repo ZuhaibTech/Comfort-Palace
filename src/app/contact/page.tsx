@@ -66,24 +66,60 @@ export default function ContactPage() {
                 <div className="space-y-12">
                   <div>
                     <h3 className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-4">Location</h3>
-                    <p className="text-xl text-surface-800 leading-relaxed font-light">
-                      Premium Furniture District, <br />
-                      Studio Avenue, Suite 2026
-                    </p>
+                    <a
+                      href="https://maps.app.goo.gl/RkitTbxxBiCZ5ZZz5"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xl text-primary-800 leading-relaxed font-light hover:text-surface-900 transition-colors underline underline-offset-4 decoration-primary-800/30 hover:decoration-surface-900"
+                    >
+                      View Our Location <br />
+                      on Google Maps ↗
+                    </a>
                   </div>
                   <div>
                     <h3 className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-4">Connect</h3>
-                    <p className="text-xl text-surface-800 leading-relaxed font-light">
-                      hello@thecomfortpalace.com <br />
-                      +1 (800) COMFORT
-                    </p>
-                  </div>
-                  <div className="pt-8 flex gap-6">
-                    {['Instagram', 'Pinterest', 'LinkedIn'].map(social => (
-                      <a key={social} href="#" className="text-[11px] font-bold uppercase tracking-widest text-primary-800 hover:text-surface-900 transition-colors underline underline-offset-8 decoration-primary-800/20 hover:decoration-surface-900">
-                        {social}
+                    <div className="text-xl text-surface-800 leading-relaxed font-light space-y-2">
+                      <a href="mailto:thecomfortpalace123@gmail.com" className="block text-primary-800 hover:text-surface-900 transition-colors">
+                        thecomfortpalace123@gmail.com
                       </a>
-                    ))}
+                      <a href="tel:+919591488660" className="block hover:text-primary-800 transition-colors">
+                        +91 95914 88660
+                      </a>
+                    </div>
+                  </div>
+                  <div className="pt-8 flex items-center gap-4">
+                    {/* Instagram */}
+                    <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer"
+                      className="w-12 h-12 rounded-full border border-surface-200 flex items-center justify-center text-surface-500 hover:text-primary-800 hover:border-primary-800/40 transition-all duration-300 hover:scale-110">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                        <circle cx="12" cy="12" r="4"/>
+                        <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/>
+                      </svg>
+                    </a>
+                    {/* X / Twitter */}
+                    <a href="https://www.x.com" target="_blank" rel="noopener noreferrer"
+                      className="w-12 h-12 rounded-full border border-surface-200 flex items-center justify-center text-surface-500 hover:text-primary-800 hover:border-primary-800/40 transition-all duration-300 hover:scale-110">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.734-8.835L2.25 2.25h6.775l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                      </svg>
+                    </a>
+                    {/* Facebook */}
+                    <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer"
+                      className="w-12 h-12 rounded-full border border-surface-200 flex items-center justify-center text-surface-500 hover:text-primary-800 hover:border-primary-800/40 transition-all duration-300 hover:scale-110">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+                      </svg>
+                    </a>
+                    {/* LinkedIn */}
+                    <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer"
+                      className="w-12 h-12 rounded-full border border-surface-200 flex items-center justify-center text-surface-500 hover:text-primary-800 hover:border-primary-800/40 transition-all duration-300 hover:scale-110">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/>
+                        <rect x="2" y="9" width="4" height="12"/>
+                        <circle cx="4" cy="4" r="2"/>
+                      </svg>
+                    </a>
                   </div>
                 </div>
               </div>
@@ -201,50 +237,42 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Map Placeholder Section */}
+      {/* Map Section */}
       <section className="w-full pb-24 px-fluid-md lg:px-fluid-lg">
         <div className="mx-auto max-w-[1400px]">
           <Reveal delay={0.2} direction="up" distance="40px">
-            <div className="relative w-full h-[450px] bg-surface-50 rounded-[3rem] lg:rounded-[4rem] overflow-hidden border border-surface-200/60 shadow-2xl group">
-               {/* Architectural Grid Overlay */}
-               <div className="absolute inset-0 opacity-[0.02] bg-[url('https://www.transparenttextures.com/patterns/graphy.png')] pointer-events-none"></div>
-               
-               {/* Subtle Gradient Accent */}
-               <div className="absolute inset-0 bg-gradient-to-br from-primary-800/5 via-transparent to-transparent"></div>
-  
-               {/* Animated Centerpiece */}
-               <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-12 relative z-10">
-                  <div className="relative mb-8">
-                    {/* Pulsing ring */}
-                    <div className="absolute inset-0 rounded-full bg-primary-800/10 animate-ping scale-150 opacity-20"></div>
-                    <div className="w-20 h-20 bg-surface-50 rounded-full flex items-center justify-center shadow-xl relative z-10 border border-surface-100 group-hover:scale-110 transition-transform duration-700 ease-apex-expo">
-                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="oklch(var(--color-primary-800))" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
-                        <circle cx="12" cy="10" r="3" />
-                      </svg>
-                    </div>
-                  </div>
-  
-                  <div className="max-w-md">
-                    <h3 className="text-3xl font-display font-light text-surface-900 mb-4 tracking-tighter leading-none">
-                      Location <span className="italic text-primary-800">Reveal Soon.</span>
-                    </h3>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-surface-400 mb-8 max-w-xs mx-auto leading-relaxed">
-                      We are currently curating a high-performance space for your personal consultation.
-                    </p>
-                    
-                    {/* Technical Coordinates Decor */}
-                    <div className="flex items-center justify-center gap-8 pt-8 border-t border-surface-100/60">
-                      <div className="text-[9px] font-mono uppercase tracking-widest text-surface-300">Lat: --.----</div>
-                      <div className="w-1 h-1 rounded-full bg-primary-800/20"></div>
-                      <div className="text-[9px] font-mono uppercase tracking-widest text-surface-300">Long: --.----</div>
-                    </div>
-                  </div>
+            <div className="relative w-full h-[450px] rounded-[3rem] lg:rounded-[4rem] overflow-hidden border border-surface-200/60 shadow-2xl group">
+               {/* Google Maps iframe */}
+               <iframe
+                 src="https://maps.google.com/maps?q=12.9716,77.5946&z=15&output=embed"
+                 width="100%"
+                 height="100%"
+                 style={{ border: 0, filter: 'grayscale(20%) contrast(1.05)' }}
+                 allowFullScreen
+                 loading="lazy"
+                 referrerPolicy="no-referrer-when-downgrade"
+                 title="Comfort Palace Location"
+               />
+
+               {/* Overlay CTA */}
+               <div className="absolute inset-0 flex items-end justify-center pb-8 pointer-events-none">
+                 <a
+                   href="https://maps.app.goo.gl/RkitTbxxBiCZ5ZZz5"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   className="pointer-events-auto flex items-center gap-3 bg-surface-50/95 backdrop-blur-md border border-surface-200/80 shadow-2xl px-6 py-3 rounded-full text-[11px] font-bold uppercase tracking-widest text-primary-800 hover:bg-primary-800 hover:text-surface-50 transition-all duration-300 group-hover:scale-105"
+                 >
+                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+                     <circle cx="12" cy="10" r="3" />
+                   </svg>
+                   Open in Google Maps
+                 </a>
                </div>
-               
+
                {/* Decorative Corner Elements */}
-               <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-primary-800/5 rounded-full blur-3xl"></div>
-               <div className="absolute -top-10 -left-10 w-32 h-32 bg-primary-800/5 rounded-full blur-2xl"></div>
+               <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-primary-800/5 rounded-full blur-3xl pointer-events-none"></div>
+               <div className="absolute -top-10 -left-10 w-32 h-32 bg-primary-800/5 rounded-full blur-2xl pointer-events-none"></div>
             </div>
           </Reveal>
         </div>

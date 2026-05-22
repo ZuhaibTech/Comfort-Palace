@@ -12,7 +12,7 @@ export default function Footer() {
             <Link href="/" className="flex items-center gap-fluid-3xs group">
               <div className="relative h-12 w-48 lg:h-16 lg:w-56 flex items-center transition-transform duration-500 group-hover:scale-105 opacity-80 group-hover:opacity-100">
                 <Image 
-                  src="/Logo/LOGO main.png" 
+                  src="/Logo/LOGO main.svg" 
                   alt="Comfort Palace" 
                   fill 
                   className="object-contain object-left dark:invert"
@@ -20,7 +20,7 @@ export default function Footer() {
               </div>
             </Link>
             <p className="text-fluid-sm text-surface-500 max-w-sm leading-relaxed text-balance">
-              Redefining contemporary living through mathematical precision and artisanal craftsmanship. Our furniture is designed to exist as timeless technical art.
+              Redefining contemporary living through precision and artisanal craftsmanship. Our furniture is designed to exist as timeless functional art.
             </p>
             <div className="flex gap-fluid-3xs mt-fluid-3xs">
               {[

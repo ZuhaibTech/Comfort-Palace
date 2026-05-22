@@ -98,11 +98,7 @@ export default function HeroShowcase() {
                 />
               </div>
               <div className="bg-surface-50 dark:bg-surface-100 p-5 flex flex-col justify-center border-t border-surface-100 dark:border-surface-200 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] z-10 relative">
-                <div className="text-[10px] font-bold text-primary-800 uppercase tracking-widest mb-1">{item.category}</div>
-                <h3 className="text-surface-900 font-display text-xl tracking-tight truncate mb-1">{item.name}</h3>
-                <div className="flex items-center mt-2 pt-2 border-t border-surface-100 dark:border-surface-200">
-                  <span className="text-surface-500 text-xs truncate w-full">{item.highlights}</span>
-                </div>
+                <h3 className="text-surface-900 font-display text-xl tracking-tight truncate">{item.name}</h3>
               </div>
             </div>
           );
@@ -113,14 +109,15 @@ export default function HeroShowcase() {
       <div className="absolute top-[10%] lg:top-[5%] right-5 lg:right-10 w-28 h-28 lg:w-32 lg:h-32 bg-surface-50 rounded-full flex flex-col items-center justify-center shadow-xl z-30">
         <svg viewBox="0 0 100 100" className="w-full h-full text-surface-900 animate-[spin_20s_linear_infinite]">
           <path id="curve" d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" fill="transparent"/>
-          <text className="text-[11px] font-bold uppercase tracking-[0.2em] fill-current">
-            <textPath href="#curve" startOffset="0%">• premium artisan quality • comfort palace</textPath>
+          <text style={{fontSize: '7px', fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase'}} fill="currentColor">
+            <textPath href="#curve" startOffset="0%">• COMFORT PALACE </textPath>
+            <textPath href="#curve" startOffset="50%">• COMFORT PALACE </textPath>
           </text>
         </svg>
         <div className="absolute inset-0 flex items-center justify-center p-6">
            <div className="relative w-full h-full">
              <Image 
-               src="/Logo/Logo.png" 
+               src="/Logo/Logo.svg" 
                alt="Logo Icon" 
                fill 
                className="object-contain dark:invert"
