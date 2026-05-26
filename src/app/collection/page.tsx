@@ -16,52 +16,46 @@ interface Product {
   quantity_in_stock: number;
 }
 
-// Gallery collection items - real furniture pieces from the gallery
-const galleryCollectionItems: Product[] = [
-  { id: 'gallery-1', item_code: 'GAL-001', name: 'Premium Living Room Set', description: 'Elegant living room ensemble featuring contemporary design with premium upholstery.', price: 85000, category: 'Living Room', image_url: '/Gallery/Gallery (1).jpeg', quantity_in_stock: 5 },
-  { id: 'gallery-2', item_code: 'GAL-002', name: 'Modern Accent Collection', description: 'Curated accent pieces that bring sophistication to any interior space.', price: 32000, category: 'Decor', image_url: '/Gallery/Gallery (2).jpeg', quantity_in_stock: 8 },
-  { id: 'gallery-3', item_code: 'GAL-003', name: 'Designer Lounge Setup', description: 'Artisan-crafted lounge furniture for the discerning homeowner.', price: 120000, category: 'Living Room', image_url: '/Gallery/Gallery (3).jpeg', quantity_in_stock: 3 },
-  { id: 'gallery-4', item_code: 'GAL-004', name: 'Classic Wooden Ensemble', description: 'Handcrafted wooden furniture set with rich natural grain finish.', price: 67000, category: 'Dining Sets', image_url: '/Gallery/Gallery (4).jpeg', quantity_in_stock: 6 },
-  { id: 'gallery-5', item_code: 'GAL-005', name: 'Minimalist Side Unit', description: 'Clean-lined minimalist storage unit crafted from sustainable hardwood.', price: 28000, category: 'Storage', image_url: '/Gallery/Gallery (5).jpeg', quantity_in_stock: 12 },
-  { id: 'gallery-6', item_code: 'GAL-006', name: 'Heritage Craft Cabinet', description: 'Traditional cabinet with intricate detailing and modern functionality.', price: 45000, category: 'Storage', image_url: '/Gallery/Gallery (6).jpeg', quantity_in_stock: 4 },
-  { id: 'gallery-7', item_code: 'GAL-007', name: 'Artisan Bookshelf Unit', description: 'Open-shelf bookcase designed for both display and storage.', price: 38000, category: 'Storage', image_url: '/Gallery/Gallery (7).jpeg', quantity_in_stock: 7 },
-  { id: 'gallery-8', item_code: 'GAL-008', name: 'Executive Desk Collection', description: 'Luxurious executive desk with ergonomic design and premium finish.', price: 55000, category: 'Study Tables', image_url: '/Gallery/Gallery (8).jpeg', quantity_in_stock: 5 },
-  { id: 'gallery-9', item_code: 'GAL-009', name: 'Statement Dining Set', description: 'Grand dining table with matching chairs for memorable gatherings.', price: 95000, category: 'Dining Sets', image_url: '/Gallery/Gallery (9).jpeg', quantity_in_stock: 3 },
-  { id: 'gallery-10', item_code: 'GAL-010', name: 'Velvet Accent Chair', description: 'Plush velvet accent chair with sculptural silhouette.', price: 22000, category: 'Seating', image_url: '/Gallery/Gallery (10).jpeg', quantity_in_stock: 15 },
-  { id: 'gallery-11', item_code: 'GAL-011', name: 'Carved Wood Console', description: 'Intricately carved console table that serves as a focal point.', price: 41000, category: 'Tables', image_url: '/Gallery/Gallery (11).jpeg', quantity_in_stock: 6 },
-  { id: 'gallery-12', item_code: 'GAL-012', name: 'Royal Bed Frame', description: 'King-size bed frame with ornate headboard and solid construction.', price: 78000, category: 'Bedroom', image_url: '/Gallery/Gallery (12).jpeg', quantity_in_stock: 4 },
-  { id: 'gallery-13', item_code: 'GAL-013', name: 'Contemporary Sofa Set', description: 'L-shaped sofa set with premium fabric and deep seating comfort.', price: 110000, category: 'Living Room', image_url: '/Gallery/Gallery (13).jpeg', quantity_in_stock: 3 },
-  { id: 'gallery-14', item_code: 'GAL-014', name: 'Rustic Center Table', description: 'Reclaimed wood center table with industrial metal accents.', price: 35000, category: 'Tables', image_url: '/Gallery/Gallery (14).jpeg', quantity_in_stock: 8 },
-  { id: 'gallery-15', item_code: 'GAL-015', name: 'Designer TV Unit', description: 'Wall-mounted entertainment unit with concealed cable management.', price: 48000, category: 'Storage', image_url: '/Gallery/Gallery (15).jpeg', quantity_in_stock: 6 },
-  { id: 'gallery-16', item_code: 'GAL-016', name: 'Luxury Wardrobe System', description: 'Full-height wardrobe with mirror panels and soft-close mechanisms.', price: 92000, category: 'Bedroom', image_url: '/Gallery/Gallery (16).jpeg', quantity_in_stock: 4 },
-  { id: 'gallery-17', item_code: 'GAL-017', name: 'Compact Study Desk', description: 'Space-efficient study desk perfect for home offices.', price: 24000, category: 'Study Tables', image_url: '/Gallery/Gallery (17).jpeg', quantity_in_stock: 10 },
-  { id: 'gallery-18', item_code: 'GAL-018', name: 'Ornamental Side Table', description: 'Decorative side table with hand-painted motifs.', price: 18000, category: 'Tables', image_url: '/Gallery/Gallery (18).jpeg', quantity_in_stock: 14 },
-  { id: 'gallery-19', item_code: 'GAL-019', name: 'Grand Living Room Suite', description: 'Complete living room furniture suite with coordinated design language.', price: 165000, category: 'Living Room', image_url: '/Gallery/Gallery (19).jpeg', quantity_in_stock: 2 },
-  { id: 'gallery-20', item_code: 'GAL-020', name: 'Artisan Dining Chair Set', description: 'Set of 6 handcrafted dining chairs with cushioned seats.', price: 54000, category: 'Seating', image_url: '/Gallery/Gallery (20).jpeg', quantity_in_stock: 5 },
-  { id: 'gallery-21', item_code: 'GAL-021', name: 'Modern Display Cabinet', description: 'Glass-fronted display cabinet with ambient lighting.', price: 62000, category: 'Storage', image_url: '/Gallery/Gallery (21).jpeg', quantity_in_stock: 4 },
-  { id: 'gallery-22', item_code: 'GAL-022', name: 'Sculptural Lounge Chair', description: 'Statement lounge chair combining art and ergonomic comfort.', price: 43000, category: 'Seating', image_url: '/Gallery/Gallery (22).jpeg', quantity_in_stock: 7 },
-  { id: 'gallery-23', item_code: 'GAL-023', name: 'Heritage Bedroom Suite', description: 'Classic bedroom furniture set with timeless silhouettes.', price: 135000, category: 'Bedroom', image_url: '/Gallery/Gallery (23).jpeg', quantity_in_stock: 2 },
+// Items from the public/Collections directory
+const collectionFolderItems: Product[] = [
+  { id: 'coll-1', item_code: 'COLL-001', name: 'Sofa Set', description: 'Luxurious sofa set for ultimate comfort.', price: 0, category: 'Living Room', image_url: '/Collections/sofa set.webp', quantity_in_stock: 5 },
+  { id: 'coll-2', item_code: 'COLL-002', name: 'Elephant Accent Table', description: 'Unique artisan-crafted accent table.', price: 0, category: 'Tables', image_url: '/Collections/Elephant Accent Table.webp', quantity_in_stock: 5 },
+  { id: 'coll-3', item_code: 'COLL-003', name: 'Accent Chair-1', description: 'Elegant accent chair for modern living.', price: 0, category: 'Seating', image_url: '/Collections/accent chair-1.webp', quantity_in_stock: 5 },
+  { id: 'coll-4', item_code: 'COLL-004', name: 'Accent Chair-2', description: 'Contemporary seating solution with premium finish.', price: 0, category: 'Seating', image_url: '/Collections/accent chair-2.webp', quantity_in_stock: 5 },
+  { id: 'coll-5', item_code: 'COLL-005', name: 'Accent Chair-3', description: 'Stylish accent piece for sophisticated interiors.', price: 0, category: 'Seating', image_url: '/Collections/accent chair-3.webp', quantity_in_stock: 5 },
+  { id: 'coll-6', item_code: 'COLL-006', name: 'Coffee Table', description: 'Classic coffee table for everyday elegance.', price: 0, category: 'Tables', image_url: '/Collections/coffee table.webp', quantity_in_stock: 5 },
+  { id: 'coll-7', item_code: 'COLL-007', name: 'Coffee Table-1', description: 'Sleek coffee table with contemporary design.', price: 0, category: 'Tables', image_url: '/Collections/coffee table-1.webp', quantity_in_stock: 5 },
+  { id: 'coll-8', item_code: 'COLL-008', name: 'Coffee Table-2', description: 'Elegant coffee table for modern homes.', price: 0, category: 'Tables', image_url: '/Collections/coffee table-2.webp', quantity_in_stock: 5 },
+  { id: 'coll-9', item_code: 'COLL-009', name: 'Coffee Table-3', description: 'Minimalist coffee table for a clean look.', price: 0, category: 'Tables', image_url: '/Collections/coffee table-3.webp', quantity_in_stock: 5 },
+  { id: 'coll-10', item_code: 'COLL-010', name: 'Dinning Table', description: 'Elegant dining table for your dining space.', price: 0, category: 'Dining Sets', image_url: '/Collections/Dinning Table.webp', quantity_in_stock: 5 },
+  { id: 'coll-11', item_code: 'COLL-011', name: 'Dinning Table-1', description: 'Grand dining table for family gatherings.', price: 0, category: 'Dining Sets', image_url: '/Collections/Dinning Table-1.webp', quantity_in_stock: 5 },
+  { id: 'coll-12', item_code: 'COLL-012', name: 'Center Table', description: 'Modern center table, a focal point for your lounge.', price: 0, category: 'Tables', image_url: '/Collections/Center table.webp', quantity_in_stock: 5 },
+  { id: 'coll-13', item_code: 'COLL-013', name: 'Wall Mirror', description: 'Decorative wall mirror to brighten your space.', price: 0, category: 'Decor', image_url: '/Collections/Wall Mirror.webp', quantity_in_stock: 5 },
+  { id: 'coll-14', item_code: 'COLL-014', name: 'Low Coffee Table', description: 'Modern low-profile coffee table.', price: 0, category: 'Tables', image_url: '/Collections/Low Coffee Table.webp', quantity_in_stock: 5 },
+  { id: 'coll-15', item_code: 'COLL-015', name: 'Wall Console Table', description: 'Sleek wall console for hallways and living rooms.', price: 0, category: 'Tables', image_url: '/Collections/wall console table.webp', quantity_in_stock: 5 },
+  { id: 'coll-16', item_code: 'COLL-016', name: 'Side Table-2', description: 'Compact and stylish side table.', price: 0, category: 'Tables', image_url: '/Collections/side table-2.webp', quantity_in_stock: 5 },
+  { id: 'coll-17', item_code: 'COLL-017', name: 'Accent Table', description: 'Versatile accent table for any room.', price: 0, category: 'Tables', image_url: '/Collections/accent table.webp', quantity_in_stock: 5 },
 ];
 
 // Layout presets for the masonry-style editorial grid
 const layoutPresets = [
-  { span: 'md:col-span-8', aspect: 'aspect-[4/3] md:aspect-[16/9]' },
-  { span: 'md:col-span-4', aspect: 'aspect-[4/5] md:aspect-[3/4]' },
-  { span: 'md:col-span-4', aspect: 'aspect-square' },
-  { span: 'md:col-span-4', aspect: 'aspect-square' },
-  { span: 'md:col-span-4', aspect: 'aspect-square' },
-  { span: 'md:col-span-12', aspect: 'aspect-[4/3] md:aspect-[21/9]' },
-  { span: 'md:col-span-4', aspect: 'aspect-square' },
-  { span: 'md:col-span-4', aspect: 'aspect-square' },
-  { span: 'md:col-span-4', aspect: 'aspect-square' },
-  { span: 'md:col-span-8', aspect: 'aspect-[16/9]' },
-  { span: 'md:col-span-4', aspect: 'aspect-[3/4]' },
-  { span: 'md:col-span-6', aspect: 'aspect-[4/3]' },
-  { span: 'md:col-span-6', aspect: 'aspect-[4/3]' },
-  { span: 'md:col-span-4', aspect: 'aspect-[3/4]' },
-  { span: 'md:col-span-4', aspect: 'aspect-[3/4]' },
-  { span: 'md:col-span-4', aspect: 'aspect-[3/4]' },
-  { span: 'md:col-span-6', aspect: 'aspect-video' },
+  { span: 'md:col-span-8', aspect: 'aspect-[4/3] md:aspect-[16/9]' }, // 1. Sofa Set
+  { span: 'md:col-span-4', aspect: 'aspect-[4/5] md:aspect-[3/4]' }, // 2. Elephant Accent Table
+  { span: 'md:col-span-4', aspect: 'aspect-square' },                // 3. Accent Chair-1
+  { span: 'md:col-span-4', aspect: 'aspect-square' },                // 4. Accent Chair-2
+  { span: 'md:col-span-4', aspect: 'aspect-square' },                // 5. Accent Chair-3
+  { span: 'md:col-span-12', aspect: 'aspect-[4/3] md:aspect-[21/9]' },// 6. Coffee Table
+  { span: 'md:col-span-4', aspect: 'aspect-square' },                // 7. Coffee Table-1
+  { span: 'md:col-span-4', aspect: 'aspect-square' },                // 8. Coffee Table-2
+  { span: 'md:col-span-4', aspect: 'aspect-square' },                // 9. Coffee Table-3
+  { span: 'md:col-span-8', aspect: 'aspect-[16/9]' },                // 10. Dinning Table
+  { span: 'md:col-span-4', aspect: 'aspect-[3/4]' },                // 11. Dinning Table-1
+  { span: 'md:col-span-6', aspect: 'aspect-[4/3]' },                // 12. Center Table
+  { span: 'md:col-span-6', aspect: 'aspect-[4/3]' },                // 13. Wall Mirror
+  { span: 'md:col-span-4', aspect: 'aspect-[3/4]' },                // 14. Low Coffee Table
+  { span: 'md:col-span-8', aspect: 'aspect-[16/9]' },                // 15. Wall Console Table
+  { span: 'md:col-span-6', aspect: 'aspect-[4/3]' },                 // 16. Side Table-2
+  { span: 'md:col-span-6', aspect: 'aspect-[4/3]' },                 // 17. Accent Table
   { span: 'md:col-span-6', aspect: 'aspect-video' },
   { span: 'md:col-span-3', aspect: 'aspect-[3/4]' },
   { span: 'md:col-span-6', aspect: 'aspect-video' },
@@ -80,33 +74,10 @@ const bgColors = [
 ];
 
 export default function CollectionPage() {
-  const [backendProducts, setBackendProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
   const [visibleCount, setVisibleCount] = useState(9);
   const [activeFilter, setActiveFilter] = useState('All');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  // Fetch products from backend
-  useEffect(() => {
-    const fetchProducts = async () => {
-      setLoading(true);
-      setError('');
-      try {
-        const res = await fetch('/api/products');
-        const json = await res.json();
-        if (json.success) {
-          setBackendProducts(json.data || []);
-        }
-      } catch (err) {
-        console.error('Failed to fetch products:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProducts();
-  }, []);
 
   // Handle deep-linking from homepage categories
   useEffect(() => {
@@ -132,10 +103,10 @@ export default function CollectionPage() {
         }
       }
     }
-  }, [loading]);
+  }, []);
 
-  // Merge backend products + gallery items
-  const allProducts: Product[] = [...backendProducts, ...galleryCollectionItems];
+  // Use only the items from the Collections folder
+  const allProducts: Product[] = [...collectionFolderItems];
 
   // Extract unique categories (exclude Decor and Storage from filter buttons)
   const hiddenCategories = ['Decor', 'Storage'];
@@ -188,7 +159,7 @@ export default function CollectionPage() {
   useEffect(() => {
     const handleInitialHashScroll = () => {
       const hash = window.location.hash;
-      if (!loading && hash && hash.startsWith('#product-') && !hasInitialScrolled.current) {
+      if (hash && hash.startsWith('#product-') && !hasInitialScrolled.current) {
         const id = hash.replace('#product-', '');
         const productIndex = allProducts.findIndex(p => p.id === id);
         
@@ -210,10 +181,8 @@ export default function CollectionPage() {
       }
     };
 
-    if (!loading) {
-      handleInitialHashScroll();
-    }
-  }, [loading, allProducts]); // Only react to initial load completion
+    handleInitialHashScroll();
+  }, [allProducts]); // React to allProducts changes
 
   const getProductImage = (product: Product) => {
     if (product.image_url) {
@@ -265,31 +234,8 @@ export default function CollectionPage() {
         </div>
       </section>
 
-      {/* Loading State */}
-      {loading && (
-        <section className="w-full pb-16 px-4 lg:px-12">
-          <div className="mx-auto max-w-[1400px] flex items-center justify-center py-20">
-            <div className="flex flex-col items-center gap-6">
-              <div className="flex gap-1.5">
-                {[1, 2, 3].map(i => (
-                  <div
-                    key={i}
-                    className="w-2 h-10 bg-primary-800 rounded-full animate-pulse"
-                    style={{ animationDelay: `${i * 150}ms` }}
-                  />
-                ))}
-              </div>
-              <span className="text-[11px] font-bold uppercase tracking-widest text-surface-400">
-                Loading Collection...
-              </span>
-            </div>
-          </div>
-        </section>
-      )}
-
       {/* Product Grid */}
-      {!loading && (
-        <section className="w-full pb-32 px-4 lg:px-12">
+      <section className="w-full pb-32 px-4 lg:px-12">
           <div className="mx-auto max-w-[1400px]">
             {filteredProducts.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-32 text-center">
@@ -396,7 +342,6 @@ export default function CollectionPage() {
             )}
           </div>
         </section>
-      )}
 
       {/* Product Inquiry Modal */}
       <ProductInquiryModal

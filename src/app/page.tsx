@@ -148,7 +148,7 @@ export default function Home() {
               
               <Reveal delay={0.8}>
                 <div className="mt-16">
-                  <Link href="/why-choose-us" className="btn-apex bg-primary-800 text-surface-50 hover:bg-surface-900 dark:bg-primary-100 dark:text-surface-900 dark:hover:bg-primary-200 px-10 py-4 text-[11px]">
+                  <Link href="/about" className="btn-apex bg-primary-800 text-surface-50 hover:bg-surface-900 dark:bg-primary-100 dark:text-surface-900 dark:hover:bg-primary-200 px-10 py-4 text-[11px]">
                     Learn More
                   </Link>
                 </div>
