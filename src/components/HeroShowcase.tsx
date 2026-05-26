@@ -8,7 +8,7 @@ const showcaseItems = [
     id: 1,
     mainImage: "/images/Hero-Sofa-main.jpeg",
     secondaryImage: "/images/Hero-Sofa-Detail.jpeg",
-    name: "Aero Modular Sofa",
+    name: "Sofa",
     category: "Living Room",
     price: "$3,200",
     highlights: "Premium Leather • Ergonomic"
@@ -17,7 +17,7 @@ const showcaseItems = [
     id: 2,
     mainImage: "/images/Hero-Bed-main.jpeg",
     secondaryImage: "/images/Hero-Bed-Detail.jpeg",
-    name: "Lumina Grand Bed",
+    name: "Bed",
     category: "Bedroom",
     price: "$2,850",
     highlights: "Solid Oak • Minimalist"
@@ -26,7 +26,7 @@ const showcaseItems = [
     id: 3,
     mainImage: "/images/Hero-CenterTable-main.jpeg",
     secondaryImage: "/images/Hero-CenterTable-Detail.jpeg",
-    name: "Eclipse Center Table",
+    name: "Center Table",
     category: "Tables",
     price: "$1,450",
     highlights: "Premium Wood • Elegant"
@@ -35,7 +35,7 @@ const showcaseItems = [
     id: 4,
     mainImage: "/images/Hero-Console-main.jpeg",
     secondaryImage: "/images/Hero-Console-Detail.jpeg",
-    name: "Vertex Console",
+    name: "Console",
     category: "Entryway",
     price: "$1,150",
     highlights: "Brass Accents • Modern"
