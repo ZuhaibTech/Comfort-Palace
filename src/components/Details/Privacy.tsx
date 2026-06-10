@@ -38,7 +38,7 @@ export default function Privacy() {
   ];
 
   return (
-    <div className="w-full bg-surface-50 min-h-screen py-16 lg:py-24 px-fluid-md lg:px-fluid-lg">
+    <div className="w-full bg-surface-50 min-h-screen py-16 lg:py-24 pt-[calc(12dvh+4rem)] lg:pt-[calc(12dvh+6rem)] px-fluid-md lg:px-fluid-lg">
       <div className="mx-auto max-w-[1000px]">
         {/* Header section */}
         <div className="mb-20 text-center">

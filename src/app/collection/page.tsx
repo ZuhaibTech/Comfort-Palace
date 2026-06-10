@@ -217,41 +217,56 @@ export default function CollectionPage() {
   };
 
   return (
-    <div className="flex flex-col w-full bg-surface-50 min-h-screen font-sans">
+    <div className="flex flex-col w-full bg-[#fbfbfb] min-h-screen font-sans selection:bg-primary-900 selection:text-white">
+      
+      {/* Extreme Luxury Background Layer */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] bg-primary-100/20 blur-[150px] rounded-full animate-[spin_30s_linear_infinite]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-surface-200/40 blur-[120px] rounded-full animate-[spin_25s_linear_infinite_reverse]" />
+        <div className="absolute top-[20%] right-[10%] w-px h-full bg-gradient-to-b from-transparent via-primary-800/5 to-transparent" />
+      </div>
 
       {/* Editorial Header Section */}
-      <section className="w-full pt-32 lg:pt-48 pb-20 px-6 lg:px-24 overflow-hidden">
-        <div className="mx-auto max-w-[900px] flex flex-col lg:flex-row lg:items-end justify-between gap-12">
+      <section className="relative w-full pt-40 lg:pt-56 pb-24 px-6 lg:px-24 overflow-hidden z-10">
+        <div className="mx-auto max-w-[900px] flex flex-col lg:flex-row lg:items-end justify-between gap-20">
           <Reveal direction="right" once={true} delay={0.2} distance="100px">
-            <div className="max-w-3xl">
-              <div className="flex items-center gap-4 mb-8">
-                <span className="w-12 h-[1px] bg-surface-400 block" />
-                <span className="text-[12px] font-medium tracking-[0.2em] text-surface-500 uppercase">Archive / 2026</span>
+            <div className="max-w-4xl">
+              <div className="flex items-center gap-6 mb-10">
+                <div className="w-16 h-px bg-primary-900/40" />
+                <span className="text-[10px] font-black tracking-[0.5em] text-primary-900 uppercase">Est. 2026 / Global Archive</span>
               </div>
-              <h1 className="font-display text-6xl lg:text-[6.5rem] text-surface-900 font-light tracking-tighter leading-[0.95]">
-                The Master <br /> Collection.
+              <h1 className="font-display text-8xl lg:text-[9.5rem] text-black font-light tracking-[-0.04em] leading-[0.8]">
+                The Master <br /> 
+                <span className="relative inline-block overflow-hidden">
+                  <span className="italic font-serif opacity-10 hover:opacity-100 transition-all duration-[2s] cursor-default">Collection.</span>
+                </span>
               </h1>
             </div>
           </Reveal>
 
           <Reveal direction="left" once={true} delay={0.4} distance="100px">
             <div className="flex flex-col items-start lg:items-end max-w-sm">
-              <p className="text-surface-500 text-lg lg:text-xl leading-relaxed text-left lg:text-right text-balance mb-12">
-                A curated selection of timeless pieces. Each form follows function, creating harmony in your modern living spaces.
-              </p>
+              <div className="relative mb-12 py-4 border-y border-black/5">
+                 <p className="text-surface-700 text-xl lg:text-2xl font-light leading-snug text-left lg:text-right italic">
+                   "Furniture that <span className="text-black font-medium not-italic">breathes</span>."
+                 </p>
+              </div>
               
-              {/* Main Navigation Buttons */}
-              <div className="flex flex-wrap items-center justify-start lg:justify-end gap-3 mb-6">
+              {/* Main Navigation - Extreme Glassmorphism */}
+              <div className="flex flex-wrap items-center justify-start lg:justify-end gap-4 mb-10">
                 <button
                   onClick={() => {
                     setActiveCategory(null);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  className={`px-6 py-2.5 rounded-full text-[12px] font-bold uppercase tracking-widest transition-all duration-300 ${
-                    !activeCategory ? 'bg-primary-900 text-surface-50 shadow-lg' : 'bg-transparent text-surface-600 border border-surface-300 hover:border-primary-800'
+                  className={`group relative px-8 py-3.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${
+                    !activeCategory 
+                      ? 'bg-black text-white shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] scale-110' 
+                      : 'bg-white/40 backdrop-blur-3xl text-black/50 border border-white/80 hover:bg-white/90 hover:text-black hover:border-black/20'
                   }`}
                 >
-                  All
+                  <span className="relative z-10">All Pieces</span>
+                  {!activeCategory && <div className="absolute inset-0 bg-primary-900 rounded-full scale-0 group-hover:scale-100 transition-transform duration-700" />}
                 </button>
                 {collectionData.map((section) => (
                   <button
@@ -259,10 +274,10 @@ export default function CollectionPage() {
                     onClick={() => {
                       setActiveCategory(section.category);
                     }}
-                    className={`px-6 py-2.5 rounded-full text-[12px] font-bold uppercase tracking-widest transition-all duration-300 ${
+                    className={`px-8 py-3.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${
                       activeCategory === section.category
-                        ? 'bg-black text-surface-50 shadow-lg'
-                        : 'bg-transparent text-surface-600 border border-surface-300 hover:border-primary-800 hover:text-primary-800'
+                        ? 'bg-black text-white shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] scale-110'
+                        : 'bg-white/40 backdrop-blur-3xl text-black/50 border border-white/80 hover:bg-white/90 hover:text-black hover:border-black/20'
                     }`}
                   >
                     {section.category}
@@ -270,16 +285,16 @@ export default function CollectionPage() {
                 ))}
               </div>
 
-              {/* Sub-Furniture Type Navigation */}
+              {/* Sub-Furniture Pill Strip - Liquid Reveal */}
               {activeCategory && (
-                <div className="flex flex-wrap items-center justify-start lg:justify-end gap-2 animate-[revealUp_0.5s_ease-out]">
+                <div className="flex flex-wrap items-center justify-start lg:justify-end gap-2.5 animate-[revealUp_0.8s_cubic-bezier(0.16,1,0.3,1)]">
                   {collectionData
                     .find(c => c.category === activeCategory)
                     ?.subcategories.map((sub) => (
                       <button
                         key={sub.name}
                         onClick={() => scrollToSection(`${activeCategory}-${sub.name}`.toLowerCase().replace(/\s+/g, '-'))}
-                        className="px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-surface-200 text-surface-600 hover:bg-primary-800 hover:text-surface-50 transition-all duration-300"
+                        className="px-6 py-2 rounded-full text-[9px] font-bold uppercase tracking-[0.25em] bg-white/60 backdrop-blur-md text-primary-900 border border-white/40 hover:bg-primary-900 hover:text-white transition-all duration-500 hover:scale-105"
                       >
                         {sub.name}
                       </button>
@@ -292,7 +307,7 @@ export default function CollectionPage() {
       </section>
 
       {/* Categorized Product Sections */}
-      <div className="flex flex-col gap-32 pb-32">
+      <div className="relative flex flex-col gap-56 pb-64 z-10">
         {collectionData.map((section, sectionIdx) => (
           <section 
             key={section.category} 
@@ -301,98 +316,106 @@ export default function CollectionPage() {
           >
             <div className="mx-auto max-w-[900px]">
 
-              <div className="flex items-center gap-6 mb-16">
-                <h2 className="font-display text-4xl lg:text-5xl text-surface-900 font-light tracking-tight">
-                  {section.category}
-                </h2>
-                <div className="flex-grow h-[1px] bg-surface-200" />
+              <div className="flex flex-col gap-6 mb-24 group/section">
+                <div className="flex items-center gap-10">
+                  <span className="font-serif text-6xl text-primary-900/10 transition-colors duration-1000 group-hover/section:text-primary-900/20 italic">0{sectionIdx + 1}</span>
+                  <h2 className="font-display text-6xl lg:text-7xl text-black font-light tracking-[-0.05em] transition-transform duration-1000 group-hover/section:translate-x-4">
+                    {section.category}
+                  </h2>
+                </div>
+                <div className="w-full h-px bg-gradient-to-r from-black/10 via-black/5 to-transparent" />
               </div>
 
-              <div className="flex flex-col gap-24">
+              <div className="flex flex-col gap-48">
                 {section.subcategories.map((sub, subIdx) => (
                   <div 
                     key={sub.name} 
                     id={`${section.category}-${sub.name}`.toLowerCase().replace(/\s+/g, '-')}
-                    className="flex flex-col gap-10 scroll-mt-24"
+                    className="flex flex-col gap-16 scroll-mt-24 group/sub"
                   >
-                    <h3 className="text-surface-400 text-sm tracking-[0.2em] uppercase font-medium">
-                      {sub.name}
-                    </h3>
+                    <div className="flex items-center justify-between">
+                       <div className="flex items-center gap-6">
+                         <div className="w-2 h-2 rounded-full bg-primary-900/20 group-hover/sub:bg-primary-900 transition-colors duration-700" />
+                         <h3 className="text-black text-[12px] tracking-[0.4em] uppercase font-black">
+                           {sub.name}
+                         </h3>
+                       </div>
+                       <span className="text-[10px] text-black/20 font-mono tracking-widest">SUB-SECTION_{subIdx + 1}</span>
+                    </div>
                     
                     {sub.items.length === 0 ? (
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
                         {[1, 2, 3].map((n) => (
-                          <div key={n} className="aspect-[4/5] bg-surface-100 rounded-[2rem] border border-dashed border-surface-300 flex items-center justify-center text-surface-400 text-xs tracking-widest uppercase">
-                            Coming Soon
+                          <div key={n} className="aspect-square bg-[#f5f5f5] rounded-[4rem] border border-black/[0.03] flex flex-col items-center justify-center gap-6 group/placeholder transition-all duration-1000 hover:bg-white hover:shadow-2xl">
+                             <div className="w-12 h-[1px] bg-black/10 group-hover/placeholder:w-20 group-hover/placeholder:bg-primary-900 transition-all duration-1000" />
+                             <span className="text-[10px] tracking-[0.4em] uppercase font-black text-black/20 group-hover/placeholder:text-black transition-colors duration-700">Coming Soon</span>
                           </div>
                         ))}
                       </div>
                     ) : (
-                      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12">
+                      <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-20">
                         {sub.items.map((product: any, idx) => {
                           const bg = bgColors[(sectionIdx + subIdx + idx) % bgColors.length];
                           const image = getProductImage(product);
-                          // Layout logic: Main image takes 12 cols (full width), others take 4
                           const isMain = product.isMain;
                           const spanClass = isMain ? 'md:col-span-12' : 'md:col-span-4';
                           const aspectClass = isMain ? 'aspect-video' : 'aspect-square';
-                          
-                          // Calculate display index (e.g., 01, 02...)
                           const displayIndex = String((sectionIdx * 5) + (subIdx * 4) + idx + 1).padStart(2, '0');
 
                           return (
                             <Reveal 
                               key={product.id} 
                               delay={idx * 0.1} 
-                              distance="40px" 
+                              distance="80px" 
                               className={spanClass}
                             >
                               <button
                                 onClick={() => handleProductClick(product as any)}
-                                className="group flex flex-col gap-5 text-left cursor-pointer w-full"
+                                className="group flex flex-col gap-10 text-left cursor-pointer w-full"
                               >
-                                {/* Image Container with Precise Cutout */}
-                                <div className={`relative w-full ${aspectClass} ${bg} rounded-[2.5rem] lg:rounded-[3.5rem] overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] group-hover:-translate-y-3`}>
+                                {/* Extreme Product Container */}
+                                <div className={`relative w-full ${aspectClass} ${bg} rounded-[4rem] lg:rounded-[5rem] overflow-hidden transition-all duration-[1.5s] cubic-bezier(0.16, 1, 0.3, 1) group-hover:shadow-[0_60px_100px_-30px_rgba(0,0,0,0.2)] group-hover:-translate-y-6`}>
                                   
-                                  {/* Top Right Category Badge */}
-                                  <div className="absolute top-5 right-5 lg:top-8 lg:right-8 z-30 bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] text-black/60 shadow-sm transition-opacity duration-500 group-hover:opacity-80">
+                                  {/* Apex Floating Badge */}
+                                  <div className="absolute top-8 right-8 lg:top-12 lg:right-12 z-30 bg-black/90 backdrop-blur-2xl px-6 py-2.5 rounded-full text-[9px] font-black uppercase tracking-[0.3em] text-white shadow-2xl transition-all duration-700 group-hover:scale-110 group-hover:bg-white group-hover:text-black">
                                     {section.category === 'Dining' ? 'TABLES' : section.category.toUpperCase()}
                                   </div>
 
-                                  {/* Product Image with Zoom Effect - Updated to Full Cover */}
+                                  {/* Fluid Product Image */}
                                   <div className="absolute inset-0">
-                                    <div className="relative w-full h-full transition-transform duration-[1.5s] ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:scale-[1.1]">
+                                    <div className="relative w-full h-full transition-transform duration-[3s] cubic-bezier(0.16, 1, 0.3, 1) group-hover:scale-[1.18]">
                                       <Image
                                         src={image}
                                         alt={product.name}
                                         fill
-                                        className="object-cover object-center"
+                                        className="object-cover object-center transition-all duration-[2s] grayscale-[0.4] group-hover:grayscale-0 contrast-[1.1]"
                                       />
                                     </div>
                                   </div>
 
-                                  {/* Inverted Corner Cutout (Bottom Left) */}
-                                  <div className="absolute bottom-0 left-0 z-40 bg-surface-50 pt-5 pr-5 rounded-tr-[2.5rem] flex items-center justify-center min-w-[65px] min-h-[65px] lg:min-w-[85px] lg:min-h-[85px]">
-                                    {/* The Inverted Curves */}
-                                    <div className="absolute -top-6 left-0 w-6 h-6 bg-transparent rounded-bl-[1.5rem] shadow-[-10px_10px_0_10px_rgb(249,250,251)]" />
-                                    <div className="absolute bottom-0 -right-6 w-6 h-6 bg-transparent rounded-bl-[1.5rem] shadow-[-10px_10px_0_10px_rgb(249,250,251)]" />
+                                  {/* Signature Cutout - Hard Edge Luxury */}
+                                  <div className="absolute bottom-0 left-0 z-40 bg-[#fbfbfb] pt-8 pr-8 rounded-tr-[5rem] flex items-center justify-center min-w-[90px] min-h-[90px] lg:min-w-[120px] lg:min-h-[120px] shadow-[20px_-20px_50px_-10px_rgba(0,0,0,0.05)] transition-all duration-700 group-hover:min-w-[100px] lg:group-hover:min-w-[140px]">
+                                    <div className="absolute -top-10 left-0 w-10 h-10 bg-transparent rounded-bl-[2.5rem] shadow-[-20px_20px_0_20px_rgb(251,251,251)]" />
+                                    <div className="absolute bottom-0 -right-10 w-10 h-10 bg-transparent rounded-bl-[2.5rem] shadow-[-20px_20px_0_20px_rgb(251,251,251)]" />
                                     
-                                    <span className="font-display text-2xl lg:text-3xl text-surface-900 font-medium tracking-tight">
+                                    <span className="font-display text-4xl lg:text-5xl text-black font-light tracking-tighter opacity-10 group-hover:opacity-100 transition-all duration-1000 group-hover:scale-110">
                                       {displayIndex}
                                     </span>
                                   </div>
 
-                                  {/* Subtle Gradient Overlays for Depth */}
-                                  <div className="absolute inset-0 bg-gradient-to-tr from-black/5 via-transparent to-white/10 opacity-40" />
-                                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/[0.02] transition-colors duration-500" />
+                                  {/* Dynamic Light Overlay */}
+                                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-black/20 opacity-30 group-hover:opacity-60 transition-opacity duration-1000" />
                                 </div>
 
-                                {/* Typography with Color Transition */}
-                                <div className="flex flex-col gap-2 px-1 transition-transform duration-500 group-hover:translate-x-1">
-                                  <h4 className="font-display text-2xl lg:text-3xl text-surface-900 font-light tracking-tight transition-colors duration-500 group-hover:text-primary-800">
-                                    {product.name}
-                                  </h4>
-                                  <p className="text-surface-400 text-sm lg:text-base font-light leading-relaxed max-w-[90%] opacity-80 group-hover:opacity-100 transition-opacity">
+                                {/* Luxury Typography Block */}
+                                <div className="flex flex-col gap-4 px-4 transition-all duration-1000 group-hover:translate-x-4">
+                                  <div className="flex items-center gap-5">
+                                    <h4 className="font-display text-4xl lg:text-5xl text-black font-light tracking-tighter transition-all duration-700 group-hover:text-primary-900">
+                                      {product.name}
+                                    </h4>
+                                    <div className="flex-grow h-px bg-black/5 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-1000 delay-100" />
+                                  </div>
+                                  <p className="text-surface-600 text-lg lg:text-xl font-light leading-relaxed max-w-[80%] opacity-40 group-hover:opacity-100 transition-all duration-1000">
                                     {product.description}
                                   </p>
                                 </div>
@@ -410,27 +433,30 @@ export default function CollectionPage() {
         ))}
       </div>
 
-      {/* Floating Back to Top Button */}
-      <div className={`fixed bottom-10 right-10 z-[9999] transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${
-          showScrollTop ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-10 scale-50 pointer-events-none'
+      {/* Extreme Floating Navigation Anchor */}
+      <div className={`fixed bottom-16 right-16 z-[9999] transition-all duration-[1.2s] cubic-bezier(0.16, 1, 0.3, 1) ${
+          showScrollTop ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-32 scale-50 pointer-events-none'
         }`}>
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="w-14 h-14 rounded-full bg-white backdrop-blur-xl border border-surface-200 text-surface-900 flex items-center justify-center shadow-[0_10px_40px_rgba(0,0,0,0.1)] hover:bg-black hover:text-white hover:scale-110 transition-all duration-300"
+          className="group relative w-20 h-20 rounded-full bg-black text-white flex items-center justify-center shadow-[0_40px_80px_-15px_rgba(0,0,0,0.5)] transition-all duration-700 hover:scale-110 active:scale-90"
           aria-label="Back to Top"
         >
+          <div className="absolute inset-[2px] rounded-full border border-white/20 group-hover:border-white/40 transition-colors" />
           <svg 
-            width="24" 
-            height="24" 
+            width="32" 
+            height="32" 
             viewBox="0 0 24 24" 
             fill="none" 
             stroke="currentColor" 
-            strokeWidth="2.5" 
+            strokeWidth="1.5" 
             strokeLinecap="round" 
             strokeLinejoin="round"
+            className="group-hover:-translate-y-1 transition-transform duration-500"
           >
             <path d="m18 15-6-6-6 6"/>
           </svg>
+          <span className="absolute -top-12 opacity-0 group-hover:opacity-100 transition-all duration-500 text-[9px] font-black uppercase tracking-[0.3em] whitespace-nowrap bg-black px-4 py-2 rounded-full">Top</span>
         </button>
       </div>
 
