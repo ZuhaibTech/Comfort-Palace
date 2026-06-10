@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import ProductInquiryModal from '@/components/ProductInquiryModal';
 import Reveal from '@/components/motion/Reveal';
@@ -186,6 +186,18 @@ export default function CollectionPage() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  // Handle scroll listener for "Back to Top" button
+  useEffect(() => {
+    const handleScroll = () => {
+      // Use both window.scrollY and documentElement.scrollTop for maximum compatibility
+      const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+      setShowScrollTop(scrollY > 150);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleProductClick = (product: Product) => {
     setSelectedProduct(product);
@@ -326,8 +338,6 @@ export default function CollectionPage() {
                           const aspectClass = isMain ? 'aspect-video' : 'aspect-square';
                           
                           // Calculate display index (e.g., 01, 02...)
-                          // For a more accurate count, we'd need to flatten all items across sections, 
-                          // but for visual matching we can use a relative index.
                           const displayIndex = String((sectionIdx * 5) + (subIdx * 4) + idx + 1).padStart(2, '0');
 
                           return (
@@ -398,6 +408,30 @@ export default function CollectionPage() {
             </div>
           </section>
         ))}
+      </div>
+
+      {/* Floating Back to Top Button */}
+      <div className={`fixed bottom-10 right-10 z-[9999] transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${
+          showScrollTop ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-10 scale-50 pointer-events-none'
+        }`}>
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="w-14 h-14 rounded-full bg-white backdrop-blur-xl border border-surface-200 text-surface-900 flex items-center justify-center shadow-[0_10px_40px_rgba(0,0,0,0.1)] hover:bg-black hover:text-white hover:scale-110 transition-all duration-300"
+          aria-label="Back to Top"
+        >
+          <svg 
+            width="24" 
+            height="24" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2.5" 
+            strokeLinecap="round" 
+            strokeLinejoin="round"
+          >
+            <path d="m18 15-6-6-6 6"/>
+          </svg>
+        </button>
       </div>
 
       {/* Product Inquiry Modal */}
