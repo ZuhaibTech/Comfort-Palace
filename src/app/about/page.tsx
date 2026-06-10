@@ -10,10 +10,10 @@ export default function AboutPage() {
   ];
 
   const reasons = [
-    { id: '01', title: 'Premium Materials', desc: 'We source only the finest sustainable timbers and high-grade leathers, ensuring your furniture lasts for decades.', img: '/images/Hero-CenterTable-main.jpeg' },
+    { id: '01', title: 'Premium Materials', desc: 'We source only the finest sustainable timbers and high-grade handlooms, ensuring your furniture lasts for decades.', img: '/images/Hero-CenterTable-main.jpeg' },
     { id: '02', title: 'Ergonomic Precision', desc: 'Every piece is engineered to support the human form, blending luxury aesthetics with technical comfort.', img: '/images/Sofa-Elevate.jpeg' },
     { id: '03', title: 'Direct To Consumer', desc: 'By eliminating middle-men, we provide studio-quality furniture at a fraction of traditional showroom prices.', img: '/images/Hero-Console-main.jpeg' },
-    { id: '04', title: 'Custom Inquiries', desc: 'Our design studio works with you to tailor specific pieces to your architectural requirements.', img: '/images/Sofa-Advanced.jpeg' }
+    { id: '04', title: 'Custom Inquiries', desc: 'We work with you to tailor specific pieces to your architectural requirements.', img: '/images/Sofa-Advanced.jpeg' }
   ];
 
   return (
@@ -53,7 +53,7 @@ export default function AboutPage() {
                   <span className="italic text-primary-800">Luxury of Lived Space.</span>
                 </h1>
                 <p className="text-surface-600 text-fluid-lg leading-relaxed max-w-xl">
-                  We believe that furniture is more than utility—it's the architecture of your atmosphere. Our mission is to curate pieces that bridge the gap between technical precision and emotional comfort.
+                  We believe that furniture is more than utility—it's the architecture of your atmosphere. Our mission is to curate pieces that bridge the gap between precision and comfort.
                 </p>
               </div>
             </Reveal>
@@ -111,7 +111,7 @@ export default function AboutPage() {
               <Reveal direction="up" delay={0.6} distance="30px">
                 <div className="max-w-md">
                   <h3 className="font-display text-2xl lg:text-3xl italic text-surface-900 leading-snug mb-8">
-                    "Furniture is the soul of a home, and our soul has been crafting comfort since 1992."
+                    "Furniture is the soul of a home, and we have been crafting comfort since 1992."
                   </h3>
                   
                   <div className="space-y-6 text-surface-500 text-base lg:text-lg leading-relaxed font-light">
@@ -119,7 +119,7 @@ export default function AboutPage() {
                       What began as a small artisan workshop in the heart of the city has blossomed into a hallmark of <span className="text-surface-900 font-medium">modern heritage</span>. 
                     </p>
                     <p>
-                      For over 34 years, we've blended the tactile honesty of traditional woodworking with the sophisticated ergonomics of contemporary living.
+                      For over three decades, we've blended the tactile honesty of traditional woodworking with the sophisticated ergonomics of contemporary living.
                     </p>
                   </div>
 

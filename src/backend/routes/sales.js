@@ -480,16 +480,37 @@ router.put('/:id', (req, res) => {
 
     // Update sale items if provided
     if (sale_items && Array.isArray(sale_items)) {
-      // Delete existing sale items
+      // 1. Get existing sale items to restore stock
+      const existingItemsStmt = db.prepare('SELECT * FROM sale_items WHERE sale_id = ?');
+      const existingItemsRows = existingItemsStmt.all([id]); // .all() isn't standard in this db wrapper, let's use exec or assume getDb() is betterSQL. Wait, this wrapper uses `db.exec()` for multiple rows? Let me use `db.exec`. Wait, better to just use `stmt.all()` or `stmt.values` if it's sql.js. Let's see how DELETE does it.
+      existingItemsStmt.free();
+      
+      // Let's use db.exec like DELETE does:
+      const itemsRows = db.exec('SELECT * FROM sale_items WHERE sale_id = ?', [id]);
+      const existingItems = itemsRows[0] ? itemsRows[0].values.map(row => {
+        const obj = {};
+        itemsRows[0].columns.forEach((col, index) => obj[col] = row[index]);
+        return obj;
+      }) : [];
+
+      // 2. Restore stock for existing items
+      const restoreStockStmt = db.prepare('UPDATE products SET quantity_in_stock = quantity_in_stock + ?, updated_at = ? WHERE id = ?');
+      for (const item of existingItems) {
+        restoreStockStmt.run([item.quantity, now, item.product_id]);
+      }
+      restoreStockStmt.free();
+
+      // 3. Delete existing sale items
       const deleteStmt = db.prepare('DELETE FROM sale_items WHERE sale_id = ?');
       deleteStmt.run([id]);
       deleteStmt.free();
 
-      // Insert updated sale items with proper validation
+      // 4. Insert updated sale items and deduct new stock
       const insertStmt = db.prepare(`
         INSERT INTO sale_items (id, sale_id, product_id, quantity, unit_price, total_price, created_at)
         VALUES (?, ?, ?, ?, ?, ?, ?)
       `);
+      const deductStockStmt = db.prepare('UPDATE products SET quantity_in_stock = quantity_in_stock - ?, updated_at = ? WHERE id = ?');
 
       let newSubtotal = 0;
       for (const item of sale_items) {
@@ -517,9 +538,12 @@ router.put('/:id', (req, res) => {
           now
         ]);
 
+        deductStockStmt.run([sanitizedItem.quantity, now, sanitizedItem.product_id]);
+
         newSubtotal += sanitizedItem.total_price;
       }
       insertStmt.free();
+      deductStockStmt.free();
 
       // Recalculate and update total_amount based on new items
       const discount = Number(updatedSale.discount_amount) || 0;

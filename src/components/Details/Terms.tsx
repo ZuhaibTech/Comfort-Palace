@@ -9,7 +9,11 @@ export default function Terms() {
     },
     {
       title: "2. Precision Craftsmanship & Variances",
-      content: "Comfort Palace designs timeless technical art, redefining contemporary living through mathematical precision and artisanal craftsmanship. Because our pieces are handcrafted with natural materials (such as premium hardwoods, natural leather, custom textiles, and brushed metals), minor natural variations in wood grain, color shading, and texture are characteristic of luxury custom furniture and do not constitute defects."
+      content: (
+        <>
+          Comfort Palace designs timeless technical art, redefining contemporary living through mathematical precision and artisanal craftsmanship. Because our pieces are handcrafted with natural materials (such as premium hardwoods, natural leather, custom textiles, and brushed metals), minor natural variations in wood grain, color shading, and texture are characteristic of luxury custom furniture and do not constitute defects. <strong>Actual product images may vary from the images displayed on the website.</strong>
+        </>
+      )
     },
     {
       title: "3. Order Placement & Customization",

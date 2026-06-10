@@ -105,6 +105,7 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
   const { 
     item_code, 
+    hsn_code,
     name, 
     description, 
     price, 
@@ -131,14 +132,14 @@ router.post('/', (req, res) => {
   try {
     const stmt = db.prepare(`
       INSERT INTO products (
-        id, item_code, name, description, price, cost_price, gst_percentage, profit_percentage,
+        id, item_code, hsn_code, name, description, price, cost_price, gst_percentage, profit_percentage,
         quantity_in_stock, low_stock_threshold, category, image_url,
         is_active, created_at, updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
     
     stmt.run([
-      id, item_code, name, description || null, price, cost_price || null, gst_percentage || null, profit_percentage || null,
+      id, item_code, hsn_code || null, name, description || null, price, cost_price || null, gst_percentage || null, profit_percentage || null,
       quantity_in_stock || 0, low_stock_threshold || 10, category || null, image_url || null,
       1, now, now
     ]);
@@ -172,6 +173,7 @@ router.put('/:id', (req, res) => {
   const { id } = req.params;
   const { 
     item_code, 
+    hsn_code,
     name, 
     description, 
     price, 
@@ -190,14 +192,14 @@ router.put('/:id', (req, res) => {
   try {
     const stmt = db.prepare(`
       UPDATE products SET 
-        item_code = ?, name = ?, description = ?, price = ?, cost_price = ?, gst_percentage = ?, profit_percentage = ?,
+        item_code = ?, hsn_code = ?, name = ?, description = ?, price = ?, cost_price = ?, gst_percentage = ?, profit_percentage = ?,
         quantity_in_stock = ?, low_stock_threshold = ?, category = ?, image_url = ?,
         updated_at = ?
       WHERE id = ?
     `);
     
     const result = stmt.run([
-      item_code, name, description, price, cost_price, gst_percentage, profit_percentage,
+      item_code, hsn_code || null, name, description, price, cost_price, gst_percentage, profit_percentage,
       quantity_in_stock, low_stock_threshold, category, image_url,
       now, id
     ]);

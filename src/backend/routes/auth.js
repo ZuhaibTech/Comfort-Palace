@@ -60,6 +60,15 @@ router.post('/reset', (req, res) => {
   return res.json({ success: true });
 });
 
+router.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  if (username === 'inventory' && password === '123456') {
+    return res.json({ success: true, message: 'Login successful' });
+  } else {
+    return res.status(401).json({ success: false, message: 'Invalid credentials. Please try again.' });
+  }
+});
+
 module.exports = router;
 
 

@@ -28,6 +28,7 @@ const initDatabase = async () => {
       CREATE TABLE IF NOT EXISTS products (
         id TEXT PRIMARY KEY,
         item_code TEXT UNIQUE NOT NULL,
+        hsn_code TEXT,
         name TEXT NOT NULL,
         description TEXT,
         price REAL NOT NULL,
@@ -48,15 +49,15 @@ const initDatabase = async () => {
     // Add new columns if they don't exist (for existing databases)
     try {
       db.run(`ALTER TABLE products ADD COLUMN gst_percentage REAL`);
-    } catch (err) {
-      // Column already exists, ignore error
-    }
+    } catch (err) {}
     
     try {
       db.run(`ALTER TABLE products ADD COLUMN profit_percentage REAL`);
-    } catch (err) {
-      // Column already exists, ignore error
-    }
+    } catch (err) {}
+
+    try {
+      db.run(`ALTER TABLE products ADD COLUMN hsn_code TEXT`);
+    } catch (err) {}
 
     // Create sales table
     db.run(`

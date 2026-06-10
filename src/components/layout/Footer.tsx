@@ -94,7 +94,7 @@ export default function Footer() {
         <div className="border-t border-surface-200/60 pt-fluid-md flex flex-col md:flex-row items-center justify-between gap-fluid-xs">
           <div className="flex items-center gap-fluid-xs">
             <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-surface-400">
-              © {new Date().getFullYear()} Comfort Palace Studio
+              © {new Date().getFullYear()} Comfort Palace
             </p>
           </div>
           <div className="flex gap-fluid-sm">

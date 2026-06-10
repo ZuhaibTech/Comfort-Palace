@@ -285,14 +285,8 @@ export default function CollectionPage() {
                             {/* Hover Overlay */}
                             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
   
-                            {/* Intricate Bottom-Left Cutout */}
-                            <div className="absolute bottom-0 left-0 w-28 h-24 bg-surface-50 rounded-tr-[2.5rem] flex items-end justify-start pb-6 pl-8 z-20">
-                              <span className="text-surface-900 text-3xl font-medium leading-none">{displayIndex}</span>
-                              {/* Outer curve top */}
-                              <div className="absolute -top-10 left-0 w-10 h-10 bg-transparent rounded-bl-[2.5rem] shadow-[-20px_20px_0_20px_oklch(var(--color-surface-50))]" />
-                              {/* Outer curve right */}
-                              <div className="absolute bottom-0 -right-10 w-10 h-10 bg-transparent rounded-bl-[2.5rem] shadow-[-20px_20px_0_20px_oklch(var(--color-surface-50))]" />
-                            </div>
+                            {/* Intricate Bottom-Left Cutout - Removed as per user request */}
+
   
                             {/* Hover CTA */}
                             <div className="absolute bottom-8 right-8 z-20 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500">

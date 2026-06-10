@@ -68,7 +68,7 @@ export default function Home() {
             {[
               { id: '01', name: 'Sofa', img: '/images/Sofa.jpeg' },
               { id: '02', name: 'Bed', img: '/images/Bed.jpeg' },
-              { id: '03', name: 'Dining Table', img: '/images/Dinning Table.jpeg' },
+              { id: '03', name: 'Chest Drawer', img: '/images/Chest-Drawer.png' },
               { id: '04', name: 'Dining Chair', img: '/images/Chair.jpeg' },
               { id: '05', name: 'Center Table', img: '/images/Center-Table.jpeg' },
               { id: '06', name: 'Consoles', img: '/images/Console.jpeg' },
@@ -96,14 +96,8 @@ export default function Home() {
                     <h3 className="text-white text-xl font-sans font-normal tracking-wide drop-shadow-sm">{cat.name}</h3>
                   </div>
 
-                  {/* The Inverted Notch at Bottom Left */}
-                  <div className="absolute bottom-[-1px] left-[-1px] z-20 pointer-events-none">
-                    <svg className="w-28 h-20 text-surface-50 scale-[1.02] origin-bottom-left" viewBox="0 0 112 80" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M0,0 A 24,24 0 0,0 24,24 H 88 A 24,24 0 0,1 112,48 V 80 H 0 Z" />
-                    </svg>
-                    {/* The Number */}
-                    <span className="absolute bottom-4 left-6 text-surface-900 text-2xl font-sans font-normal tracking-tight">{cat.id}</span>
-                  </div>
+                  {/* The Inverted Notch at Bottom Left - Removed as per user request */}
+                  
                 </Link>
               </Reveal>
             ))}
@@ -126,15 +120,15 @@ export default function Home() {
                   <span className="italic text-primary-800">Uncompromising</span> Standards.
                 </h2>
                 <p className="text-surface-500 text-lg leading-relaxed mb-12 max-w-xl">
-                  We bridge the gap between architectural precision and emotional comfort. Discover why designers and homeowners choose The Comfort Palace for their most significant spaces.
+                  We bridge the gap between architectural precision and emotional comfort. Discover why designers and homeowners choose Comfort Palace for their most significant spaces.
                 </p>
               </Reveal>
               
                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                 {[
-                  { title: 'premium wood furniture', desc: 'Hand-selected sustainable hardwoods.' },
+                  { title: 'premium wood furniture', desc: 'Hand-selected sustainable premium woods.' },
                   { title: 'Ergonomic Design', desc: 'Engineered for the human form.' },
-                  { title: 'Luxury Finishes', desc: 'At Bespoke, we use premium-based Materials.' },
+                  { title: 'Luxury Finishes', desc: 'At Comfort Palace, we use premium-quality materials crafted for durability, elegance, and lasting comfort.' },
                   { title: 'Direct Pricing', desc: 'Studio quality, Affordable pricing.' }
                 ].map((item, i) => (
                   <Reveal key={item.title} delay={0.4 + (i * 0.1)} distance="30px">
