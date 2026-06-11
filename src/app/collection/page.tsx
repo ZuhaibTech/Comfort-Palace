@@ -416,10 +416,10 @@ export default function CollectionPage() {
                                 className="group flex flex-col gap-10 text-left cursor-pointer w-full"
                               >
                                 {/* Extreme Product Container */}
-                                <div className={`relative w-full ${aspectClass} ${bg} rounded-[4rem] lg:rounded-[5rem] overflow-hidden transition-all duration-[1.5s] cubic-bezier(0.16, 1, 0.3, 1) group-hover:shadow-[0_60px_100px_-30px_rgba(0,0,0,0.2)] group-hover:-translate-y-6`}>
+                                <div className={`relative w-full ${aspectClass} ${bg} ${isMain ? 'rounded-[4rem] lg:rounded-[5rem]' : 'rounded-[1.5rem] lg:rounded-[2rem]'} overflow-hidden transition-all duration-[1.5s] cubic-bezier(0.16, 1, 0.3, 1) group-hover:shadow-[0_60px_100px_-30px_rgba(0,0,0,0.2)] group-hover:-translate-y-6`}>
                                   
                                   {/* Apex Floating Badge */}
-                                  <div className="absolute top-6 lg:top-8 left-1/2 -translate-x-1/2 z-30 bg-[#111] px-4 py-1.5 rounded-full text-[8px] font-black uppercase tracking-[0.2em] text-white shadow-xl transition-all duration-700 group-hover:scale-110 group-hover:bg-white group-hover:text-black">
+                                  <div className="absolute top-6 right-6 lg:top-8 lg:right-8 z-30 bg-[#111] px-4 py-1.5 rounded-full text-[8px] font-black uppercase tracking-[0.2em] text-white shadow-xl transition-all duration-700 group-hover:scale-110 group-hover:bg-white group-hover:text-black">
                                     {section.category === 'Dining' ? 'TABLES' : section.category.toUpperCase()}
                                   </div>
 
@@ -436,11 +436,21 @@ export default function CollectionPage() {
                                   </div>
 
                                   {/* Signature Cutout - Hard Edge Luxury */}
-                                  <div className="absolute bottom-0 left-0 z-40 bg-[#fbfbfb] pt-8 pr-8 rounded-tr-[5rem] flex items-center justify-center min-w-[90px] min-h-[90px] lg:min-w-[120px] lg:min-h-[120px] shadow-[20px_-20px_50px_-10px_rgba(0,0,0,0.05)] transition-all duration-700 group-hover:min-w-[100px] lg:group-hover:min-w-[140px]">
-                                    <div className="absolute -top-10 left-0 w-10 h-10 bg-transparent rounded-bl-[2.5rem] shadow-[-20px_20px_0_20px_rgb(251,251,251)]" />
-                                    <div className="absolute bottom-0 -right-10 w-10 h-10 bg-transparent rounded-bl-[2.5rem] shadow-[-20px_20px_0_20px_rgb(251,251,251)]" />
+                                  <div className={`absolute bottom-0 left-0 z-40 bg-[#fbfbfb] shadow-[20px_-20px_50px_-10px_rgba(0,0,0,0.05)] transition-all duration-700 flex items-center justify-center ${
+                                    isMain 
+                                      ? 'pt-8 pr-8 rounded-tr-[5rem] min-w-[90px] min-h-[90px] lg:min-w-[120px] lg:min-h-[120px] group-hover:min-w-[100px] lg:group-hover:min-w-[140px]' 
+                                      : 'pt-3 pr-3 rounded-tr-[1.5rem] lg:rounded-tr-[2rem] min-w-[45px] min-h-[45px] lg:min-w-[60px] lg:min-h-[60px] group-hover:min-w-[55px] lg:group-hover:min-w-[70px]'
+                                  }`}>
+                                    <div className={`absolute left-0 bg-transparent shadow-[-20px_20px_0_20px_rgb(251,251,251)] ${
+                                      isMain ? '-top-10 w-10 h-10 rounded-bl-[2.5rem]' : '-top-4 w-4 h-4 rounded-bl-[1rem]'
+                                    }`} />
+                                    <div className={`absolute bottom-0 bg-transparent shadow-[-20px_20px_0_20px_rgb(251,251,251)] ${
+                                      isMain ? '-right-10 w-10 h-10 rounded-bl-[2.5rem]' : '-right-4 w-4 h-4 rounded-bl-[1rem]'
+                                    }`} />
                                     
-                                    <span className="font-display text-4xl lg:text-5xl text-black font-light tracking-tighter opacity-10 group-hover:opacity-100 transition-all duration-1000 group-hover:scale-110">
+                                    <span className={`font-display text-black font-light tracking-tighter opacity-10 group-hover:opacity-100 transition-all duration-1000 group-hover:scale-110 ${
+                                      isMain ? 'text-4xl lg:text-5xl' : 'text-2xl lg:text-3xl'
+                                    }`}>
                                       {displayIndex}
                                     </span>
                                   </div>
