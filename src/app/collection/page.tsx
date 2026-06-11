@@ -257,25 +257,25 @@ export default function CollectionPage() {
   };
 
   return (
-    <div className="flex flex-col w-full bg-[#fbfbfb] min-h-screen font-sans selection:bg-primary-900 selection:text-white">
+    <div className="flex flex-col w-full bg-surface-50 min-h-screen font-sans selection:bg-primary-900 selection:text-white">
       
       {/* Extreme Luxury Background Layer */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] bg-primary-100/20 blur-[150px] rounded-full animate-[spin_30s_linear_infinite]" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-surface-200/40 blur-[120px] rounded-full animate-[spin_25s_linear_infinite_reverse]" />
-        <div className="absolute top-[20%] right-[10%] w-px h-full bg-gradient-to-b from-transparent via-primary-800/5 to-transparent" />
+        <div className="absolute top-[20%] right-[10%] w-px h-full bg-gradient-to-b from-transparent via-surface-900/5 to-transparent" />
       </div>
 
       {/* Editorial Header Section */}
-      <section className="relative w-full pt-40 lg:pt-56 pb-24 px-6 lg:px-24 overflow-hidden z-10">
+      <section className="relative w-full pt-20 lg:pt-28 pb-16 px-6 lg:px-24 overflow-hidden z-10">
         <div className="mx-auto max-w-[1100px] flex flex-col lg:flex-row lg:items-end justify-between gap-12 lg:gap-20">
           <Reveal direction="right" once={true} delay={0.2} distance="100px">
             <div className="max-w-4xl">
               <div className="flex items-center gap-6 mb-10">
-                <div className="w-16 h-px bg-primary-900/40" />
-                <span className="text-[10px] font-black tracking-[0.5em] text-primary-900 uppercase">Est. 2026 / Global Archive</span>
+                <div className="w-16 h-px bg-surface-900/40" />
+                <span className="text-[10px] font-black tracking-[0.5em] text-surface-900 uppercase">Est. 2026 / Global Archive</span>
               </div>
-              <h1 className="font-display text-8xl lg:text-[9.5rem] text-black font-light tracking-[-0.04em] leading-[0.8]">
+              <h1 className="font-display text-8xl lg:text-[9.5rem] text-surface-900 font-light tracking-[-0.04em] leading-[0.8]">
                 The Master <br /> 
                 <span className="relative inline-block overflow-hidden">
                   <span className="italic font-serif opacity-10 hover:opacity-100 transition-all duration-[2s] cursor-default">Collection.</span>
@@ -287,7 +287,7 @@ export default function CollectionPage() {
           <Reveal direction="left" once={true} delay={0.4} distance="100px">
             <div className="flex flex-col items-start lg:items-end w-full lg:w-[480px] shrink-0">
               <div className="relative mb-6">
-                 <p className="text-surface-600 text-base lg:text-lg font-light leading-relaxed text-center lg:text-right">
+                 <p className="text-surface-500 text-base lg:text-lg font-light leading-relaxed text-center lg:text-right">
                    A curated selection of timeless pieces.<br className="hidden lg:block" />
                    Each form follows function, creating<br className="hidden lg:block" />
                    harmony in your modern living spaces.
@@ -303,8 +303,8 @@ export default function CollectionPage() {
                   }}
                   className={`group relative px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${
                     !activeCategory 
-                      ? 'bg-[#0f2115] text-white shadow-[0_15px_30px_-10px_rgba(15,33,21,0.5)]' 
-                      : 'bg-white/40 backdrop-blur-3xl text-black border border-black/10 hover:bg-white hover:border-black/30'
+                      ? 'bg-surface-900 text-surface-50 shadow-[0_15px_30px_-10px_rgba(0,0,0,0.3)]' 
+                      : 'bg-surface-100 text-surface-900 border border-surface-200 hover:bg-surface-200'
                   }`}
                 >
                   <span className="relative z-10">All</span>
@@ -318,8 +318,8 @@ export default function CollectionPage() {
                     }}
                     className={`px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${
                       activeCategory === section.category
-                        ? 'bg-[#0f2115] text-white shadow-[0_15px_30px_-10px_rgba(15,33,21,0.5)]'
-                        : 'bg-white/40 backdrop-blur-3xl text-black border border-black/10 hover:bg-white hover:border-black/30'
+                        ? 'bg-surface-900 text-surface-50 shadow-[0_15px_30px_-10px_rgba(0,0,0,0.3)]'
+                        : 'bg-surface-100 text-surface-900 border border-surface-200 hover:bg-surface-200'
                     }`}
                   >
                     {section.category}
@@ -336,7 +336,7 @@ export default function CollectionPage() {
                       <button
                         key={sub.name}
                         onClick={() => scrollToSection(`${activeCategory}-${sub.name}`.toLowerCase().replace(/\s+/g, '-'))}
-                        className="px-6 py-2 rounded-full text-[9px] font-bold uppercase tracking-[0.25em] bg-white/40 backdrop-blur-3xl text-black border border-black/10 hover:bg-white hover:border-black/30 transition-all duration-500"
+                        className="px-6 py-2 rounded-full text-[9px] font-bold uppercase tracking-[0.25em] bg-surface-100 text-surface-900 border border-surface-200 hover:bg-surface-200 transition-all duration-500"
                       >
                         {sub.name}
                       </button>
@@ -360,12 +360,12 @@ export default function CollectionPage() {
 
               <div className="flex flex-col gap-6 mb-24 group/section">
                 <div className="flex items-center gap-10">
-                  <span className="font-serif text-6xl text-primary-900/10 transition-colors duration-1000 group-hover/section:text-primary-900/20 italic">0{sectionIdx + 1}</span>
-                  <h2 className="font-display text-6xl lg:text-7xl text-black font-light tracking-[-0.05em] transition-transform duration-1000 group-hover/section:translate-x-4">
+                  <span className="font-serif text-6xl text-surface-900/10 transition-colors duration-1000 group-hover/section:text-surface-900/20 italic">0{sectionIdx + 1}</span>
+                  <h2 className="font-display text-6xl lg:text-7xl text-surface-900 font-light tracking-[-0.05em] transition-transform duration-1000 group-hover/section:translate-x-4">
                     {section.category}
                   </h2>
                 </div>
-                <div className="w-full h-px bg-gradient-to-r from-black/10 via-black/5 to-transparent" />
+                <div className="w-full h-px bg-gradient-to-r from-surface-900/10 via-surface-900/5 to-transparent" />
               </div>
 
               <div className="flex flex-col gap-48">
@@ -377,12 +377,12 @@ export default function CollectionPage() {
                   >
                     <div className="flex items-center justify-between">
                        <div className="flex items-center gap-6">
-                         <div className="w-2 h-2 rounded-full bg-primary-900/20 group-hover/sub:bg-primary-900 transition-colors duration-700" />
-                         <h3 className="text-black text-[12px] tracking-[0.4em] uppercase font-black">
+                         <div className="w-2 h-2 rounded-full bg-surface-900/20 group-hover/sub:bg-primary-900 transition-colors duration-700" />
+                         <h3 className="text-surface-900 text-[12px] tracking-[0.4em] uppercase font-black">
                            {sub.name}
                          </h3>
                        </div>
-                       <span className="text-[10px] text-black/20 font-mono tracking-widest">SUB-SECTION_{subIdx + 1}</span>
+                       <span className="text-[10px] text-surface-900/20 font-mono tracking-widest">SUB-SECTION_{subIdx + 1}</span>
                     </div>
                     
                     {sub.items.length === 0 ? (
@@ -419,7 +419,11 @@ export default function CollectionPage() {
                                 <div className={`relative w-full ${aspectClass} ${bg} ${isMain ? 'rounded-[4rem] lg:rounded-[5rem]' : 'rounded-[1.5rem] lg:rounded-[2rem]'} overflow-hidden transition-all duration-[1.5s] cubic-bezier(0.16, 1, 0.3, 1) group-hover:shadow-[0_60px_100px_-30px_rgba(0,0,0,0.2)] group-hover:-translate-y-6`}>
                                   
                                   {/* Apex Floating Badge */}
-                                  <div className="absolute top-6 right-6 lg:top-8 lg:right-8 z-30 bg-[#111] px-4 py-1.5 rounded-full text-[8px] font-black uppercase tracking-[0.2em] text-white shadow-xl transition-all duration-700 group-hover:scale-110 group-hover:bg-white group-hover:text-black">
+                                  <div className={`absolute z-30 bg-[#111] rounded-full font-black uppercase tracking-[0.2em] text-white shadow-xl transition-all duration-700 group-hover:scale-110 group-hover:bg-white group-hover:text-black ${
+                                    isMain 
+                                      ? 'top-6 right-6 lg:top-8 lg:right-8 px-4 py-1.5 text-[8px]'
+                                      : 'top-2 right-3 lg:top-3 lg:right-4 px-3 py-1 text-[6px] lg:text-[7px]'
+                                  }`}>
                                     {section.category === 'Dining' ? 'TABLES' : section.category.toUpperCase()}
                                   </div>
 
@@ -435,39 +439,33 @@ export default function CollectionPage() {
                                     </div>
                                   </div>
 
-                                  {/* Signature Cutout - Hard Edge Luxury */}
-                                  <div className={`absolute bottom-0 left-0 z-40 bg-[#fbfbfb] shadow-[20px_-20px_50px_-10px_rgba(0,0,0,0.05)] transition-all duration-700 flex items-center justify-center ${
-                                    isMain 
-                                      ? 'pt-8 pr-8 rounded-tr-[5rem] min-w-[90px] min-h-[90px] lg:min-w-[120px] lg:min-h-[120px] group-hover:min-w-[100px] lg:group-hover:min-w-[140px]' 
-                                      : 'pt-3 pr-3 rounded-tr-[1.5rem] lg:rounded-tr-[2rem] min-w-[45px] min-h-[45px] lg:min-w-[60px] lg:min-h-[60px] group-hover:min-w-[55px] lg:group-hover:min-w-[70px]'
+                                  {/* Base Overlay for Text Legibility */}
+                                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent z-20 pointer-events-none transition-opacity duration-1000 group-hover:opacity-70" />
+
+                                  {/* Floating Number */}
+                                  <div className={`absolute z-40 transition-all duration-700 ${
+                                    isMain ? 'bottom-8 left-8 lg:bottom-10 lg:left-10' : 'bottom-6 left-6 lg:bottom-8 lg:left-8'
                                   }`}>
-                                    <div className={`absolute left-0 bg-transparent shadow-[-20px_20px_0_20px_rgb(251,251,251)] ${
-                                      isMain ? '-top-10 w-10 h-10 rounded-bl-[2.5rem]' : '-top-4 w-4 h-4 rounded-bl-[1rem]'
-                                    }`} />
-                                    <div className={`absolute bottom-0 bg-transparent shadow-[-20px_20px_0_20px_rgb(251,251,251)] ${
-                                      isMain ? '-right-10 w-10 h-10 rounded-bl-[2.5rem]' : '-right-4 w-4 h-4 rounded-bl-[1rem]'
-                                    }`} />
-                                    
-                                    <span className={`font-display text-black font-light tracking-tighter opacity-10 group-hover:opacity-100 transition-all duration-1000 group-hover:scale-110 ${
-                                      isMain ? 'text-4xl lg:text-5xl' : 'text-2xl lg:text-3xl'
+                                    <span className={`font-display font-light tracking-tighter text-white drop-shadow-md opacity-90 group-hover:opacity-100 transition-all duration-1000 group-hover:scale-110 ${
+                                      isMain ? 'text-5xl lg:text-6xl' : 'text-3xl lg:text-4xl'
                                     }`}>
                                       {displayIndex}
                                     </span>
                                   </div>
 
                                   {/* Dynamic Light Overlay */}
-                                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-black/20 opacity-30 group-hover:opacity-60 transition-opacity duration-1000" />
+                                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-black/20 opacity-30 group-hover:opacity-60 transition-opacity duration-1000 z-30 pointer-events-none" />
                                 </div>
 
                                 {/* Luxury Typography Block */}
                                 <div className="flex flex-col gap-4 px-4 transition-all duration-1000 group-hover:translate-x-4">
                                   <div className="flex items-center gap-5 w-full overflow-hidden">
-                                    <h4 className="font-display text-2xl lg:text-3xl text-black font-light tracking-tighter truncate transition-all duration-700 group-hover:text-primary-900">
+                                    <h4 className="font-display text-2xl lg:text-3xl text-surface-900 font-light tracking-tighter truncate transition-all duration-700 group-hover:text-primary-800">
                                       {product.name}
                                     </h4>
-                                    <div className="flex-grow h-px bg-black/5 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-1000 delay-100" />
+                                    <div className="flex-grow h-px bg-surface-900/5 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-1000 delay-100" />
                                   </div>
-                                  <p className="text-surface-600 text-sm lg:text-base font-light leading-relaxed max-w-[90%] opacity-40 group-hover:opacity-100 transition-all duration-1000">
+                                  <p className="text-surface-500 text-sm lg:text-base font-light leading-relaxed max-w-[90%] opacity-40 group-hover:opacity-100 transition-all duration-1000">
                                     {product.description}
                                   </p>
                                 </div>
@@ -491,7 +489,7 @@ export default function CollectionPage() {
         }`}>
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="group relative w-14 h-14 rounded-full bg-transparent border border-black text-black flex items-center justify-center transition-all duration-700 hover:scale-110 active:scale-90 hover:bg-black hover:text-white"
+          className="group relative w-14 h-14 rounded-full bg-transparent border border-surface-900 text-surface-900 flex items-center justify-center transition-all duration-700 hover:scale-110 active:scale-90 hover:bg-surface-900 hover:text-surface-50"
           aria-label="Back to Top"
         >
           <svg 
