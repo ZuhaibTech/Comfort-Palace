@@ -162,11 +162,51 @@ const collectionData = [
   {
     category: 'Accent Furniture',
     subcategories: [
-      { name: 'Diwan', items: [] },
-      { name: 'Maharaja Diwan', items: [] },
-      { name: 'Wall Mirrors', items: [] },
-      { name: 'Wase stands', items: [] },
-      { name: 'corner stands', items: [] }
+      {
+        name: 'Diwan',
+        items: [
+          { id: 'af-dw-main', item_code: 'AF-DW-001', name: 'Premium Diwan Main', description: 'Majestic diwan for royal comfort.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Diwan Main.webp', quantity_in_stock: 5, isMain: true },
+          { id: 'af-dw-1', item_code: 'AF-DW-002', name: 'Accent Diwan - 1', description: 'Elegant diwan with intricate carvings.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Diwan -1.webp', quantity_in_stock: 5 },
+          { id: 'af-dw-2', item_code: 'AF-DW-003', name: 'Accent Diwan - 2', description: 'Modern take on traditional diwan design.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Diwan -2.webp', quantity_in_stock: 5 },
+          { id: 'af-dw-3', item_code: 'AF-DW-004', name: 'Accent Diwan - 3', description: 'Comfortable diwan for your living space.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Diwan -3.webp', quantity_in_stock: 5 },
+        ]
+      },
+      {
+        name: 'Maharaja Diwan',
+        items: [
+          { id: 'af-mdw-main', item_code: 'AF-MDW-001', name: 'Maharaja Diwan Main', description: 'The ultimate royal diwan experience.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Maharaja Diwan Main.webp', quantity_in_stock: 5, isMain: true },
+          { id: 'af-mdw-1', item_code: 'AF-MDW-002', name: 'Maharaja Diwan - 1', description: 'Handcrafted luxury Maharaja diwan.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Maharaja Diwan -1.webp', quantity_in_stock: 5 },
+          { id: 'af-mdw-2', item_code: 'AF-MDW-003', name: 'Maharaja Diwan - 2', description: 'Classic Maharaja style with modern comfort.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Maharaja Diwan -2.webp', quantity_in_stock: 5 },
+          { id: 'af-mdw-3', item_code: 'AF-MDW-004', name: 'Maharaja Diwan - 3', description: 'Ornate Maharaja diwan for grand interiors.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Maharaja Diwan -3.webp', quantity_in_stock: 5 },
+        ]
+      },
+      {
+        name: 'Wall Mirrors',
+        items: [
+          { id: 'af-wm-main', item_code: 'AF-WM-001', name: 'Architectural Wall Mirror', description: 'Grand statement wall mirror.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Wall Mirror Mirror.webp', quantity_in_stock: 5, isMain: true },
+          { id: 'af-wm-1', item_code: 'AF-WM-002', name: 'Wall Mirror - 1', description: 'Elegant framed wall mirror.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Wall Mirror -1.webp', quantity_in_stock: 5 },
+          { id: 'af-wm-2', item_code: 'AF-WM-003', name: 'Wall Mirror - 2', description: 'Contemporary wall mirror design.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Wall Mirror -2.webp', quantity_in_stock: 5 },
+          { id: 'af-wm-3', item_code: 'AF-WM-004', name: 'Wall Mirror - 3', description: 'Minimalist wall mirror for any room.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Wall Mirror -3.webp', quantity_in_stock: 5 },
+        ]
+      },
+      {
+        name: 'Waave Stands',
+        items: [
+          { id: 'af-ws-main', item_code: 'AF-WS-001', name: 'Waave Stand Main', description: 'Sculptural waave stand for your accents.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Waave Stands Main.webp', quantity_in_stock: 5, isMain: true },
+          { id: 'af-ws-1', item_code: 'AF-WS-002', name: 'Waave Stand - 1', description: 'Modern waave stand design.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Waave Stands -1.webp', quantity_in_stock: 5 },
+          { id: 'af-ws-2', item_code: 'AF-WS-003', name: 'Waave Stand - 2', description: 'Elegant waave stand for display.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Waave Stands -2.webp', quantity_in_stock: 5 },
+          { id: 'af-ws-3', item_code: 'AF-WS-004', name: 'Waave Stand - 3', description: 'Minimalist waave stand accent.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Waave Stands -3.webp', quantity_in_stock: 5 },
+        ]
+      },
+      {
+        name: 'Corner Stands',
+        items: [
+          { id: 'af-cs-main', item_code: 'AF-CS-001', name: 'Signature Corner Stand', description: 'Exquisite corner stand for display.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Corner Stands Main.webp', quantity_in_stock: 5, isMain: true },
+          { id: 'af-cs-1', item_code: 'AF-CS-002', name: 'Corner Stand - 1', description: 'Sleek corner display stand.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Corner Stands -1.webp', quantity_in_stock: 5 },
+          { id: 'af-cs-2', item_code: 'AF-CS-003', name: 'Corner Stand - 2', description: 'Traditional corner stand craftsmanship.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Corner Stands -2.webp', quantity_in_stock: 5 },
+          { id: 'af-cs-3', item_code: 'AF-CS-004', name: 'Corner Stand - 3', description: 'Modern corner storage solution.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Corner Stands -3.webp', quantity_in_stock: 5 },
+        ]
+      }
     ]
   }
 ];
@@ -193,7 +233,7 @@ export default function CollectionPage() {
     const handleScroll = () => {
       // Use both window.scrollY and documentElement.scrollTop for maximum compatibility
       const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-      setShowScrollTop(scrollY > 150);
+      setShowScrollTop(scrollY > 200);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -228,7 +268,7 @@ export default function CollectionPage() {
 
       {/* Editorial Header Section */}
       <section className="relative w-full pt-40 lg:pt-56 pb-24 px-6 lg:px-24 overflow-hidden z-10">
-        <div className="mx-auto max-w-[900px] flex flex-col lg:flex-row lg:items-end justify-between gap-20">
+        <div className="mx-auto max-w-[1100px] flex flex-col lg:flex-row lg:items-end justify-between gap-12 lg:gap-20">
           <Reveal direction="right" once={true} delay={0.2} distance="100px">
             <div className="max-w-4xl">
               <div className="flex items-center gap-6 mb-10">
@@ -245,27 +285,29 @@ export default function CollectionPage() {
           </Reveal>
 
           <Reveal direction="left" once={true} delay={0.4} distance="100px">
-            <div className="flex flex-col items-start lg:items-end max-w-sm">
-              <div className="relative mb-12 py-4 border-y border-black/5">
-                 <p className="text-surface-700 text-xl lg:text-2xl font-light leading-snug text-left lg:text-right italic">
-                   "Furniture that <span className="text-black font-medium not-italic">breathes</span>."
+            <div className="flex flex-col items-start lg:items-end w-full lg:w-[480px] shrink-0">
+              <div className="relative mb-6">
+                 <p className="text-surface-600 text-base lg:text-lg font-light leading-relaxed text-center lg:text-right">
+                   A curated selection of timeless pieces.<br className="hidden lg:block" />
+                   Each form follows function, creating<br className="hidden lg:block" />
+                   harmony in your modern living spaces.
                  </p>
               </div>
               
               {/* Main Navigation - Extreme Glassmorphism */}
-              <div className="flex flex-wrap items-center justify-start lg:justify-end gap-4 mb-10">
+              <div className="flex flex-wrap items-center justify-center lg:justify-end gap-3 mb-10 w-full lg:w-[420px]">
                 <button
                   onClick={() => {
                     setActiveCategory(null);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  className={`group relative px-8 py-3.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${
+                  className={`group relative px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${
                     !activeCategory 
-                      ? 'bg-black text-white shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] scale-110' 
-                      : 'bg-white/40 backdrop-blur-3xl text-black/50 border border-white/80 hover:bg-white/90 hover:text-black hover:border-black/20'
+                      ? 'bg-[#0f2115] text-white shadow-[0_15px_30px_-10px_rgba(15,33,21,0.5)]' 
+                      : 'bg-white/40 backdrop-blur-3xl text-black border border-black/10 hover:bg-white hover:border-black/30'
                   }`}
                 >
-                  <span className="relative z-10">All Pieces</span>
+                  <span className="relative z-10">All</span>
                   {!activeCategory && <div className="absolute inset-0 bg-primary-900 rounded-full scale-0 group-hover:scale-100 transition-transform duration-700" />}
                 </button>
                 {collectionData.map((section) => (
@@ -274,10 +316,10 @@ export default function CollectionPage() {
                     onClick={() => {
                       setActiveCategory(section.category);
                     }}
-                    className={`px-8 py-3.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${
+                    className={`px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${
                       activeCategory === section.category
-                        ? 'bg-black text-white shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] scale-110'
-                        : 'bg-white/40 backdrop-blur-3xl text-black/50 border border-white/80 hover:bg-white/90 hover:text-black hover:border-black/20'
+                        ? 'bg-[#0f2115] text-white shadow-[0_15px_30px_-10px_rgba(15,33,21,0.5)]'
+                        : 'bg-white/40 backdrop-blur-3xl text-black border border-black/10 hover:bg-white hover:border-black/30'
                     }`}
                   >
                     {section.category}
@@ -287,14 +329,14 @@ export default function CollectionPage() {
 
               {/* Sub-Furniture Pill Strip - Liquid Reveal */}
               {activeCategory && (
-                <div className="flex flex-wrap items-center justify-start lg:justify-end gap-2.5 animate-[revealUp_0.8s_cubic-bezier(0.16,1,0.3,1)]">
+                <div className="flex flex-wrap items-center justify-center lg:justify-end gap-2.5 animate-[revealUp_0.8s_cubic-bezier(0.16,1,0.3,1)]">
                   {collectionData
                     .find(c => c.category === activeCategory)
                     ?.subcategories.map((sub) => (
                       <button
                         key={sub.name}
                         onClick={() => scrollToSection(`${activeCategory}-${sub.name}`.toLowerCase().replace(/\s+/g, '-'))}
-                        className="px-6 py-2 rounded-full text-[9px] font-bold uppercase tracking-[0.25em] bg-white/60 backdrop-blur-md text-primary-900 border border-white/40 hover:bg-primary-900 hover:text-white transition-all duration-500 hover:scale-105"
+                        className="px-6 py-2 rounded-full text-[9px] font-bold uppercase tracking-[0.25em] bg-white/40 backdrop-blur-3xl text-black border border-black/10 hover:bg-white hover:border-black/30 transition-all duration-500"
                       >
                         {sub.name}
                       </button>
@@ -377,7 +419,7 @@ export default function CollectionPage() {
                                 <div className={`relative w-full ${aspectClass} ${bg} rounded-[4rem] lg:rounded-[5rem] overflow-hidden transition-all duration-[1.5s] cubic-bezier(0.16, 1, 0.3, 1) group-hover:shadow-[0_60px_100px_-30px_rgba(0,0,0,0.2)] group-hover:-translate-y-6`}>
                                   
                                   {/* Apex Floating Badge */}
-                                  <div className="absolute top-8 right-8 lg:top-12 lg:right-12 z-30 bg-black/90 backdrop-blur-2xl px-6 py-2.5 rounded-full text-[9px] font-black uppercase tracking-[0.3em] text-white shadow-2xl transition-all duration-700 group-hover:scale-110 group-hover:bg-white group-hover:text-black">
+                                  <div className="absolute top-6 lg:top-8 left-1/2 -translate-x-1/2 z-30 bg-[#111] px-4 py-1.5 rounded-full text-[8px] font-black uppercase tracking-[0.2em] text-white shadow-xl transition-all duration-700 group-hover:scale-110 group-hover:bg-white group-hover:text-black">
                                     {section.category === 'Dining' ? 'TABLES' : section.category.toUpperCase()}
                                   </div>
 
@@ -409,13 +451,13 @@ export default function CollectionPage() {
 
                                 {/* Luxury Typography Block */}
                                 <div className="flex flex-col gap-4 px-4 transition-all duration-1000 group-hover:translate-x-4">
-                                  <div className="flex items-center gap-5">
-                                    <h4 className="font-display text-4xl lg:text-5xl text-black font-light tracking-tighter transition-all duration-700 group-hover:text-primary-900">
+                                  <div className="flex items-center gap-5 w-full overflow-hidden">
+                                    <h4 className="font-display text-2xl lg:text-3xl text-black font-light tracking-tighter truncate transition-all duration-700 group-hover:text-primary-900">
                                       {product.name}
                                     </h4>
                                     <div className="flex-grow h-px bg-black/5 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-1000 delay-100" />
                                   </div>
-                                  <p className="text-surface-600 text-lg lg:text-xl font-light leading-relaxed max-w-[80%] opacity-40 group-hover:opacity-100 transition-all duration-1000">
+                                  <p className="text-surface-600 text-sm lg:text-base font-light leading-relaxed max-w-[90%] opacity-40 group-hover:opacity-100 transition-all duration-1000">
                                     {product.description}
                                   </p>
                                 </div>
@@ -434,29 +476,27 @@ export default function CollectionPage() {
       </div>
 
       {/* Extreme Floating Navigation Anchor */}
-      <div className={`fixed bottom-16 right-16 z-[9999] transition-all duration-[1.2s] cubic-bezier(0.16, 1, 0.3, 1) ${
+      <div className={`fixed bottom-8 right-8 lg:bottom-12 lg:right-12 z-[9999] transition-all duration-[1.2s] cubic-bezier(0.16, 1, 0.3, 1) ${
           showScrollTop ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-32 scale-50 pointer-events-none'
         }`}>
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="group relative w-20 h-20 rounded-full bg-black text-white flex items-center justify-center shadow-[0_40px_80px_-15px_rgba(0,0,0,0.5)] transition-all duration-700 hover:scale-110 active:scale-90"
+          className="group relative w-14 h-14 rounded-full bg-transparent border border-black text-black flex items-center justify-center transition-all duration-700 hover:scale-110 active:scale-90 hover:bg-black hover:text-white"
           aria-label="Back to Top"
         >
-          <div className="absolute inset-[2px] rounded-full border border-white/20 group-hover:border-white/40 transition-colors" />
           <svg 
-            width="32" 
-            height="32" 
+            width="24" 
+            height="24" 
             viewBox="0 0 24 24" 
             fill="none" 
             stroke="currentColor" 
-            strokeWidth="1.5" 
+            strokeWidth="1" 
             strokeLinecap="round" 
             strokeLinejoin="round"
-            className="group-hover:-translate-y-1 transition-transform duration-500"
+            className="transition-transform duration-500 group-hover:-translate-y-1"
           >
-            <path d="m18 15-6-6-6 6"/>
+            <path d="M12 19V5M5 12l7-7 7 7"/>
           </svg>
-          <span className="absolute -top-12 opacity-0 group-hover:opacity-100 transition-all duration-500 text-[9px] font-black uppercase tracking-[0.3em] whitespace-nowrap bg-black px-4 py-2 rounded-full">Top</span>
         </button>
       </div>
 
