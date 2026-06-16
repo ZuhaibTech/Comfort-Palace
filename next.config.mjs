@@ -22,14 +22,6 @@ const nextConfig = {
         source: '/:path((?!api|uploads|assets|_next).+\\.(?:jpg|jpeg|png|svg|ico|gif|webp))',
         destination: '/images/:path',
       },
-      {
-        source: '/api/:path*',
-        destination: 'http://localhost:3001/api/:path*',
-      },
-      {
-        source: '/uploads/:path*',
-        destination: 'http://localhost:3001/uploads/:path*',
-      },
     ];
   },
 };
