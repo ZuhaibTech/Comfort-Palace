@@ -27,6 +27,9 @@ export default function DashboardPage() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [imageFile2, setImageFile2] = useState<File | null>(null);
+  const [imagePreview2, setImagePreview2] = useState('');
+  const fileInputRef2 = useRef<HTMLInputElement>(null);
 
   // Edit Product Modal State
   const [editProduct, setEditProduct] = useState<any>(null);
@@ -51,15 +54,26 @@ export default function DashboardPage() {
   const [isNewSaleOpen, setIsNewSaleOpen] = useState(false);
   const [saleStep, setSaleStep] = useState<'products' | 'cart'>('products');
   const [cart, setCart] = useState<any[]>([]);
-  const [saleCustomer, setSaleCustomer] = useState({ name: '', email: '', phone: '', address: '', payment_method: 'Cash', discount: '0', transport_cost: '0', notes: '' });
+  const [saleCustomer, setSaleCustomer] = useState({ name: '', email: '', phone: '', address: '', delivery_address: '', pan_number: '', payment_methods: ['Cash'], cash_amount: '', upi_amount: '', discount: '0', transport_cost: '0', notes: '' });
   const [saleSubmitting, setSaleSubmitting] = useState(false);
   const [editSaleId, setEditSaleId] = useState<string | null>(null);
   const [viewInvoice, setViewInvoice] = useState<any>(null);
+  const [saleProductSearch, setSaleProductSearch] = useState('');
 
   // Sales filters
   const [salesStartDate, setSalesStartDate] = useState('');
   const [salesEndDate, setSalesEndDate] = useState('');
   const [salesSearch, setSalesSearch] = useState('');
+
+  // Return Invoice state
+  const [isReturnOpen, setIsReturnOpen] = useState(false);
+  const [returnSearch, setReturnSearch] = useState('');
+  const [returnSearchResults, setReturnSearchResults] = useState<any[]>([]);
+  const [returnSelectedSale, setReturnSelectedSale] = useState<any>(null);
+  const [returnItems, setReturnItems] = useState<{[productId: string]: number}>({});
+  const [returnNotes, setReturnNotes] = useState('');
+  const [returnSubmitting, setReturnSubmitting] = useState(false);
+  const [returnSearching, setReturnSearching] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -95,14 +109,16 @@ export default function DashboardPage() {
     const { name, value } = e.target;
     const updated = { ...formData, [name]: value };
 
-    // Auto-calculate profit amount and SP when CP or PF% change
-    if (name === 'cost_price' || name === 'profit_percentage') {
+    // Auto-calculate profit amount and SP when CP, GST%, or PF% change
+    if (name === 'cost_price' || name === 'profit_percentage' || name === 'gst_percentage') {
       const cp = Number(name === 'cost_price' ? value : updated.cost_price) || 0;
       const pf = Number(name === 'profit_percentage' ? value : updated.profit_percentage) || 0;
-      if (cp > 0 && pf > 0) {
+      const gst = Number(name === 'gst_percentage' ? value : updated.gst_percentage) || 0;
+      if (cp > 0) {
         const profitAmt = Math.round(cp * (pf / 100));
+        const gstAmt = Math.round(cp * (gst / 100));
         updated.profit_amount = String(profitAmt);
-        updated.price = String(cp + profitAmt);
+        updated.price = String(cp + gstAmt + profitAmt);
       }
     }
 
@@ -141,11 +157,15 @@ export default function DashboardPage() {
         customer_email: saleCustomer.email || null,
         customer_phone: saleCustomer.phone || null,
         customer_address: saleCustomer.address || null,
+        delivery_address: saleCustomer.delivery_address || null,
+        pan_number: saleCustomer.pan_number || null,
         total_amount: cartTotal,
         discount_amount: discountAmt,
         tax_amount: transportCost, // Using tax_amount to store transport cost
         amount_paid: cartTotal,
-        payment_method: saleCustomer.payment_method.toLowerCase(),
+        payment_method: saleCustomer.payment_methods.join(', '),
+        cash_amount: Number(saleCustomer.cash_amount) || 0,
+        upi_amount: Number(saleCustomer.upi_amount) || 0,
         payment_status: 'completed',
         notes: saleCustomer.notes || null,
         sale_items: cart.map(c => ({ product_id: c.product_id, quantity: c.quantity, unit_price: c.unit_price, total_price: c.total_price }))
@@ -160,7 +180,7 @@ export default function DashboardPage() {
         setIsNewSaleOpen(false);
         setEditSaleId(null);
         setCart([]);
-        setSaleCustomer({ name: '', email: '', phone: '', address: '', payment_method: 'Cash', discount: '0', transport_cost: '0', notes: '' });
+        setSaleCustomer({ name: '', email: '', phone: '', address: '', delivery_address: '', pan_number: '', payment_methods: ['Cash'], cash_amount: '', upi_amount: '', discount: '0', transport_cost: '0', notes: '' });
         setSaleStep('products');
         fetchData();
       } else { alert('Failed: ' + result.error); }
@@ -186,7 +206,12 @@ export default function DashboardPage() {
     
     setSaleCustomer({
       name: sale.customer_name || '', email: sale.customer_email || '', phone: sale.customer_phone || '',
-      address: sale.customer_address || '', payment_method: sale.payment_method || 'Cash',
+      address: sale.customer_address || '', 
+      delivery_address: sale.delivery_address || '',
+      pan_number: sale.pan_number || '',
+      payment_methods: sale.payment_method ? sale.payment_method.split(',').map((s: string) => s.trim()) : ['Cash'],
+      cash_amount: sale.cash_amount ? String(sale.cash_amount) : '',
+      upi_amount: sale.upi_amount ? String(sale.upi_amount) : '',
       discount: discountPct,
       transport_cost: sale.tax_amount ? String(sale.tax_amount) : '0',
       notes: sale.notes || ''
@@ -207,13 +232,15 @@ export default function DashboardPage() {
   const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     const updated = { ...editFormData, [name]: value };
-    if (name === 'cost_price' || name === 'profit_percentage') {
+    if (name === 'cost_price' || name === 'profit_percentage' || name === 'gst_percentage') {
       const cp = Number(name === 'cost_price' ? value : updated.cost_price) || 0;
       const pf = Number(name === 'profit_percentage' ? value : updated.profit_percentage) || 0;
-      if (cp > 0 && pf > 0) {
+      const gst = Number(name === 'gst_percentage' ? value : updated.gst_percentage) || 0;
+      if (cp > 0) {
         const profitAmt = Math.round(cp * (pf / 100));
+        const gstAmt = Math.round(cp * (gst / 100));
         updated.profit_amount = String(profitAmt);
-        updated.price = String(cp + profitAmt);
+        updated.price = String(cp + gstAmt + profitAmt);
       }
     }
     setEditFormData(updated);
@@ -260,12 +287,26 @@ export default function DashboardPage() {
     return pass;
   });
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const getFirstImage = (urlData: string) => {
+    if (!urlData) return '';
+    try {
+      const parsed = JSON.parse(urlData);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed[0];
+    } catch(e) {}
+    return urlData;
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, slot: 1 | 2 = 1) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      setImageFile(file);
       const previewUrl = URL.createObjectURL(file);
-      setImagePreview(previewUrl);
+      if (slot === 1) {
+        setImageFile(file);
+        setImagePreview(previewUrl);
+      } else {
+        setImageFile2(file);
+        setImagePreview2(previewUrl);
+      }
     }
   };
 
@@ -274,27 +315,39 @@ export default function DashboardPage() {
     setUploadingImage(true);
     
     try {
-      let imageUrl = '';
+      const imageUrls: string[] = [];
       
-      // 1. Upload Image
+      // 1. Upload Image 1
       if (imageFile) {
-        const formData = new FormData();
-        formData.append('file', imageFile);
-        
-        const uploadRes = await fetch('/api/upload', {
-          method: 'POST',
-          body: formData
-        });
-        
+        const fd = new FormData();
+        fd.append('file', imageFile);
+        const uploadRes = await fetch('/api/upload', { method: 'POST', body: fd });
         const uploadData = await uploadRes.json();
         if (uploadData.success) {
-          imageUrl = uploadData.data.url;
+          imageUrls.push(uploadData.data.url);
         } else {
-          alert('Image upload failed: ' + uploadData.error);
+          alert('Image 1 upload failed: ' + uploadData.error);
           setUploadingImage(false);
           return;
         }
       }
+
+      // 2. Upload Image 2
+      if (imageFile2) {
+        const fd2 = new FormData();
+        fd2.append('file', imageFile2);
+        const uploadRes2 = await fetch('/api/upload', { method: 'POST', body: fd2 });
+        const uploadData2 = await uploadRes2.json();
+        if (uploadData2.success) {
+          imageUrls.push(uploadData2.data.url);
+        } else {
+          alert('Image 2 upload failed: ' + uploadData2.error);
+          setUploadingImage(false);
+          return;
+        }
+      }
+
+      const imageUrl = imageUrls.length > 0 ? JSON.stringify(imageUrls) : '';
 
       // 2. Submit Product
       const payload = {
@@ -320,6 +373,8 @@ export default function DashboardPage() {
         setIsAddModalOpen(false);
         setImageFile(null);
         setImagePreview('');
+        setImageFile2(null);
+        setImagePreview2('');
         setFormData({
           item_code: '', hsn_code: '', category: '', name: '', description: '', price: '',
           cost_price: '', gst_percentage: '', profit_percentage: '', profit_amount: '', quantity_in_stock: '', low_stock_threshold: '10'
@@ -341,10 +396,91 @@ export default function DashboardPage() {
   const totalSalesCount = sales.length;
   const totalRevenue = sales.reduce((acc: number, s: any) => acc + (s.total_amount || 0), 0);
 
+  // Return Invoice helpers
+  const searchForReturn = async (query: string) => {
+    setReturnSearch(query);
+    if (query.length < 2) { setReturnSearchResults([]); return; }
+    setReturnSearching(true);
+    try {
+      const res = await fetch(`/api/sales/search?q=${encodeURIComponent(query)}`);
+      const data = await res.json();
+      setReturnSearchResults(data.data || []);
+    } catch (_e) { setReturnSearchResults([]); }
+    setReturnSearching(false);
+  };
+
+  const selectSaleForReturn = (sale: any) => {
+    setReturnSelectedSale(sale);
+    setReturnItems({});
+    setReturnSearchResults([]);
+    setReturnSearch('');
+  };
+
+  const toggleReturnItem = (productId: string, maxQty: number) => {
+    setReturnItems(prev => {
+      if (prev[productId] !== undefined) {
+        const next = { ...prev };
+        delete next[productId];
+        return next;
+      }
+      return { ...prev, [productId]: maxQty };
+    });
+  };
+
+  const updateReturnQty = (productId: string, qty: number, maxQty: number) => {
+    if (qty < 1) qty = 1;
+    if (qty > maxQty) qty = maxQty;
+    setReturnItems(prev => ({ ...prev, [productId]: qty }));
+  };
+
+  const returnTotal = returnSelectedSale
+    ? returnSelectedSale.sale_items
+        .filter((item: any) => returnItems[item.product_id] !== undefined)
+        .reduce((sum: number, item: any) => sum + (returnItems[item.product_id] || 0) * (item.unit_price || 0), 0)
+    : 0;
+
+  const submitReturn = async () => {
+    if (!returnSelectedSale || Object.keys(returnItems).length === 0) return;
+    setReturnSubmitting(true);
+    try {
+      const items = returnSelectedSale.sale_items
+        .filter((item: any) => returnItems[item.product_id] !== undefined)
+        .map((item: any) => ({
+          product_id: item.product_id,
+          quantity: returnItems[item.product_id],
+          unit_price: item.unit_price
+        }));
+
+      const res = await fetch('/api/sales/return', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          original_sale_id: returnSelectedSale.id,
+          return_items: items,
+          notes: returnNotes
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert(`Return invoice ${data.data.sale_number} created successfully!`);
+        setIsReturnOpen(false);
+        setReturnSelectedSale(null);
+        setReturnItems({});
+        setReturnNotes('');
+        fetchData();
+      } else {
+        alert('Return failed: ' + (data.error || 'Unknown error'));
+      }
+    } catch (err) {
+      alert('An error occurred while processing the return.');
+    }
+    setReturnSubmitting(false);
+  };
+
   return (
-    <div className="min-h-screen bg-surface-50 font-sans relative pt-[12dvh]">
+    <div className="min-h-screen bg-surface-50 font-sans relative pt-[12dvh] print:bg-transparent print:pt-0 print:min-h-0">
       {/* Header */}
-      <header className="bg-surface-50/80 backdrop-blur-xl border-b border-surface-200/60 sticky top-[12dvh] z-40">
+      <header className="bg-surface-50/80 backdrop-blur-xl border-b border-surface-200/60 sticky top-[12dvh] z-40 print:hidden">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center">
             <div className="relative h-12 w-48">
@@ -375,7 +511,7 @@ export default function DashboardPage() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 print:hidden">
         
         {/* Page Title */}
         <div className="mb-8">
@@ -388,9 +524,7 @@ export default function DashboardPage() {
           {[
             { id: 'dashboard', label: 'Dashboard' },
             { id: 'products', label: 'Products' },
-            { id: 'archived', label: 'Archived' },
             { id: 'sales', label: 'Sales' },
-            { id: 'testimonials', label: 'Testimonials' },
             { id: 'forms', label: 'Forms' }
           ].map((tab) => (
             <button
@@ -624,7 +758,7 @@ export default function DashboardPage() {
                             <td className="py-4 px-4">
                               <div className="w-12 h-12 bg-surface-100 rounded-lg overflow-hidden border border-surface-200/60 relative">
                                 {product.image_url ? (
-                                  <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" />
+                                  <img src={getFirstImage(product.image_url)} alt={product.name} className="w-full h-full object-cover" />
                                 ) : (
                                   <svg className="w-6 h-6 text-surface-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -717,6 +851,10 @@ export default function DashboardPage() {
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
                   Export Excel
                 </button>
+                <button onClick={() => { setIsReturnOpen(true); setReturnSelectedSale(null); setReturnSearch(''); setReturnSearchResults([]); setReturnItems({}); setReturnNotes(''); }} className="px-4 py-2 border border-red-300 text-red-600 rounded-lg text-sm font-semibold hover:bg-red-50 flex items-center gap-2 transition-colors">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" /></svg>
+                  Return Invoice
+                </button>
                 <button onClick={() => { setIsNewSaleOpen(true); setSaleStep('products'); }} className="px-4 py-2 bg-[#0b5c2a] text-white rounded-lg text-sm font-semibold hover:bg-green-800 flex items-center gap-2 transition-colors shadow-sm">
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg>
                   New Sale
@@ -769,27 +907,40 @@ export default function DashboardPage() {
                     </thead>
                     <tbody>
                       {filteredSales.map((sale: any) => (
-                        <tr key={sale.id} className="border-b border-surface-200/40 hover:bg-surface-50">
-                          <td className="py-4 px-4 text-sm text-surface-900 font-medium">{sale.sale_number || `#${sale.id.slice(0,8)}`}</td>
+                        <tr key={sale.id} className={`border-b border-surface-200/40 hover:bg-surface-50 ${sale.is_return ? 'bg-red-50/30' : ''}`}>
+                          <td className="py-4 px-4 text-sm font-medium">
+                            <div className="flex items-center gap-2">
+                              <span className={sale.is_return ? 'text-red-600' : 'text-surface-900'}>{sale.sale_number || `#${sale.id.slice(0,8)}`}</span>
+                              {sale.is_return ? <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-600 uppercase tracking-wider">Return</span> : null}
+                            </div>
+                          </td>
                           <td className="py-4 px-4 text-sm text-surface-500">{formatSaleDate(sale)}</td>
                           <td className="py-4 px-4">
                             <div className="text-sm font-semibold text-surface-900">{sale.customer_name || 'Walk-in Customer'}</div>
                             <div className="text-xs text-surface-500">{sale.customer_phone || ''}</div>
                           </td>
                           <td className="py-4 px-4 text-sm">
-                            <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${sale.payment_status === 'completed' || sale.payment_status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'} capitalize`}>
-                              {sale.payment_status || 'pending'}
-                            </span>
+                            {sale.is_return ? (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-700">Refund</span>
+                            ) : (
+                              <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${sale.payment_status === 'completed' || sale.payment_status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'} capitalize`}>
+                                {sale.payment_status || 'pending'}
+                              </span>
+                            )}
                           </td>
-                          <td className="py-4 px-4 text-sm text-surface-900 font-semibold text-right">₹{sale.total_amount?.toLocaleString()}</td>
+                          <td className={`py-4 px-4 text-sm font-semibold text-right ${sale.is_return ? 'text-red-600' : 'text-surface-900'}`}>
+                            {sale.is_return ? '-' : ''}₹{Math.abs(sale.total_amount || 0)?.toLocaleString()}
+                          </td>
                           <td className="py-4 px-4 text-right">
                             <div className="flex items-center justify-end gap-2">
                               <button onClick={() => setViewInvoice(sale)} className="p-1.5 text-surface-500 hover:bg-surface-100 rounded-lg transition-colors" title="View Invoice">
                                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                               </button>
-                              <button onClick={() => openEditSale(sale)} className="p-1.5 text-primary-800 hover:bg-primary-50 rounded-lg transition-colors" title="Edit">
-                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-                              </button>
+                              {!sale.is_return && (
+                                <button onClick={() => openEditSale(sale)} className="p-1.5 text-primary-800 hover:bg-primary-50 rounded-lg transition-colors" title="Edit">
+                                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                </button>
+                              )}
                               <button onClick={() => deleteSale(sale.id)} className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Delete">
                                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                               </button>
@@ -799,6 +950,207 @@ export default function DashboardPage() {
                       ))}
                     </tbody>
                   </table>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* RETURN INVOICE MODAL */}
+        {isReturnOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-surface-900/40 backdrop-blur-sm">
+            <div className="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto relative border border-surface-200/60">
+              {/* Header */}
+              <div className="px-8 py-5 border-b border-surface-200/40 flex justify-between items-center sticky top-0 bg-white z-20 rounded-t-3xl">
+                <div>
+                  <h2 className="font-display text-2xl font-light text-surface-900">Return <span className="italic text-red-600">Invoice</span></h2>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-surface-400 mt-1">Process a Customer Return</p>
+                </div>
+                <button onClick={() => setIsReturnOpen(false)} className="text-surface-400 hover:text-surface-900 p-2 bg-surface-100 hover:bg-surface-200 rounded-full transition-colors">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+              </div>
+
+              <div className="p-8 space-y-6">
+                {/* Step 1: Search for bill */}
+                {!returnSelectedSale ? (
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-surface-400 mb-2 block">Search Original Bill</label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                          <svg className="h-5 w-5 text-surface-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                        </div>
+                        <input
+                          type="text"
+                          value={returnSearch}
+                          onChange={e => searchForReturn(e.target.value)}
+                          placeholder="Enter bill number or customer name..."
+                          className="pl-12 pr-4 py-3.5 w-full border-2 border-surface-200 rounded-2xl text-sm focus:outline-none focus:border-red-400 transition-colors bg-surface-50/50"
+                          autoFocus
+                        />
+                      </div>
+                    </div>
+
+                    {returnSearching && (
+                      <div className="text-center py-6 text-surface-400 text-sm">Searching...</div>
+                    )}
+
+                    {!returnSearching && returnSearchResults.length > 0 && (
+                      <div className="space-y-2 max-h-80 overflow-y-auto">
+                        {returnSearchResults.map((sale: any) => (
+                          <button
+                            key={sale.id}
+                            onClick={() => selectSaleForReturn(sale)}
+                            className="w-full text-left p-4 bg-surface-50/80 hover:bg-surface-100 rounded-xl border border-surface-200/60 transition-all duration-200 group"
+                          >
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <p className="text-sm font-bold text-surface-900 group-hover:text-red-700 transition-colors">{sale.sale_number}</p>
+                                <p className="text-xs text-surface-500 mt-0.5">{sale.customer_name || 'Walk-in Customer'} · {formatSaleDate(sale)}</p>
+                              </div>
+                              <div className="text-right">
+                                <p className="text-sm font-bold text-surface-900">₹{Math.abs(sale.total_amount || 0).toLocaleString()}</p>
+                                <p className="text-[10px] text-surface-400">{sale.sale_items?.length || 0} items</p>
+                              </div>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+
+                    {!returnSearching && returnSearch.length >= 2 && returnSearchResults.length === 0 && (
+                      <div className="text-center py-10 text-surface-400">
+                        <svg className="w-12 h-12 mx-auto mb-3 text-surface-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <p className="text-sm font-semibold">No bills found</p>
+                        <p className="text-xs mt-1">Try a different bill number or customer name</p>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  /* Step 2: Select products to return */
+                  <div className="space-y-6">
+                    {/* Selected Bill Info */}
+                    <div className="bg-surface-50/80 rounded-2xl p-5 border border-surface-200/40">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-surface-400 mb-1">Original Bill</p>
+                          <p className="text-lg font-bold text-surface-900">{returnSelectedSale.sale_number}</p>
+                          <p className="text-sm text-surface-500 mt-0.5">{returnSelectedSale.customer_name || 'Walk-in Customer'} · {formatSaleDate(returnSelectedSale)}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-surface-400 mb-1">Bill Total</p>
+                          <p className="text-lg font-bold text-surface-900">₹{Math.abs(returnSelectedSale.total_amount || 0).toLocaleString()}</p>
+                        </div>
+                      </div>
+                      <button onClick={() => { setReturnSelectedSale(null); setReturnItems({}); }} className="mt-3 text-xs text-red-500 hover:text-red-700 font-semibold transition-colors">
+                        ← Choose a different bill
+                      </button>
+                    </div>
+
+                    {/* Product Selection */}
+                    <div>
+                      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-surface-400 mb-3">Select Products to Return</p>
+                      <div className="space-y-2">
+                        {returnSelectedSale.sale_items?.map((item: any) => {
+                          const isSelected = returnItems[item.product_id] !== undefined;
+                          return (
+                            <div
+                              key={item.product_id}
+                              className={`p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer ${
+                                isSelected
+                                  ? 'border-red-300 bg-red-50/50 shadow-sm'
+                                  : 'border-surface-200/60 bg-white hover:border-surface-300'
+                              }`}
+                              onClick={() => toggleReturnItem(item.product_id, item.quantity)}
+                            >
+                              <div className="flex justify-between items-center">
+                                <div className="flex items-center gap-3">
+                                  <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-colors ${
+                                    isSelected ? 'bg-red-500 border-red-500' : 'border-surface-300'
+                                  }`}>
+                                    {isSelected && <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
+                                  </div>
+                                  <div>
+                                    <p className="text-sm font-semibold text-surface-900">{item.product_name || `Product ${item.product_id.slice(0,8)}`}</p>
+                                    <p className="text-xs text-surface-400">₹{Number(item.unit_price).toLocaleString()} × {item.quantity} purchased</p>
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-4">
+                                  {isSelected && (
+                                    <div className="flex items-center gap-2" onClick={e => e.stopPropagation()}>
+                                      <span className="text-[10px] font-bold uppercase tracking-widest text-surface-400">Qty:</span>
+                                      <button
+                                        onClick={() => updateReturnQty(item.product_id, (returnItems[item.product_id] || 1) - 1, item.quantity)}
+                                        className="w-7 h-7 rounded-lg border border-surface-200 flex items-center justify-center text-surface-600 hover:bg-surface-100 text-sm"
+                                      >−</button>
+                                      <span className="text-sm font-bold w-6 text-center">{returnItems[item.product_id]}</span>
+                                      <button
+                                        onClick={() => updateReturnQty(item.product_id, (returnItems[item.product_id] || 1) + 1, item.quantity)}
+                                        className="w-7 h-7 rounded-lg border border-surface-200 flex items-center justify-center text-surface-600 hover:bg-surface-100 text-sm"
+                                      >+</button>
+                                    </div>
+                                  )}
+                                  <p className="text-sm font-bold text-surface-900 w-24 text-right">
+                                    ₹{(isSelected ? (returnItems[item.product_id] || 0) * Number(item.unit_price) : Number(item.total_price)).toLocaleString()}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Notes */}
+                    <div>
+                      <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-surface-400 mb-2 block">Return Reason (Optional)</label>
+                      <textarea
+                        value={returnNotes}
+                        onChange={e => setReturnNotes(e.target.value)}
+                        rows={2}
+                        placeholder="Enter reason for return..."
+                        className="w-full px-4 py-3 border border-surface-200/60 rounded-xl text-sm focus:outline-none focus:border-red-400 resize-none"
+                      />
+                    </div>
+
+                    {/* Refund Summary */}
+                    {Object.keys(returnItems).length > 0 && (
+                      <div className="bg-red-50 border border-red-200/60 rounded-2xl p-6">
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-400 mb-1">Refund Amount</p>
+                            <p className="text-3xl font-display font-light text-red-700">₹{returnTotal.toLocaleString()}</p>
+                          </div>
+                          <div className="text-right text-xs text-red-500">
+                            {Object.keys(returnItems).length} product(s) selected<br/>
+                            Items will be restocked
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Footer */}
+              {returnSelectedSale && (
+                <div className="px-8 py-5 border-t border-surface-200/40 flex justify-end gap-3 sticky bottom-0 bg-white rounded-b-3xl">
+                  <button onClick={() => setIsReturnOpen(false)} className="px-6 py-2.5 rounded-full text-sm font-semibold border border-surface-200 text-surface-500 hover:bg-surface-50 transition-colors">
+                    Cancel
+                  </button>
+                  <button
+                    onClick={submitReturn}
+                    disabled={returnSubmitting || Object.keys(returnItems).length === 0}
+                    className="px-6 py-2.5 bg-red-600 text-white rounded-full text-sm font-semibold hover:bg-red-700 flex items-center gap-2 disabled:opacity-50 transition-colors shadow-sm"
+                  >
+                    {returnSubmitting ? 'Processing...' : (
+                      <>
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" /></svg>
+                        Process Return
+                      </>
+                    )}
+                  </button>
                 </div>
               )}
             </div>
@@ -917,16 +1269,12 @@ export default function DashboardPage() {
 
                 <div className="grid grid-cols-4 gap-3 md:col-span-3">
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">SP *</label>
-                    <input required name="price" value={formData.price} onChange={handleInputChange} type="number" step="0.01" placeholder="Sale Price" className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-900 focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all resize-none" />
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">CP *</label>
+                    <input required name="cost_price" value={formData.cost_price} onChange={handleInputChange} type="number" placeholder="Cost Price" className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-900 focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all resize-none" />
                   </div>
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">CP</label>
-                    <input name="cost_price" value={formData.cost_price} onChange={handleInputChange} type="number" placeholder="Cost Price" className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-900 focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all resize-none" />
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">GST%</label>
-                    <select name="gst_percentage" value={formData.gst_percentage} onChange={handleInputChange} className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-900 focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all resize-none">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">GST% *</label>
+                    <select required name="gst_percentage" value={formData.gst_percentage} onChange={handleInputChange} className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-900 focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all resize-none">
                       <option value="">Select GST%</option>
                       <option value="5">5%</option>
                       <option value="12">12%</option>
@@ -934,16 +1282,24 @@ export default function DashboardPage() {
                       <option value="28">28%</option>
                     </select>
                   </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">PF%</label>
-                      <input name="profit_percentage" value={formData.profit_percentage} onChange={handleInputChange} type="number" step="0.01" placeholder="Profit %" className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-900 focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all resize-none" />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">&nbsp;</label>
-                      <input readOnly value={formData.profit_amount} type="text" placeholder="Profit Amt" className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-500 outline-none cursor-not-allowed" />
-                    </div>
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">PF% *</label>
+                    <input required name="profit_percentage" value={formData.profit_percentage} onChange={handleInputChange} type="number" step="0.01" placeholder="Profit %" className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-900 focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all resize-none" />
                   </div>
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">&nbsp;</label>
+                    <input readOnly value={formData.profit_amount ? `₹${formData.profit_amount}` : ''} type="text" placeholder="Profit Amt" className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-500 outline-none cursor-not-allowed" />
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-1.5 md:col-span-3">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">SP (Auto Calculated)</label>
+                  <input readOnly value={formData.price ? `₹${Number(formData.price).toLocaleString()}` : ''} type="text" placeholder="Sale Price = CP + GST + Profit" className="w-full bg-green-50 border-2 border-green-300 rounded-xl px-4 py-3 text-green-800 font-bold text-lg outline-none cursor-not-allowed" />
+                  {formData.cost_price && formData.gst_percentage && formData.profit_percentage && (
+                    <p className="text-[10px] text-surface-400 mt-1">
+                      CP ₹{formData.cost_price} + GST ₹{Math.round(Number(formData.cost_price) * Number(formData.gst_percentage) / 100)} ({formData.gst_percentage}%) + Profit ₹{formData.profit_amount} ({formData.profit_percentage}%) = SP ₹{formData.price}
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex flex-col gap-1.5">
@@ -956,35 +1312,72 @@ export default function DashboardPage() {
                   <input name="low_stock_threshold" value={formData.low_stock_threshold} onChange={handleInputChange} type="number" className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-900 focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all resize-none" />
                 </div>
 
-                <div className="flex flex-col gap-1.5 md:col-span-2">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">Product Image</label>
-                  <div 
-                    onClick={() => fileInputRef.current?.click()}
-                    className={`border-2 border-dashed rounded-[2rem] p-10 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 ${imagePreview ? 'border-primary-400 bg-primary-50' : 'border-surface-200/80 hover:border-primary-400 hover:bg-surface-100/50'}`}
-                  >
-                    <input 
-                      type="file" 
-                      accept="image/*"
-                      ref={fileInputRef}
-                      className="hidden"
-                      onChange={handleImageChange}
-                    />
-                    
-                    {imagePreview ? (
-                      <div className="relative w-32 h-32 rounded-lg overflow-hidden border border-surface-200/60">
-                        <Image src={imagePreview} alt="Preview" fill className="object-cover" />
-                      </div>
-                    ) : (
-                      <>
-                        <div className="bg-primary-500 text-white p-3 rounded-lg mb-3">
-                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                          </svg>
+                <div className="md:col-span-3">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-3 block">Product Images (Max 2)</label>
+                  <div className="grid grid-cols-2 gap-4">
+                    {/* Image 1 */}
+                    <div 
+                      onClick={() => fileInputRef.current?.click()}
+                      className={`border-2 border-dashed rounded-2xl p-6 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 ${imagePreview ? 'border-primary-400 bg-primary-50' : 'border-surface-200/80 hover:border-primary-400 hover:bg-surface-100/50'}`}
+                    >
+                      <input 
+                        type="file" 
+                        accept="image/*"
+                        ref={fileInputRef}
+                        className="hidden"
+                        onChange={(e) => handleImageChange(e, 1)}
+                      />
+                      {imagePreview ? (
+                        <div className="relative">
+                          <div className="relative w-28 h-28 rounded-lg overflow-hidden border border-surface-200/60">
+                            <Image src={imagePreview} alt="Preview 1" fill className="object-cover" />
+                          </div>
+                          <button type="button" onClick={(e) => { e.stopPropagation(); setImageFile(null); setImagePreview(''); }} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors shadow-md">
+                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                          </button>
                         </div>
-                        <p className="text-sm font-bold text-surface-900 mb-1">Click to upload product image</p>
-                        <p className="text-xs text-surface-400">PNG, JPG, SVG up to 10MB</p>
-                      </>
-                    )}
+                      ) : (
+                        <>
+                          <div className="bg-primary-500 text-white p-2.5 rounded-lg mb-2">
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+                          </div>
+                          <p className="text-xs font-bold text-surface-900 mb-0.5">Image 1</p>
+                          <p className="text-[10px] text-surface-400">Click to upload</p>
+                        </>
+                      )}
+                    </div>
+
+                    {/* Image 2 */}
+                    <div 
+                      onClick={() => fileInputRef2.current?.click()}
+                      className={`border-2 border-dashed rounded-2xl p-6 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 ${imagePreview2 ? 'border-primary-400 bg-primary-50' : 'border-surface-200/80 hover:border-primary-400 hover:bg-surface-100/50'}`}
+                    >
+                      <input 
+                        type="file" 
+                        accept="image/*"
+                        ref={fileInputRef2}
+                        className="hidden"
+                        onChange={(e) => handleImageChange(e, 2)}
+                      />
+                      {imagePreview2 ? (
+                        <div className="relative">
+                          <div className="relative w-28 h-28 rounded-lg overflow-hidden border border-surface-200/60">
+                            <Image src={imagePreview2} alt="Preview 2" fill className="object-cover" />
+                          </div>
+                          <button type="button" onClick={(e) => { e.stopPropagation(); setImageFile2(null); setImagePreview2(''); }} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors shadow-md">
+                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                          </button>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="bg-surface-300 text-white p-2.5 rounded-lg mb-2">
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+                          </div>
+                          <p className="text-xs font-bold text-surface-900 mb-0.5">Image 2</p>
+                          <p className="text-[10px] text-surface-400">Optional</p>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -1049,32 +1442,55 @@ export default function DashboardPage() {
               {/* Products Selection */}
               {saleStep === 'products' && (
                 <div>
-                  <p className="text-sm text-surface-500 mb-4">Click on a product to add it to your cart.</p>
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                    <p className="text-sm text-surface-500">Click on a product to add it to your cart.</p>
+                    <div className="relative w-full sm:w-64">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg className="h-4 w-4 text-surface-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                      </div>
+                      <input 
+                        type="text" 
+                        value={saleProductSearch}
+                        onChange={e => setSaleProductSearch(e.target.value)}
+                        className="pl-9 pr-4 py-2 w-full border border-surface-200/60 rounded-lg text-sm focus:outline-none focus:border-primary-800" 
+                        placeholder="Search by Item Code..."
+                      />
+                    </div>
+                  </div>
+
                   {products.length === 0 ? (
                     <div className="py-12 text-center text-surface-500">No products in inventory. Add products first.</div>
                   ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {products.map((p: any) => {
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                      {products.filter((p: any) => p.item_code?.toLowerCase().includes(saleProductSearch.toLowerCase())).map((p: any) => {
                         const inCart = cart.find((c: any) => c.product_id === p.id);
                         return (
-                          <div key={p.id} onClick={() => addToCart(p)} className={`p-4 border rounded-xl cursor-pointer transition-all hover:shadow-md ${inCart ? 'border-blue-400 bg-primary-50' : 'border-surface-200/60 hover:border-blue-300'}`}>
-                            <div className="flex justify-between items-start mb-2">
-                              <div>
-                                <div className="text-sm font-bold text-surface-900">{p.name}</div>
-                                <div className="text-xs text-surface-500">{p.item_code} · {p.category || 'Uncategorized'}</div>
-                              </div>
-                              {inCart && (
-                                <div className="flex items-center gap-1 bg-primary-500 text-white pl-2 pr-1 py-0.5 rounded-full text-xs">
-                                  <span>{inCart.quantity}</span>
-                                  <button onClick={(e) => { e.stopPropagation(); removeFromCart(p.id); }} className="hover:bg-primary-900 rounded-full p-0.5 transition-colors" title="Remove">
-                                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-                                  </button>
-                                </div>
+                          <div key={p.id} onClick={() => !inCart && addToCart(p)} className={`p-4 border rounded-xl cursor-pointer transition-all hover:shadow-md flex items-start gap-4 ${inCart ? 'border-blue-400 bg-primary-50/40 ring-1 ring-blue-400/20' : 'border-surface-200/60 hover:border-blue-300'}`}>
+                            <div className="w-16 h-16 bg-white rounded-lg overflow-hidden border border-surface-200/60 shrink-0 relative shadow-sm">
+                              {p.image_url ? (
+                                <img src={getFirstImage(p.image_url)} alt={p.name} className="w-full h-full object-cover" />
+                              ) : (
+                                <svg className="w-6 h-6 text-surface-300 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                               )}
                             </div>
-                            <div className="flex justify-between items-end mt-3">
-                              <div className="text-lg font-bold text-surface-900">₹{p.price?.toLocaleString()}</div>
-                              <div className="text-xs text-surface-500">Stock: {p.quantity_in_stock}</div>
+                            
+                            <div className="flex-1 min-w-0 flex flex-col justify-between min-h-[4rem]">
+                              <div className="flex justify-between items-start gap-2">
+                                <div className="min-w-0 flex-1">
+                                  <div className="text-[10px] text-surface-400 font-mono font-bold tracking-wider uppercase truncate">{p.item_code}</div>
+                                  <div className="text-sm font-bold text-surface-900 truncate mt-0.5">{p.name}</div>
+                                </div>
+                                {inCart && (
+                                  <div onClick={e => e.stopPropagation()} className="flex items-center gap-1 bg-white border border-primary-200 rounded-md px-1 py-0.5 shadow-sm shrink-0">
+                                    <button onClick={() => updateCartQty(p.id, inCart.quantity - 1)} className="w-6 h-6 flex items-center justify-center text-primary-700 hover:bg-primary-50 rounded font-bold transition-colors">−</button>
+                                    <span className="text-xs font-bold text-surface-900 w-5 text-center">{inCart.quantity}</span>
+                                    <button onClick={() => updateCartQty(p.id, inCart.quantity + 1)} className="w-6 h-6 flex items-center justify-center text-primary-700 hover:bg-primary-50 rounded font-bold transition-colors">+</button>
+                                  </div>
+                                )}
+                              </div>
+                              <div className="mt-2">
+                                <div className="text-lg font-bold text-surface-900 leading-none truncate">₹{p.price?.toLocaleString()}</div>
+                              </div>
                             </div>
                           </div>
                         );
@@ -1139,11 +1555,74 @@ export default function DashboardPage() {
                         <div><label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">Email</label><input value={saleCustomer.email} onChange={e => setSaleCustomer({...saleCustomer, email: e.target.value})} className="mt-1 w-full px-3 py-2 border border-surface-200/60 rounded-lg text-sm focus:outline-none focus:border-primary-800" /></div>
                         <div><label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">Phone</label><input value={saleCustomer.phone} onChange={e => setSaleCustomer({...saleCustomer, phone: e.target.value})} className="mt-1 w-full px-3 py-2 border border-surface-200/60 rounded-lg text-sm focus:outline-none focus:border-primary-800" /></div>
                       </div>
-                      <div><label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">Address</label><input value={saleCustomer.address} onChange={e => setSaleCustomer({...saleCustomer, address: e.target.value})} className="mt-1 w-full px-3 py-2 border border-surface-200/60 rounded-lg text-sm focus:outline-none focus:border-primary-800" /></div>
+                      <div><label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">Billing Address</label><input value={saleCustomer.address} onChange={e => setSaleCustomer({...saleCustomer, address: e.target.value})} className="mt-1 w-full px-3 py-2 border border-surface-200/60 rounded-lg text-sm focus:outline-none focus:border-primary-800" /></div>
                       <div className="grid grid-cols-2 gap-3">
-                        <div><label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">Payment Method</label><select value={saleCustomer.payment_method} onChange={e => setSaleCustomer({...saleCustomer, payment_method: e.target.value})} className="mt-1 w-full px-3 py-2 border border-surface-200/60 rounded-lg text-sm bg-white focus:outline-none focus:border-primary-800"><option>Cash</option><option>UPI</option><option>Card</option><option>Bank Transfer</option></select></div>
+                        <div><label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">Delivery Address</label><input value={saleCustomer.delivery_address} onChange={e => setSaleCustomer({...saleCustomer, delivery_address: e.target.value})} className="mt-1 w-full px-3 py-2 border border-surface-200/60 rounded-lg text-sm focus:outline-none focus:border-primary-800" /></div>
+                        <div><label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">PAN Card Number</label><input value={saleCustomer.pan_number} onChange={e => setSaleCustomer({...saleCustomer, pan_number: e.target.value})} className="mt-1 w-full px-3 py-2 border border-surface-200/60 rounded-lg text-sm focus:outline-none focus:border-primary-800 uppercase" /></div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3 items-start">
+                        <div>
+                          <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-2 block">Payment Methods</label>
+                          <div className="flex flex-wrap gap-2">
+                            {['Cash', 'UPI', 'Card', 'Bank Transfer'].map(method => (
+                              <label key={method} className="flex items-center gap-1.5 text-sm cursor-pointer hover:bg-surface-100/50 px-2 py-1 rounded transition-colors">
+                                <input type="checkbox" checked={saleCustomer.payment_methods.includes(method)} onChange={(e) => {
+                                  const methods = e.target.checked 
+                                    ? [...saleCustomer.payment_methods, method] 
+                                    : saleCustomer.payment_methods.filter(m => m !== method);
+                                  setSaleCustomer({...saleCustomer, payment_methods: methods.length ? methods : ['Cash']});
+                                }} className="rounded border-surface-300 text-primary-800 focus:ring-primary-800 w-4 h-4 cursor-pointer" />
+                                {method}
+                              </label>
+                            ))}
+                          </div>
+                        </div>
                         <div><label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">Discount %</label><input value={saleCustomer.discount} onChange={e => setSaleCustomer({...saleCustomer, discount: e.target.value})} type="number" className="mt-1 w-full px-3 py-2 border border-surface-200/60 rounded-lg text-sm focus:outline-none focus:border-primary-800" /></div>
                       </div>
+                      {saleCustomer.payment_methods.length > 1 && (saleCustomer.payment_methods.includes('Cash') || saleCustomer.payment_methods.includes('UPI')) && (
+                        <div className="grid grid-cols-2 gap-3 p-3 bg-surface-100/50 rounded-lg border border-surface-200/60 mt-1">
+                          {saleCustomer.payment_methods.includes('Cash') && (
+                            <div>
+                              <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">Cash Amount (₹)</label>
+                              <input 
+                                value={saleCustomer.cash_amount} 
+                                onChange={e => {
+                                  const cashVal = parseFloat(e.target.value) || 0;
+                                  const upiVal = cartTotal - cashVal;
+                                  setSaleCustomer({
+                                    ...saleCustomer, 
+                                    cash_amount: e.target.value,
+                                    ...(saleCustomer.payment_methods.includes('UPI') ? { upi_amount: e.target.value !== '' && upiVal >= 0 ? upiVal.toString() : '' } : {})
+                                  });
+                                }} 
+                                type="number" 
+                                className="mt-1 w-full px-3 py-2 border border-surface-200/60 rounded-lg text-sm focus:outline-none focus:border-primary-800 bg-white" 
+                                placeholder="Amount paid in Cash" 
+                              />
+                            </div>
+                          )}
+                          {saleCustomer.payment_methods.includes('UPI') && (
+                            <div>
+                              <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">UPI Amount (₹)</label>
+                              <input 
+                                value={saleCustomer.upi_amount} 
+                                onChange={e => {
+                                  const upiVal = parseFloat(e.target.value) || 0;
+                                  const cashVal = cartTotal - upiVal;
+                                  setSaleCustomer({
+                                    ...saleCustomer, 
+                                    upi_amount: e.target.value,
+                                    ...(saleCustomer.payment_methods.includes('Cash') ? { cash_amount: e.target.value !== '' && cashVal >= 0 ? cashVal.toString() : '' } : {})
+                                  });
+                                }} 
+                                type="number" 
+                                className="mt-1 w-full px-3 py-2 border border-surface-200/60 rounded-lg text-sm focus:outline-none focus:border-primary-800 bg-white" 
+                                placeholder="Amount paid via UPI" 
+                              />
+                            </div>
+                          )}
+                        </div>
+                      )}
                       <div><label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">Transport Cost</label><input value={saleCustomer.transport_cost} onChange={e => setSaleCustomer({...saleCustomer, transport_cost: e.target.value})} type="number" className="mt-1 w-full px-3 py-2 border border-surface-200/60 rounded-lg text-sm focus:outline-none focus:border-primary-800" /></div>
                       <div><label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">Notes (Optional)</label><textarea value={saleCustomer.notes} onChange={e => setSaleCustomer({...saleCustomer, notes: e.target.value})} rows={3} placeholder="Add any additional notes for this sale..." className="mt-1 w-full px-3 py-2 border border-surface-200/60 rounded-lg text-sm focus:outline-none focus:border-primary-800 resize-none"></textarea></div>
                     </div>
@@ -1208,16 +1687,12 @@ export default function DashboardPage() {
 
                 <div className="grid grid-cols-4 gap-3 md:col-span-3">
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">SP *</label>
-                    <input required name="price" value={editFormData.price} onChange={handleEditInputChange} type="number" step="0.01" placeholder="Sale Price" className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-900 focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all resize-none" />
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">CP *</label>
+                    <input required name="cost_price" value={editFormData.cost_price} onChange={handleEditInputChange} type="number" placeholder="Cost Price" className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-900 focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all resize-none" />
                   </div>
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">CP</label>
-                    <input name="cost_price" value={editFormData.cost_price} onChange={handleEditInputChange} type="number" placeholder="Cost Price" className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-900 focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all resize-none" />
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">GST%</label>
-                    <select name="gst_percentage" value={editFormData.gst_percentage} onChange={handleEditInputChange} className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-900 focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all resize-none">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">GST% *</label>
+                    <select required name="gst_percentage" value={editFormData.gst_percentage} onChange={handleEditInputChange} className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-900 focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all resize-none">
                       <option value="">Select GST%</option>
                       <option value="5">5%</option>
                       <option value="12">12%</option>
@@ -1225,16 +1700,24 @@ export default function DashboardPage() {
                       <option value="28">28%</option>
                     </select>
                   </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">PF%</label>
-                      <input name="profit_percentage" value={editFormData.profit_percentage} onChange={handleEditInputChange} type="number" step="0.01" placeholder="Profit %" className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-900 focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all resize-none" />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">&nbsp;</label>
-                      <input readOnly value={editFormData.profit_amount} type="text" placeholder="Profit Amt" className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-500 outline-none cursor-not-allowed" />
-                    </div>
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">PF% *</label>
+                    <input required name="profit_percentage" value={editFormData.profit_percentage} onChange={handleEditInputChange} type="number" step="0.01" placeholder="Profit %" className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-900 focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all resize-none" />
                   </div>
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">&nbsp;</label>
+                    <input readOnly value={editFormData.profit_amount ? `₹${editFormData.profit_amount}` : ''} type="text" placeholder="Profit Amt" className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-500 outline-none cursor-not-allowed" />
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-1.5 md:col-span-3">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">SP (Auto Calculated)</label>
+                  <input readOnly value={editFormData.price ? `₹${Number(editFormData.price).toLocaleString()}` : ''} type="text" placeholder="Sale Price = CP + GST + Profit" className="w-full bg-green-50 border-2 border-green-300 rounded-xl px-4 py-3 text-green-800 font-bold text-lg outline-none cursor-not-allowed" />
+                  {editFormData.cost_price && editFormData.gst_percentage && editFormData.profit_percentage && (
+                    <p className="text-[10px] text-surface-400 mt-1">
+                      CP ₹{editFormData.cost_price} + GST ₹{Math.round(Number(editFormData.cost_price) * Number(editFormData.gst_percentage) / 100)} ({editFormData.gst_percentage}%) + Profit ₹{editFormData.profit_amount} ({editFormData.profit_percentage}%) = SP ₹{editFormData.price}
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex flex-col gap-1.5">
@@ -1257,194 +1740,207 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* Edit Product Modal */}
-      {editProduct && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-surface-900/60 backdrop-blur-md">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="px-6 py-4 border-b border-surface-200/40 flex justify-between items-center sticky top-0 bg-white z-10">
-              <h2 className="text-lg font-bold text-surface-900 flex items-center gap-2">
-                <div className="bg-blue-100 text-primary-900 p-1.5 rounded-lg">
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
-                </div>
-                Edit Product
-              </h2>
-              <button onClick={() => setEditProduct(null)} className="text-surface-400 hover:text-surface-600 p-1"><svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
-            </div>
 
-            <form onSubmit={submitEditProduct} className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">Item Code *</label>
-                  <input required name="item_code" value={editFormData.item_code} onChange={handleEditInputChange} type="text" className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-900 focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all resize-none" />
-                </div>
-
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">Category</label>
-                  <select name="category" value={editFormData.category} onChange={handleEditInputChange} className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-900 focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all resize-none appearance-none">
-                    <option value="" disabled>Select a category</option>
-                    {CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
-                  </select>
-                </div>
-
-                <div className="flex flex-col gap-1.5 md:col-span-2">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">Product Name *</label>
-                  <input required name="name" value={editFormData.name} onChange={handleEditInputChange} type="text" className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-900 focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all resize-none" />
-                </div>
-
-                <div className="flex flex-col gap-1.5 md:col-span-2">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">Description</label>
-                  <textarea name="description" value={editFormData.description} onChange={handleEditInputChange} rows={4} className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-900 focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all resize-none resize-none"></textarea>
-                </div>
-
-                <div className="grid grid-cols-4 gap-3 md:col-span-2">
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">SP *</label>
-                    <input required name="price" value={editFormData.price} onChange={handleEditInputChange} type="number" step="0.01" placeholder="Sale Price" className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-900 focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all resize-none" />
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">CP</label>
-                    <input name="cost_price" value={editFormData.cost_price} onChange={handleEditInputChange} type="number" placeholder="Cost Price" className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-900 focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all resize-none" />
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">GST%</label>
-                    <select name="gst_percentage" value={editFormData.gst_percentage} onChange={handleEditInputChange} className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-900 focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all resize-none">
-                      <option value="">Select GST%</option>
-                      <option value="5">5%</option>
-                      <option value="12">12%</option>
-                      <option value="18">18%</option>
-                      <option value="28">28%</option>
-                    </select>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">PF%</label>
-                      <input name="profit_percentage" value={editFormData.profit_percentage} onChange={handleEditInputChange} type="number" step="0.01" placeholder="Profit %" className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-900 focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all resize-none" />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">&nbsp;</label>
-                      <input readOnly value={editFormData.profit_amount} type="text" placeholder="Profit Amt" className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-500 outline-none cursor-not-allowed" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">Quantity in Stock *</label>
-                  <input required name="quantity_in_stock" value={editFormData.quantity_in_stock} onChange={handleEditInputChange} type="number" className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-900 focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all resize-none" />
-                </div>
-
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">Low Stock Alert</label>
-                  <input name="low_stock_threshold" value={editFormData.low_stock_threshold} onChange={handleEditInputChange} type="number" className="w-full bg-surface-100 border border-surface-200/80 rounded-xl px-4 py-3 text-surface-900 focus:ring-2 focus:ring-primary-800/20 focus:border-primary-800/40 outline-none transition-all resize-none" />
-                </div>
-              </div>
-
-              <div className="mt-8 pt-4 border-t border-surface-200/40 flex justify-end gap-3">
-                <button type="button" onClick={() => setEditProduct(null)} className="px-8 py-3 rounded-full text-[10px] uppercase tracking-widest font-bold border border-surface-200 text-surface-500 hover:bg-white hover:text-surface-900 transition-all duration-300">Cancel</button>
-                <button type="submit" className="px-8 py-3 rounded-full text-[10px] uppercase tracking-widest font-bold bg-primary-900 text-surface-50 hover:bg-primary-800 shadow-xl hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2">Save Changes</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* View Invoice Modal */}
+      {/* View Invoice Modal (Luxury Edition) */}
       {viewInvoice && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm print:bg-white print:p-0 print:block">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto print:shadow-none print:w-full print:max-w-full print:h-auto print:max-h-full print:rounded-none">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-8 bg-surface-900/40 backdrop-blur-sm print:bg-white print:p-0 print:block print:static">
+          <div className="bg-white/95 backdrop-blur-2xl rounded-3xl shadow-[0_32px_64px_-12px_rgba(0,0,0,0.14)] w-full max-w-5xl max-h-[90vh] overflow-y-auto print:shadow-none print:w-full print:max-w-full print:h-auto print:max-h-none print:rounded-none relative border border-white/60 print:border-none print:overflow-visible">
             
             {/* Header (Non-printable) */}
-            <div className="px-6 py-4 border-b border-surface-200/40 flex justify-between items-center sticky top-0 bg-white z-10 print:hidden">
-              <h2 className="text-lg font-bold text-surface-900 flex items-center gap-2">Invoice Detail</h2>
-              <div className="flex gap-2">
-                <button onClick={() => window.print()} className="px-4 py-1.5 bg-surface-100 text-surface-700 rounded-lg text-sm font-semibold hover:bg-surface-200 flex items-center gap-2">
+            <div className="px-8 py-5 border-b border-surface-200/40 flex justify-between items-center sticky top-0 bg-white/80 backdrop-blur-xl z-20 print:hidden rounded-t-3xl">
+              <h2 className="text-xl font-display text-surface-900 flex items-center gap-2">Invoice <span className="italic text-[#C5A059]">Detail</span></h2>
+              <div className="flex gap-3">
+                <button onClick={() => window.print()} className="px-5 py-2 bg-surface-900 text-white rounded-full text-sm font-semibold hover:bg-[#C5A059] transition-colors flex items-center gap-2 shadow-lg hover:shadow-xl">
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
-                  Print / Download
+                  Export PDF
                 </button>
-                <button onClick={() => setViewInvoice(null)} className="text-surface-400 hover:text-surface-600 p-1 bg-surface-50 rounded-lg"><svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
+                <button onClick={() => setViewInvoice(null)} className="text-surface-400 hover:text-surface-900 p-2 bg-surface-100 hover:bg-surface-200 rounded-full transition-colors"><svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
               </div>
             </div>
 
             {/* Printable Area */}
-            <div className="p-8 print:p-0 print:m-0" id="invoice-printable">
-              <div className="flex justify-between items-start border-b border-surface-200/60 pb-8 mb-8">
+            <div className="p-10 md:p-14 print:p-0 print:m-0 print:pb-20" id="invoice-printable">
+              
+              {/* Brand & Document Header */}
+              <div className="flex justify-between items-start mb-12">
                 <div>
-                  <h1 className="text-3xl font-bold text-surface-900 tracking-tight">INVOICE</h1>
-                  <p className="text-sm text-surface-500 mt-1">{viewInvoice.sale_number || `#${viewInvoice.id.slice(0,8)}`}</p>
+                  <div className="w-48 h-12 relative mb-4">
+                     <Image src="/Logo/LOGO main.svg" alt="Comfort Palace" fill className="object-contain object-left print:grayscale" priority />
+                  </div>
+                  <p className="text-sm text-surface-500 leading-relaxed font-light">
+                    123 Furniture Street<br/>Metropolis, NY 10001<br/>contact@comfortpalace.com<br/>+1 (555) 019-8273
+                  </p>
                 </div>
                 <div className="text-right">
-                  <h2 className="text-xl font-bold text-surface-900">Comfort Palace</h2>
-                  <p className="text-sm text-surface-500 mt-1">123 Furniture Street<br/>Metropolis, NY 10001<br/>contact@comfortpalace.com</p>
+                  <h1 className="text-4xl font-display font-light text-surface-900 tracking-tight uppercase">Invoice</h1>
+                  <p className="text-sm text-surface-500 mt-2 font-mono">{viewInvoice.sale_number || `#${viewInvoice.id.slice(0,8)}`}</p>
+                  <p className="text-sm font-semibold text-surface-900 mt-1">{formatSaleDate(viewInvoice)}</p>
+                  <div className="mt-4 inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest border border-[#C5A059]/30 text-[#C5A059] bg-[#C5A059]/5">
+                    {viewInvoice.payment_status || 'Pending'}
+                  </div>
                 </div>
               </div>
 
-              <div className="flex justify-between items-start mb-8">
-                <div>
-                  <p className="text-xs font-semibold text-surface-400 uppercase tracking-wider mb-2">Billed To</p>
-                  <h3 className="text-lg font-bold text-surface-900">{viewInvoice.customer_name || 'Walk-in Customer'}</h3>
-                  {viewInvoice.customer_phone && <p className="text-sm text-surface-600">{viewInvoice.customer_phone}</p>}
-                  {viewInvoice.customer_email && <p className="text-sm text-surface-600">{viewInvoice.customer_email}</p>}
-                  {viewInvoice.customer_address && <p className="text-sm text-surface-600 mt-1">{viewInvoice.customer_address}</p>}
+
+              {/* Addresses */}
+              <div className="grid grid-cols-1 md:grid-cols-2 print:grid-cols-2 gap-8 mb-12 print:break-inside-avoid">
+                <div className="bg-surface-50/50 p-6 rounded-2xl border border-surface-200/40">
+                  <p className="text-[10px] font-bold text-surface-400 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+                    <svg className="w-4 h-4 text-[#C5A059]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                    Billed To
+                  </p>
+                  <h3 className="text-xl font-display text-surface-900">{viewInvoice.customer_name || 'Walk-in Customer'}</h3>
+                  {(viewInvoice.customer_phone || viewInvoice.customer_email) && (
+                    <div className="mt-3 space-y-1">
+                      {viewInvoice.customer_phone && <p className="text-sm text-surface-600 font-mono">{viewInvoice.customer_phone}</p>}
+                      {viewInvoice.customer_email && <p className="text-sm text-surface-600">{viewInvoice.customer_email}</p>}
+                    </div>
+                  )}
+                  {viewInvoice.customer_address && <p className="text-sm text-surface-600 mt-3 leading-relaxed">{viewInvoice.customer_address}</p>}
+                  {viewInvoice.pan_number && <p className="text-xs font-semibold text-surface-500 mt-4 uppercase">PAN: <span className="text-surface-900">{viewInvoice.pan_number}</span></p>}
                 </div>
-                <div className="text-right">
-                  <p className="text-xs font-semibold text-surface-400 uppercase tracking-wider mb-2">Payment Info</p>
-                  <p className="text-sm text-surface-900"><span className="text-surface-500">Date:</span> {formatSaleDate(viewInvoice)}</p>
-                  <p className="text-sm text-surface-900 capitalize"><span className="text-surface-500">Method:</span> {viewInvoice.payment_method || 'Cash'}</p>
-                  <p className="text-sm text-surface-900 capitalize"><span className="text-surface-500">Status:</span> {viewInvoice.payment_status || 'Pending'}</p>
+
+                <div className="bg-surface-50/50 p-6 rounded-2xl border border-surface-200/40">
+                  <p className="text-[10px] font-bold text-surface-400 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+                    <svg className="w-4 h-4 text-[#C5A059]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                    Delivery To
+                  </p>
+                  {viewInvoice.delivery_address ? (
+                    <p className="text-sm text-surface-600 leading-relaxed whitespace-pre-wrap">{viewInvoice.delivery_address}</p>
+                  ) : (
+                    <p className="text-sm text-surface-400 italic">Same as billing address</p>
+                  )}
                 </div>
               </div>
 
-              <table className="w-full text-left border-collapse mb-8">
-                <thead>
-                  <tr className="border-y border-surface-200/60 bg-surface-50">
-                    <th className="py-3 px-4 text-xs font-semibold text-surface-600 uppercase">Item Description</th>
-                    <th className="py-3 px-4 text-xs font-semibold text-surface-600 uppercase text-center">Qty</th>
-                    <th className="py-3 px-4 text-xs font-semibold text-surface-600 uppercase text-right">Price</th>
-                    <th className="py-3 px-4 text-xs font-semibold text-surface-600 uppercase text-right">Total</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {(viewInvoice.sale_items || []).map((item: any, idx: number) => (
-                    <tr key={idx} className="border-b border-surface-200/40">
-                      <td className="py-4 px-4 text-sm text-surface-900 font-medium">{item.product_name || `Product ID: ${item.product_id.slice(0,8)}`}</td>
-                      <td className="py-4 px-4 text-sm text-surface-600 text-center">{item.quantity}</td>
-                      <td className="py-4 px-4 text-sm text-surface-600 text-right">₹{item.unit_price?.toLocaleString()}</td>
-                      <td className="py-4 px-4 text-sm text-surface-900 font-semibold text-right">₹{item.total_price?.toLocaleString()}</td>
+              {/* Items Table */}
+              <div className="rounded-2xl border border-surface-200/60 overflow-hidden mb-12">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-surface-50/80 border-b border-surface-200/60">
+                      <th className="py-4 px-6 text-[10px] font-bold text-surface-400 uppercase tracking-widest w-2/5">Product</th>
+                      <th className="py-4 px-6 text-[10px] font-bold text-surface-400 uppercase tracking-widest text-center">Qty</th>
+                      <th className="py-4 px-6 text-[10px] font-bold text-surface-400 uppercase tracking-widest text-right">Unit Price</th>
+                      <th className="py-4 px-6 text-[10px] font-bold text-surface-400 uppercase tracking-widest text-right">Total</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {(viewInvoice.sale_items || []).map((item: any, idx: number) => {
+                      const image = item.product_image_url ? getFirstImage(item.product_image_url) : null;
+                      return (
+                        <tr key={idx} className="border-b border-surface-100 last:border-0 hover:bg-surface-50/30 transition-colors">
+                          <td className="py-5 px-6">
+                            <div className="flex items-center gap-4">
+                              <div className="w-12 h-12 rounded-lg border border-surface-200 overflow-hidden bg-white shrink-0 flex items-center justify-center">
+                                {image ? <img src={image} alt={item.product_name} className="w-full h-full object-cover" /> : <div className="w-6 h-6 bg-surface-200 rounded-sm"></div>}
+                              </div>
+                              <div>
+                                <p className="text-sm font-bold text-surface-900">{item.product_name || `Product ID: ${item.product_id.slice(0,8)}`}</p>
+                                {item.product_item_code && <p className="text-[10px] text-surface-400 font-mono mt-0.5">{item.product_item_code}</p>}
+                              </div>
+                            </div>
+                          </td>
+                          <td className="py-5 px-6 text-sm text-surface-600 font-semibold text-center">{item.quantity}</td>
+                          <td className="py-5 px-6 text-sm text-surface-600 text-right">₹{item.unit_price?.toLocaleString()}</td>
+                          <td className="py-5 px-6 text-sm text-surface-900 font-bold text-right">₹{item.total_price?.toLocaleString()}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
 
-              <div className="flex justify-end">
-                <div className="w-64 space-y-3">
-                  <div className="flex justify-between text-sm text-surface-600">
-                    <span>Subtotal</span>
-                    <span>₹{((viewInvoice.total_amount || 0) + (viewInvoice.discount_amount || 0) - (viewInvoice.tax_amount || 0)).toLocaleString()}</span>
+              {/* Footer Summary area */}
+              <div className="grid grid-cols-1 md:grid-cols-2 print:grid-cols-2 gap-12 print:break-inside-avoid">
+                
+                {/* Notes and Payment Splitting */}
+                <div className="space-y-8">
+                  <div className="bg-surface-50/50 p-6 rounded-2xl border border-surface-200/40">
+                    <p className="text-[10px] font-bold text-surface-400 uppercase tracking-[0.2em] mb-4">Payment Summary</p>
+                    <div className="space-y-2 text-sm text-surface-600">
+                      <div className="flex justify-between items-center pb-2 border-b border-surface-200/40">
+                        <span className="capitalize">Method(s)</span>
+                        <span className="font-semibold text-surface-900">{viewInvoice.payment_method || 'Cash'}</span>
+                      </div>
+                      
+                      {(viewInvoice.cash_amount > 0 || viewInvoice.upi_amount > 0) && (
+                        <div className="pt-2 space-y-2">
+                          {viewInvoice.cash_amount > 0 && (
+                            <div className="flex justify-between items-center text-xs">
+                              <span>Cash Portion</span>
+                              <span className="font-mono">₹{viewInvoice.cash_amount.toLocaleString()}</span>
+                            </div>
+                          )}
+                          {viewInvoice.upi_amount > 0 && (
+                            <div className="flex justify-between items-center text-xs">
+                              <span>UPI Portion</span>
+                              <span className="font-mono">₹{viewInvoice.upi_amount.toLocaleString()}</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                  {(viewInvoice.tax_amount || 0) > 0 && (
-                    <div className="flex justify-between text-sm text-surface-600">
-                      <span>Transport Cost</span>
-                      <span>+₹{viewInvoice.tax_amount.toLocaleString()}</span>
+
+                  {viewInvoice.notes && (
+                    <div>
+                      <p className="text-[10px] font-bold text-surface-400 uppercase tracking-[0.2em] mb-2">Remarks</p>
+                      <p className="text-sm text-surface-600 leading-relaxed italic border-l-2 border-[#C5A059] pl-4 py-1">{viewInvoice.notes}</p>
                     </div>
                   )}
-                  {(viewInvoice.discount_amount || 0) > 0 && (
-                    <div className="flex justify-between text-sm text-green-600">
-                      <span>Discount</span>
-                      <span>-₹{viewInvoice.discount_amount.toLocaleString()}</span>
+                </div>
+
+                {/* Grand Total Breakdown */}
+                <div className="flex justify-end">
+                  <div className="w-full max-w-sm">
+                    <div className="bg-surface-900 text-white rounded-3xl p-8 shadow-2xl relative overflow-hidden print:bg-white print:text-surface-900 print:shadow-none print:border print:border-surface-300">
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-2xl -mr-16 -mt-16 print:hidden"></div>
+                      
+                      <div className="space-y-4 relative z-10">
+                        <div className="flex justify-between text-sm text-surface-300 print:text-surface-600">
+                          <span>Subtotal</span>
+                          <span>₹{((viewInvoice.total_amount || 0) + (viewInvoice.discount_amount || 0) - (viewInvoice.tax_amount || 0)).toLocaleString()}</span>
+                        </div>
+                        
+                        {(viewInvoice.tax_amount || 0) > 0 && (
+                          <div className="flex justify-between text-sm text-surface-300 print:text-surface-600">
+                            <span>Transport Cost</span>
+                            <span>+₹{viewInvoice.tax_amount.toLocaleString()}</span>
+                          </div>
+                        )}
+                        
+                        {(viewInvoice.discount_amount || 0) > 0 && (
+                          <div className="flex justify-between text-sm text-[#C5A059] print:text-green-600">
+                            <span>Discount</span>
+                            <span>-₹{viewInvoice.discount_amount.toLocaleString()}</span>
+                          </div>
+                        )}
+                        
+                        <div className="border-t border-surface-700/50 print:border-surface-200 pt-6 mt-6">
+                          <p className="text-[10px] font-bold text-surface-400 uppercase tracking-widest mb-1">Grand Total</p>
+                          <div className="flex justify-between items-end">
+                            <span className="text-4xl font-display font-light text-white print:text-surface-900">
+                              ₹{viewInvoice.total_amount?.toLocaleString()}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  )}
-                  <div className="flex justify-between text-lg font-bold text-surface-900 border-t border-surface-200/60 pt-3">
-                    <span>Total</span>
-                    <span>₹{viewInvoice.total_amount?.toLocaleString()}</span>
+                    <div className="text-center mt-6">
+                       <p className="text-[10px] font-bold text-surface-400 uppercase tracking-widest flex items-center justify-center gap-2">
+                         <svg className="w-3 h-3 text-[#C5A059]" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                         Authorized Signature
+                       </p>
+                    </div>
                   </div>
                 </div>
+
               </div>
               
-              {viewInvoice.notes && (
-                <div className="mt-8 pt-8 border-t border-surface-200/60">
-                  <p className="text-xs font-semibold text-surface-400 uppercase tracking-wider mb-2">Notes</p>
-                  <p className="text-sm text-surface-600">{viewInvoice.notes}</p>
-                </div>
-              )}
+              {/* Footer */}
+              <div className="mt-16 pt-8 border-t border-surface-200/40 text-center print:fixed print:bottom-0 print:left-0 print:w-full print:bg-white print:py-4 print:mt-0 print:border-none print:z-50">
+                <p className="text-xs text-surface-400">Thank you for your business. For any queries regarding this invoice, please contact support.</p>
+              </div>
 
             </div>
           </div>

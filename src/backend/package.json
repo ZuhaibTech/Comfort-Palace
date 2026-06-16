@@ -1,7 +1,7 @@
 {
   "name": "inventory-artisans-backend",
-  "version": "1.0.0",
-  "description": "Backend API for Inventory Artisans",
+  "version": "2.0.0",
+  "description": "Backend API for Comfort Palace (MongoDB)",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -11,17 +11,19 @@
   "keywords": [
     "inventory",
     "api",
-    "express"
+    "express",
+    "mongodb"
   ],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
     "express": "^4.18.2",
+    "mongoose": "^8.5.0",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^7.0.10",
-    "sql.js": "^1.13.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

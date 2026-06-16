@@ -1,35 +1,23 @@
 const express = require('express');
-const { v4: uuidv4 } = require('uuid');
-const { getDb, saveDatabase } = require('../database');
+const Product = require('../models/Product');
 
 const router = express.Router();
 
 // GET /api/products - Get all active products
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   const { archived } = req.query;
-  const db = getDb();
   
-  let sql = 'SELECT * FROM products WHERE is_active = 1 ORDER BY created_at DESC';
-  
-  if (archived === 'true') {
-    sql = 'SELECT * FROM products WHERE is_active = 0 ORDER BY created_at DESC';
-  }
+  const query = archived === 'true' ? { is_active: 0 } : { is_active: 1 };
   
   try {
-    const rows = db.exec(sql);
-    const data = rows[0] ? rows[0].values.map(row => {
-      const obj = {};
-      rows[0].columns.forEach((col, index) => {
-        obj[col] = row[index];
-      });
-      return obj;
-    }) : [];
+    const products = await Product.find(query).sort({ created_at: -1 });
     
     res.json({
       success: true,
-      data: data
+      data: products
     });
   } catch (err) {
+    console.error('Failed to fetch products:', err);
     res.status(500).json({
       success: false,
       error: 'Failed to fetch products'
@@ -38,28 +26,29 @@ router.get('/', (req, res) => {
 });
 
 // PUT /api/products/:id/restore - Restore archived product
-router.put('/:id/restore', (req, res) => {
+router.put('/:id/restore', async (req, res) => {
   const { id } = req.params;
-  const db = getDb();
 
   try {
-    const stmt = db.prepare('UPDATE products SET is_active = 1, archived_at = NULL, updated_at = ? WHERE id = ?');
-    const result = stmt.run([new Date().toISOString(), id]);
-    stmt.free();
+    const product = await Product.findByIdAndUpdate(
+      id,
+      { is_active: 1, archived_at: null },
+      { new: true }
+    );
     
-    if (result.changes === 0) {
+    if (!product) {
       return res.status(404).json({
         success: false,
         error: 'Product not found'
       });
     }
 
-    saveDatabase();
     res.json({
       success: true,
       message: 'Product restored successfully'
     });
   } catch (err) {
+    console.error('Failed to restore product:', err);
     res.status(500).json({
       success: false,
       error: 'Failed to restore product'
@@ -68,21 +57,13 @@ router.put('/:id/restore', (req, res) => {
 });
 
 // GET /api/products/:id - Get single product
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   const { id } = req.params;
-  const db = getDb();
 
   try {
-    const rows = db.exec('SELECT * FROM products WHERE id = ?', [id]);
-    const data = rows[0] ? rows[0].values.map(row => {
-      const obj = {};
-      rows[0].columns.forEach((col, index) => {
-        obj[col] = row[index];
-      });
-      return obj;
-    }) : [];
+    const product = await Product.findById(id);
 
-    if (data.length === 0) {
+    if (!product) {
       return res.status(404).json({
         success: false,
         error: 'Product not found'
@@ -91,9 +72,10 @@ router.get('/:id', (req, res) => {
 
     res.json({
       success: true,
-      data: data[0]
+      data: product
     });
   } catch (err) {
+    console.error('Failed to fetch product:', err);
     res.status(500).json({
       success: false,
       error: 'Failed to fetch product'
@@ -102,7 +84,7 @@ router.get('/:id', (req, res) => {
 });
 
 // POST /api/products - Create new product
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const { 
     item_code, 
     hsn_code,
@@ -125,36 +107,33 @@ router.post('/', (req, res) => {
     });
   }
 
-  const db = getDb();
-  const id = uuidv4();
-  const now = new Date().toISOString();
-
   try {
-    const stmt = db.prepare(`
-      INSERT INTO products (
-        id, item_code, hsn_code, name, description, price, cost_price, gst_percentage, profit_percentage,
-        quantity_in_stock, low_stock_threshold, category, image_url,
-        is_active, created_at, updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-    
-    stmt.run([
-      id, item_code, hsn_code || null, name, description || null, price, cost_price || null, gst_percentage || null, profit_percentage || null,
-      quantity_in_stock || 0, low_stock_threshold || 10, category || null, image_url || null,
-      1, now, now
-    ]);
-    
-    stmt.free();
-    saveDatabase();
+    const product = new Product({
+      item_code, 
+      hsn_code: hsn_code || null, 
+      name, 
+      description: description || null, 
+      price, 
+      cost_price: cost_price || null, 
+      gst_percentage: gst_percentage || null, 
+      profit_percentage: profit_percentage || null,
+      quantity_in_stock: quantity_in_stock || 0, 
+      low_stock_threshold: low_stock_threshold || 10, 
+      category: category || null, 
+      image_url: image_url || null,
+      is_active: 1
+    });
+
+    await product.save();
 
     res.status(201).json({
       success: true,
-      data: { id, item_code, name, description, price, cost_price, gst_percentage, profit_percentage, quantity_in_stock, low_stock_threshold, category, image_url, is_active: 1, created_at: now, updated_at: now },
+      data: product,
       message: 'Product created successfully'
     });
   } catch (err) {
     console.error('Product creation error:', err);
-    if (err.message && err.message.includes('UNIQUE constraint failed')) {
+    if (err.code === 11000) { // MongoDB duplicate key error
       return res.status(400).json({
         success: false,
         error: 'Product with this item code already exists'
@@ -169,7 +148,7 @@ router.post('/', (req, res) => {
 });
 
 // PUT /api/products/:id - Update product
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
   const { id } = req.params;
   const { 
     item_code, 
@@ -186,39 +165,22 @@ router.put('/:id', (req, res) => {
     image_url 
   } = req.body;
 
-  const db = getDb();
-  const now = new Date().toISOString();
-
   try {
-    const stmt = db.prepare(`
-      UPDATE products SET 
-        item_code = ?, hsn_code = ?, name = ?, description = ?, price = ?, cost_price = ?, gst_percentage = ?, profit_percentage = ?,
-        quantity_in_stock = ?, low_stock_threshold = ?, category = ?, image_url = ?,
-        updated_at = ?
-      WHERE id = ?
-    `);
+    const product = await Product.findByIdAndUpdate(
+      id,
+      {
+        item_code, hsn_code: hsn_code || null, name, description, price, cost_price, gst_percentage, profit_percentage,
+        quantity_in_stock, low_stock_threshold, category, image_url
+      },
+      { new: true, runValidators: true }
+    );
     
-    const result = stmt.run([
-      item_code, hsn_code || null, name, description, price, cost_price, gst_percentage, profit_percentage,
-      quantity_in_stock, low_stock_threshold, category, image_url,
-      now, id
-    ]);
-    
-    stmt.free();
-    
-    if (result.changes === 0) {
+    if (!product) {
       return res.status(404).json({
         success: false,
         error: 'Product not found'
       });
     }
-
-    saveDatabase();
-    
-    // Get the updated product data
-    const selectStmt = db.prepare('SELECT * FROM products WHERE id = ?');
-    const product = selectStmt.getAsObject([id]);
-    selectStmt.free();
     
     res.json({
       success: true,
@@ -227,8 +189,7 @@ router.put('/:id', (req, res) => {
     });
   } catch (err) {
     console.error('Product update error:', err);
-    console.error('Update data:', { item_code, name, price, cost_price, gst_percentage, profit_percentage, quantity_in_stock, low_stock_threshold });
-    if (err.message && err.message.includes('UNIQUE constraint failed')) {
+    if (err.code === 11000) {
       return res.status(400).json({
         success: false,
         error: 'Product with this item code already exists'
@@ -243,29 +204,30 @@ router.put('/:id', (req, res) => {
 });
 
 // DELETE /api/products/:id - Archive product (soft delete)
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   const { id } = req.params;
-  const db = getDb();
-  const now = new Date().toISOString();
+  const now = new Date();
 
   try {
-    const stmt = db.prepare('UPDATE products SET is_active = 0, archived_at = ?, updated_at = ? WHERE id = ?');
-    const result = stmt.run([now, now, id]);
-    stmt.free();
+    const product = await Product.findByIdAndUpdate(
+      id,
+      { is_active: 0, archived_at: now },
+      { new: true }
+    );
     
-    if (result.changes === 0) {
+    if (!product) {
       return res.status(404).json({
         success: false,
         error: 'Product not found'
       });
     }
 
-    saveDatabase();
     res.json({
       success: true,
       message: 'Product archived successfully'
     });
   } catch (err) {
+    console.error('Failed to archive product:', err);
     res.status(500).json({
       success: false,
       error: 'Failed to archive product'

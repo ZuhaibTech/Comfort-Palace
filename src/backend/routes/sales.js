@@ -1,56 +1,31 @@
 const express = require('express');
-const { v4: uuidv4 } = require('uuid');
-const { getDb, generateSaleNumber, saveDatabase } = require('../database');
+const Sale = require('../models/Sale');
+const Product = require('../models/Product');
 
 const router = express.Router();
 
-// GET /api/sales - Get all sales with items
-router.get('/', (req, res) => {
-  const db = getDb();
-  
+// GET /api/sales - Get all sales
+router.get('/', async (req, res) => {
   try {
-    // Get all sales
-    const salesRows = db.exec('SELECT * FROM sales ORDER BY created_at DESC');
-    const sales = salesRows[0] ? salesRows[0].values.map(row => {
-      const obj = {};
-      salesRows[0].columns.forEach((col, index) => {
-        obj[col] = row[index];
-      });
-      return obj;
-    }) : [];
+    const sales = await Sale.find().sort({ created_at: -1 });
 
-    // Get all sale items with product info
-    const itemsRows = db.exec(`
-      SELECT si.*, p.name as product_name, p.item_code as product_item_code
-      FROM sale_items si
-      LEFT JOIN products p ON si.product_id = p.id
-      ORDER BY si.created_at
-    `);
-    const items = itemsRows[0] ? itemsRows[0].values.map(row => {
-      const obj = {};
-      itemsRows[0].columns.forEach((col, index) => {
-        obj[col] = row[index];
-      });
-      return obj;
-    }) : [];
-
-    // Group items by sale_id
-    const salesWithItems = sales.map(sale => {
-      const saleItems = items.filter(item => item.sale_id === sale.id);
-      const recalculatedTotal = saleItems.reduce((sum, item) => {
+    const salesWithItems = sales.map(saleDoc => {
+      const sale = saleDoc.toJSON(); // Mongoose toJSON applies virtuals (id mapping)
+      
+      const recalculatedTotal = sale.sale_items.reduce((sum, item) => {
         const unitPrice = Number(item.unit_price) || 0;
         const quantity = Number(item.quantity) || 0;
         const totalPrice = Number(item.total_price);
-        if (!Number.isNaN(totalPrice) && totalPrice > 0) {
+        if (!Number.isNaN(totalPrice) && totalPrice !== 0) {
           return sum + totalPrice;
         }
         return sum + unitPrice * quantity;
       }, 0);
 
       const rawTotal = Number(sale.total_amount);
-      const normalizedTotal = (!Number.isNaN(rawTotal) && rawTotal > 0) ? rawTotal : recalculatedTotal;
+      const normalizedTotal = (!Number.isNaN(rawTotal) && rawTotal !== 0) ? rawTotal : recalculatedTotal;
       const normalizedAmountPaid = Number(sale.amount_paid) || 0;
-      const normalizedStatus = normalizedAmountPaid >= normalizedTotal && normalizedTotal > 0
+      const normalizedStatus = Math.abs(normalizedAmountPaid) >= Math.abs(normalizedTotal) && normalizedTotal !== 0
         ? 'completed'
         : (sale.payment_status || 'pending');
 
@@ -58,8 +33,7 @@ router.get('/', (req, res) => {
         ...sale,
         total_amount: normalizedTotal,
         amount_paid: normalizedAmountPaid,
-        payment_status: normalizedStatus,
-        sale_items: saleItems
+        payment_status: normalizedStatus
       };
     });
 
@@ -68,6 +42,7 @@ router.get('/', (req, res) => {
       data: salesWithItems
     });
   } catch (err) {
+    console.error('Failed to fetch sales:', err);
     res.status(500).json({
       success: false,
       error: 'Failed to fetch sales'
@@ -75,76 +50,53 @@ router.get('/', (req, res) => {
   }
 });
 
-// GET /api/sales/:id - Get single sale with items
-router.get('/:id', (req, res) => {
-  const { id } = req.params;
-  const db = getDb();
+// GET /api/sales/search - Search sales
+router.get('/search', async (req, res) => {
+  const { q } = req.query;
+  if (!q) {
+    return res.json({ success: true, data: [] });
+  }
 
   try {
-    // Get sale
-    const salesRows = db.exec('SELECT * FROM sales WHERE id = ?', [id]);
-    const sales = salesRows[0] ? salesRows[0].values.map(row => {
-      const obj = {};
-      salesRows[0].columns.forEach((col, index) => {
-        obj[col] = row[index];
-      });
-      return obj;
-    }) : [];
+    const sales = await Sale.find({
+      $and: [
+        { is_return: 0 },
+        {
+          $or: [
+            { sale_number: { $regex: q, $options: 'i' } },
+            { customer_name: { $regex: q, $options: 'i' } }
+          ]
+        }
+      ]
+    }).sort({ created_at: -1 }).limit(20);
 
-    if (sales.length === 0) {
+    res.json({ success: true, data: sales });
+  } catch (err) {
+    console.error('Search error:', err);
+    res.status(500).json({ success: false, error: 'Failed to search sales' });
+  }
+});
+
+// GET /api/sales/:id - Get single sale
+router.get('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const sale = await Sale.findById(id);
+
+    if (!sale) {
       return res.status(404).json({
         success: false,
         error: 'Sale not found'
       });
     }
 
-    const sale = sales[0];
-
-    // Get sale items
-    const itemsRows = db.exec(`
-      SELECT si.*, p.name as product_name, p.item_code as product_item_code
-      FROM sale_items si
-      LEFT JOIN products p ON si.product_id = p.id
-      WHERE si.sale_id = ?
-      ORDER BY si.created_at
-    `, [id]);
-    
-    const saleItems = itemsRows[0] ? itemsRows[0].values.map(row => {
-      const obj = {};
-      itemsRows[0].columns.forEach((col, index) => {
-        obj[col] = row[index];
-      });
-      return obj;
-    }) : [];
-
-    const recalculatedTotal = saleItems.reduce((sum, item) => {
-      const unitPrice = Number(item.unit_price) || 0;
-      const quantity = Number(item.quantity) || 0;
-      const totalPrice = Number(item.total_price);
-      if (!Number.isNaN(totalPrice) && totalPrice > 0) {
-        return sum + totalPrice;
-      }
-      return sum + unitPrice * quantity;
-    }, 0);
-
-    const rawTotal = Number(sale.total_amount);
-    const normalizedTotal = (!Number.isNaN(rawTotal) && rawTotal > 0) ? rawTotal : recalculatedTotal;
-    const normalizedAmountPaid = Number(sale.amount_paid) || 0;
-    const normalizedStatus = normalizedAmountPaid >= normalizedTotal && normalizedTotal > 0
-      ? 'completed'
-      : (sale.payment_status || 'pending');
-
     res.json({
       success: true,
-      data: {
-        ...sale,
-        total_amount: normalizedTotal,
-        amount_paid: normalizedAmountPaid,
-        payment_status: normalizedStatus,
-        sale_items: saleItems
-      }
+      data: sale
     });
   } catch (err) {
+    console.error('Failed to fetch sale:', err);
     res.status(500).json({
       success: false,
       error: 'Failed to fetch sale'
@@ -153,24 +105,28 @@ router.get('/:id', (req, res) => {
 });
 
 // POST /api/sales - Create new sale
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const {
       customer_name,
       customer_email,
       customer_phone,
       customer_address,
+      delivery_address,
+      pan_number,
       total_amount,
       tax_amount,
       discount_amount,
       amount_paid,
+      cash_amount,
+      upi_amount,
       payment_method,
       payment_status,
       notes,
       sale_items
     } = req.body;
 
-    // Validate and sanitize all inputs
+    // Validate and sanitize inputs
     if (!sale_items || !Array.isArray(sale_items) || sale_items.length === 0) {
       return res.status(400).json({
         success: false,
@@ -178,7 +134,6 @@ router.post('/', (req, res) => {
       });
     }
 
-    // Validate total_amount
     if (typeof total_amount !== 'number' || total_amount <= 0) {
       return res.status(400).json({
         success: false,
@@ -186,97 +141,67 @@ router.post('/', (req, res) => {
       });
     }
 
-    // Sanitize all string inputs
+    // Prepare sale items for Mongoose
+    const sanitizedItems = sale_items.map(item => ({
+      product_id: String(item.product_id),
+      quantity: Number(item.quantity),
+      unit_price: Number(item.unit_price),
+      total_price: Number(item.total_price)
+    }));
+    
+    // Attempt to enrich sale items with current product snapshot data
+    const enrichedItems = await Promise.all(sanitizedItems.map(async (item) => {
+      try {
+         const product = await Product.findById(item.product_id);
+         if (product) {
+           return {
+             ...item,
+             product_name: product.name,
+             product_item_code: product.item_code,
+             product_image_url: product.image_url
+           };
+         }
+      } catch(e) {}
+      return item;
+    }));
+
     const sanitizedData = {
       customer_name: customer_name ? String(customer_name).trim() : null,
       customer_email: customer_email ? String(customer_email).trim() : null,
       customer_phone: customer_phone ? String(customer_phone).trim() : null,
       customer_address: customer_address ? String(customer_address).trim() : null,
+      delivery_address: delivery_address ? String(delivery_address).trim() : null,
+      pan_number: pan_number ? String(pan_number).trim() : null,
       total_amount: Number(total_amount),
       tax_amount: tax_amount ? Number(tax_amount) : 0,
       discount_amount: discount_amount ? Number(discount_amount) : 0,
       amount_paid: amount_paid ? Number(amount_paid) : 0,
+      cash_amount: cash_amount ? Number(cash_amount) : 0,
+      upi_amount: upi_amount ? Number(upi_amount) : 0,
       payment_method: payment_method ? String(payment_method).trim() : 'cash',
       payment_status: payment_status ? String(payment_status).trim() : undefined,
       notes: notes ? String(notes).trim() : null,
-      sale_items: sale_items.map(item => ({
-        product_id: String(item.product_id),
-        quantity: Number(item.quantity),
-        unit_price: Number(item.unit_price),
-        total_price: Number(item.total_price)
-      }))
+      sale_items: enrichedItems,
+      sale_number: Sale.generateSaleNumber()
     };
 
-    // Auto-derive payment status by amount paid
     if (!sanitizedData.payment_status) {
       sanitizedData.payment_status = sanitizedData.amount_paid >= sanitizedData.total_amount ? 'completed' : 'pending';
     }
 
-    const db = getDb();
-    const saleId = uuidv4();
-    const saleNumber = generateSaleNumber();
-    const now = new Date().toISOString();
-
-    // Create sale
-    const saleStmt = db.prepare(`
-      INSERT INTO sales (
-        id, sale_number, customer_name, customer_email, customer_phone, customer_address,
-        total_amount, tax_amount, discount_amount, amount_paid, payment_method, payment_status, notes,
-        created_at, updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-    
-    saleStmt.run([
-      saleId, saleNumber, sanitizedData.customer_name, sanitizedData.customer_email, sanitizedData.customer_phone, sanitizedData.customer_address,
-      sanitizedData.total_amount, sanitizedData.tax_amount, sanitizedData.discount_amount, sanitizedData.amount_paid, sanitizedData.payment_method, sanitizedData.payment_status, sanitizedData.notes,
-      now, now
-    ]);
-    saleStmt.free();
-
-    // Create sale items
-    const itemStmt = db.prepare(`
-      INSERT INTO sale_items (
-        id, sale_id, product_id, quantity, unit_price, total_price, created_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?)
-    `);
-
-    for (const item of sanitizedData.sale_items) {
-      const itemId = uuidv4();
-      itemStmt.run([
-        itemId, saleId, item.product_id, item.quantity, item.unit_price, item.total_price, now
-      ]);
-    }
-    itemStmt.free();
+    const sale = new Sale(sanitizedData);
+    await sale.save();
 
     // Update product stock
-    const updateStockStmt = db.prepare('UPDATE products SET quantity_in_stock = quantity_in_stock - ?, updated_at = ? WHERE id = ?');
     for (const item of sanitizedData.sale_items) {
-      updateStockStmt.run([item.quantity, now, item.product_id]);
+      await Product.findByIdAndUpdate(item.product_id, {
+        $inc: { quantity_in_stock: -item.quantity }
+      });
     }
-    updateStockStmt.free();
-
-    saveDatabase();
 
     res.status(201).json({
       success: true,
-      data: {
-        id: saleId,
-        sale_number: saleNumber,
-        customer_name: sanitizedData.customer_name,
-        customer_email: sanitizedData.customer_email,
-        customer_phone: sanitizedData.customer_phone,
-        customer_address: sanitizedData.customer_address,
-        total_amount: sanitizedData.total_amount,
-        tax_amount: sanitizedData.tax_amount,
-        discount_amount: sanitizedData.discount_amount,
-        amount_paid: sanitizedData.amount_paid,
-        payment_method: sanitizedData.payment_method,
-        payment_status: sanitizedData.payment_status,
-        notes: sanitizedData.notes,
-        created_at: now,
-        updated_at: now,
-        sale_items: sanitizedData.sale_items
-      },
+      data: sale,
       message: 'Sale created successfully'
     });
   } catch (err) {
@@ -290,7 +215,7 @@ router.post('/', (req, res) => {
 });
 
 // PUT /api/sales/:id - Update sale
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
   const { id } = req.params;
   const {
     customer_name,
@@ -301,27 +226,16 @@ router.put('/:id', (req, res) => {
     tax_amount,
     discount_amount,
     amount_paid,
+    cash_amount,
+    upi_amount,
     payment_method,
     payment_status,
     notes,
     sale_items
   } = req.body;
 
-  const db = getDb();
-  const now = new Date().toISOString();
-
   try {
-    // Fetch existing sale data to preserve fields that weren't provided in the update
-    const existingRows = db.exec('SELECT * FROM sales WHERE id = ?', [id]);
-    const existingSale = existingRows[0] && existingRows[0].values.length > 0
-      ? (() => {
-          const obj = {};
-          existingRows[0].columns.forEach((col, index) => {
-            obj[col] = existingRows[0].values[0][index];
-          });
-          return obj;
-        })()
-      : null;
+    const existingSale = await Sale.findById(id);
 
     if (!existingSale) {
       return res.status(404).json({
@@ -330,237 +244,76 @@ router.put('/:id', (req, res) => {
       });
     }
 
-    // Fetch existing sale items to recalculate totals if needed
-    const existingItemsRows = db.exec('SELECT * FROM sale_items WHERE sale_id = ?', [id]);
-    const existingSaleItems = existingItemsRows[0]
-      ? existingItemsRows[0].values.map(row => {
-          const obj = {};
-          existingItemsRows[0].columns.forEach((col, index) => {
-            obj[col] = row[index];
-          });
-          return obj;
-        })
-      : [];
-    const recalculatedTotalFromItems = existingSaleItems.reduce((sum, item) => {
-      const unitPrice = Number(item.unit_price) || 0;
-      const quantity = Number(item.quantity) || 0;
-      const totalPrice = Number(item.total_price);
-      if (!Number.isNaN(totalPrice) && totalPrice > 0) {
-        return sum + totalPrice;
-      }
-      return sum + unitPrice * quantity;
-    }, 0);
+    let enrichedItems = existingSale.sale_items;
 
-    // Sanitize and validate incoming fields (only those provided)
-    const sanitizedData = {};
-
-    if (customer_name !== undefined) {
-      sanitizedData.customer_name = customer_name ? String(customer_name).trim() : null;
-    }
-    if (customer_email !== undefined) {
-      sanitizedData.customer_email = customer_email ? String(customer_email).trim() : null;
-    }
-    if (customer_phone !== undefined) {
-      sanitizedData.customer_phone = customer_phone ? String(customer_phone).trim() : null;
-    }
-    if (customer_address !== undefined) {
-      sanitizedData.customer_address = customer_address ? String(customer_address).trim() : null;
-    }
-    if (total_amount !== undefined) {
-      const parsedTotal = Number(total_amount);
-      if (Number.isNaN(parsedTotal)) {
-        return res.status(400).json({
-          success: false,
-          error: 'Total amount must be a valid number'
+    // Handle stock updates if sale_items changed
+    if (sale_items && Array.isArray(sale_items)) {
+      // Restore stock for old items
+      for (const item of existingSale.sale_items) {
+        await Product.findByIdAndUpdate(item.product_id, {
+          $inc: { quantity_in_stock: item.quantity }
         });
       }
-      sanitizedData.total_amount = parsedTotal;
-    }
-    if (tax_amount !== undefined) {
-      const parsedTax = Number(tax_amount);
-      if (Number.isNaN(parsedTax)) {
-        return res.status(400).json({
-          success: false,
-          error: 'Tax amount must be a valid number'
+
+      // Prepare new items
+      const sanitizedItems = sale_items.map(item => ({
+        product_id: String(item.product_id),
+        quantity: Number(item.quantity),
+        unit_price: Number(item.unit_price),
+        total_price: Number(item.total_price)
+      }));
+      
+      enrichedItems = await Promise.all(sanitizedItems.map(async (item) => {
+        try {
+           const product = await Product.findById(item.product_id);
+           if (product) {
+             return {
+               ...item,
+               product_name: product.name,
+               product_item_code: product.item_code,
+               product_image_url: product.image_url
+             };
+           }
+        } catch(e) {}
+        return item;
+      }));
+
+      // Deduct stock for new items
+      for (const item of enrichedItems) {
+        await Product.findByIdAndUpdate(item.product_id, {
+          $inc: { quantity_in_stock: -item.quantity }
         });
       }
-      sanitizedData.tax_amount = parsedTax;
-    }
-    if (discount_amount !== undefined) {
-      const parsedDiscount = Number(discount_amount);
-      if (Number.isNaN(parsedDiscount)) {
-        return res.status(400).json({
-          success: false,
-          error: 'Discount amount must be a valid number'
-        });
-      }
-      sanitizedData.discount_amount = parsedDiscount;
-    }
-    if (amount_paid !== undefined) {
-      const parsedPaid = Number(amount_paid);
-      if (Number.isNaN(parsedPaid)) {
-        return res.status(400).json({
-          success: false,
-          error: 'Amount paid must be a valid number'
-        });
-      }
-      sanitizedData.amount_paid = parsedPaid;
-    }
-    if (payment_method !== undefined) {
-      sanitizedData.payment_method = payment_method ? String(payment_method).trim() : null;
-    }
-    if (payment_status !== undefined) {
-      sanitizedData.payment_status = payment_status ? String(payment_status).trim() : null;
-    }
-    if (notes !== undefined) {
-      sanitizedData.notes = notes ? String(notes).trim() : null;
     }
 
-    // Merge sanitized data with existing sale
-    const existingTotalAmount = Number(existingSale.total_amount);
-    const fallbackTotalAmount = !Number.isNaN(existingTotalAmount) && existingTotalAmount > 0
-      ? existingTotalAmount
-      : recalculatedTotalFromItems;
-
-    const updatedSale = {
-      customer_name: sanitizedData.customer_name !== undefined ? sanitizedData.customer_name : existingSale.customer_name,
-      customer_email: sanitizedData.customer_email !== undefined ? sanitizedData.customer_email : existingSale.customer_email,
-      customer_phone: sanitizedData.customer_phone !== undefined ? sanitizedData.customer_phone : existingSale.customer_phone,
-      customer_address: sanitizedData.customer_address !== undefined ? sanitizedData.customer_address : existingSale.customer_address,
-      total_amount: sanitizedData.total_amount !== undefined ? sanitizedData.total_amount : fallbackTotalAmount,
-      tax_amount: sanitizedData.tax_amount !== undefined ? sanitizedData.tax_amount : existingSale.tax_amount,
-      discount_amount: sanitizedData.discount_amount !== undefined ? sanitizedData.discount_amount : existingSale.discount_amount,
-      amount_paid: sanitizedData.amount_paid !== undefined ? sanitizedData.amount_paid : (existingSale.amount_paid || 0),
-      payment_method: sanitizedData.payment_method !== undefined ? sanitizedData.payment_method : existingSale.payment_method,
-      notes: sanitizedData.notes !== undefined ? sanitizedData.notes : existingSale.notes
+    const updatedData = {
+      customer_name: customer_name !== undefined ? String(customer_name).trim() : existingSale.customer_name,
+      customer_email: customer_email !== undefined ? String(customer_email).trim() : existingSale.customer_email,
+      customer_phone: customer_phone !== undefined ? String(customer_phone).trim() : existingSale.customer_phone,
+      customer_address: customer_address !== undefined ? String(customer_address).trim() : existingSale.customer_address,
+      delivery_address: req.body.delivery_address !== undefined ? String(req.body.delivery_address).trim() : existingSale.delivery_address,
+      pan_number: req.body.pan_number !== undefined ? String(req.body.pan_number).trim() : existingSale.pan_number,
+      total_amount: total_amount !== undefined ? Number(total_amount) : existingSale.total_amount,
+      tax_amount: tax_amount !== undefined ? Number(tax_amount) : existingSale.tax_amount,
+      discount_amount: discount_amount !== undefined ? Number(discount_amount) : existingSale.discount_amount,
+      amount_paid: amount_paid !== undefined ? Number(amount_paid) : existingSale.amount_paid,
+      cash_amount: cash_amount !== undefined ? Number(cash_amount) : existingSale.cash_amount,
+      upi_amount: upi_amount !== undefined ? Number(upi_amount) : existingSale.upi_amount,
+      payment_method: payment_method !== undefined ? String(payment_method).trim() : existingSale.payment_method,
+      payment_status: payment_status !== undefined ? String(payment_status).trim() : existingSale.payment_status,
+      notes: notes !== undefined ? String(notes).trim() : existingSale.notes,
+      sale_items: enrichedItems
     };
 
-    // Determine the correct payment status
-    let finalPaymentStatus = existingSale.payment_status || 'pending';
-    if (sanitizedData.amount_paid !== undefined) {
-      const totalForStatus = Number(updatedSale.total_amount) || 0;
-      finalPaymentStatus = updatedSale.amount_paid >= totalForStatus ? 'completed' : 'pending';
-    } else if (sanitizedData.payment_status !== undefined && sanitizedData.payment_status) {
-      finalPaymentStatus = sanitizedData.payment_status;
+    if (amount_paid !== undefined && payment_status === undefined) {
+      updatedData.payment_status = updatedData.amount_paid >= updatedData.total_amount ? 'completed' : 'pending';
     }
 
-    // Update the main sale record
-    const stmt = db.prepare(`
-      UPDATE sales SET 
-        customer_name = ?, customer_email = ?, customer_phone = ?, customer_address = ?,
-        total_amount = ?, tax_amount = ?, discount_amount = ?, amount_paid = ?, payment_method = ?, 
-        payment_status = ?, notes = ?, updated_at = ?
-      WHERE id = ?
-    `);
+    const updatedSale = await Sale.findByIdAndUpdate(id, updatedData, { new: true });
 
-    const result = stmt.run([
-      updatedSale.customer_name ?? null,
-      updatedSale.customer_email ?? null,
-      updatedSale.customer_phone ?? null,
-      updatedSale.customer_address ?? null,
-      Number(updatedSale.total_amount) || 0,
-      Number(updatedSale.tax_amount) || 0,
-      Number(updatedSale.discount_amount) || 0,
-      Number(updatedSale.amount_paid) || 0,
-      updatedSale.payment_method ?? existingSale.payment_method ?? 'cash',
-      finalPaymentStatus,
-      updatedSale.notes ?? null,
-      now,
-      id
-    ]);
-
-    stmt.free();
-
-    if (result.changes === 0) {
-      return res.status(404).json({
-        success: false,
-        error: 'Sale not found'
-      });
-    }
-
-    // Update sale items if provided
-    if (sale_items && Array.isArray(sale_items)) {
-      // 1. Get existing sale items to restore stock
-      const existingItemsStmt = db.prepare('SELECT * FROM sale_items WHERE sale_id = ?');
-      const existingItemsRows = existingItemsStmt.all([id]); // .all() isn't standard in this db wrapper, let's use exec or assume getDb() is betterSQL. Wait, this wrapper uses `db.exec()` for multiple rows? Let me use `db.exec`. Wait, better to just use `stmt.all()` or `stmt.values` if it's sql.js. Let's see how DELETE does it.
-      existingItemsStmt.free();
-      
-      // Let's use db.exec like DELETE does:
-      const itemsRows = db.exec('SELECT * FROM sale_items WHERE sale_id = ?', [id]);
-      const existingItems = itemsRows[0] ? itemsRows[0].values.map(row => {
-        const obj = {};
-        itemsRows[0].columns.forEach((col, index) => obj[col] = row[index]);
-        return obj;
-      }) : [];
-
-      // 2. Restore stock for existing items
-      const restoreStockStmt = db.prepare('UPDATE products SET quantity_in_stock = quantity_in_stock + ?, updated_at = ? WHERE id = ?');
-      for (const item of existingItems) {
-        restoreStockStmt.run([item.quantity, now, item.product_id]);
-      }
-      restoreStockStmt.free();
-
-      // 3. Delete existing sale items
-      const deleteStmt = db.prepare('DELETE FROM sale_items WHERE sale_id = ?');
-      deleteStmt.run([id]);
-      deleteStmt.free();
-
-      // 4. Insert updated sale items and deduct new stock
-      const insertStmt = db.prepare(`
-        INSERT INTO sale_items (id, sale_id, product_id, quantity, unit_price, total_price, created_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-      `);
-      const deductStockStmt = db.prepare('UPDATE products SET quantity_in_stock = quantity_in_stock - ?, updated_at = ? WHERE id = ?');
-
-      let newSubtotal = 0;
-      for (const item of sale_items) {
-        // Validate and sanitize each item
-        if (!item.product_id) {
-          console.warn('Skipping item with missing product_id:', item);
-          continue;
-        }
-
-        const itemId = require('uuid').v4();
-        const sanitizedItem = {
-          product_id: String(item.product_id),
-          quantity: item.quantity ? Number(item.quantity) : 1,
-          unit_price: item.unit_price ? Number(item.unit_price) : 0,
-          total_price: item.total_price ? Number(item.total_price) : 0
-        };
-
-        insertStmt.run([
-          itemId,
-          id,
-          sanitizedItem.product_id,
-          sanitizedItem.quantity,
-          sanitizedItem.unit_price,
-          sanitizedItem.total_price,
-          now
-        ]);
-
-        deductStockStmt.run([sanitizedItem.quantity, now, sanitizedItem.product_id]);
-
-        newSubtotal += sanitizedItem.total_price;
-      }
-      insertStmt.free();
-      deductStockStmt.free();
-
-      // Recalculate and update total_amount based on new items
-      const discount = Number(updatedSale.discount_amount) || 0;
-      const tax = Number(updatedSale.tax_amount) || 0;
-      const newTotalAmount = newSubtotal - discount + tax;
-
-      // Update the sale with recalculated total
-      const updateTotalStmt = db.prepare(`
-        UPDATE sales SET total_amount = ?, updated_at = ? WHERE id = ?
-      `);
-      updateTotalStmt.run([newTotalAmount, now, id]);
-      updateTotalStmt.free();
-    }
-
-    saveDatabase();
     res.json({
       success: true,
+      data: updatedSale,
       message: 'Sale updated successfully'
     });
   } catch (err) {
@@ -573,55 +326,118 @@ router.put('/:id', (req, res) => {
 });
 
 // DELETE /api/sales/:id - Delete sale
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   const { id } = req.params;
-  const db = getDb();
 
   try {
-    // Get sale items first to restore stock
-    const itemsRows = db.exec('SELECT * FROM sale_items WHERE sale_id = ?', [id]);
-    const items = itemsRows[0] ? itemsRows[0].values.map(row => {
-      const obj = {};
-      itemsRows[0].columns.forEach((col, index) => {
-        obj[col] = row[index];
-      });
-      return obj;
-    }) : [];
+    const sale = await Sale.findById(id);
 
-    // Restore product stock
-    const updateStockStmt = db.prepare('UPDATE products SET quantity_in_stock = quantity_in_stock + ?, updated_at = ? WHERE id = ?');
-    for (const item of items) {
-      updateStockStmt.run([item.quantity, new Date().toISOString(), item.product_id]);
-    }
-    updateStockStmt.free();
-
-    // Delete sale items
-    const deleteItemsStmt = db.prepare('DELETE FROM sale_items WHERE sale_id = ?');
-    deleteItemsStmt.run([id]);
-    deleteItemsStmt.free();
-
-    // Delete sale
-    const deleteSaleStmt = db.prepare('DELETE FROM sales WHERE id = ?');
-    const result = deleteSaleStmt.run([id]);
-    deleteSaleStmt.free();
-
-    if (result.changes === 0) {
+    if (!sale) {
       return res.status(404).json({
         success: false,
         error: 'Sale not found'
       });
     }
 
-    saveDatabase();
+    // Restore stock
+    for (const item of sale.sale_items) {
+      await Product.findByIdAndUpdate(item.product_id, {
+        $inc: { quantity_in_stock: item.quantity }
+      });
+    }
+
+    await Sale.findByIdAndDelete(id);
+
     res.json({
       success: true,
       message: 'Sale deleted successfully'
     });
   } catch (err) {
+    console.error('Error deleting sale:', err);
     res.status(500).json({
       success: false,
       error: 'Failed to delete sale'
     });
+  }
+});
+
+// POST /api/sales/return - Create a return invoice
+router.post('/return', async (req, res) => {
+  try {
+    const { original_sale_id, return_items, notes } = req.body;
+    
+    if (!original_sale_id || !return_items || return_items.length === 0) {
+      return res.status(400).json({ success: false, error: 'Original sale ID and return items are required' });
+    }
+
+    const originalSale = await Sale.findById(original_sale_id);
+    if (!originalSale) {
+      return res.status(404).json({ success: false, error: 'Original sale not found' });
+    }
+    
+    // Calculate return amount and build enriched items
+    let totalReturnAmount = 0;
+    const sanitizedItems = await Promise.all(return_items.map(async item => {
+      const qty = Number(item.quantity);
+      const price = Number(item.unit_price);
+      const total = qty * price;
+      totalReturnAmount += total;
+      
+      let enrichedItem = {
+        product_id: String(item.product_id),
+        quantity: -qty, // negative for return
+        unit_price: price,
+        total_price: -total // negative for return
+      };
+      
+      try {
+         const product = await Product.findById(item.product_id);
+         if (product) {
+           enrichedItem.product_name = product.name;
+           enrichedItem.product_item_code = product.item_code;
+           enrichedItem.product_image_url = product.image_url;
+         }
+      } catch(e) {}
+      
+      return enrichedItem;
+    }));
+
+    const suffix = Date.now().toString().slice(-4);
+    const returnNumber = originalSale.sale_number + '-R-' + suffix;
+
+    const returnSale = new Sale({
+      sale_number: returnNumber,
+      customer_name: originalSale.customer_name,
+      customer_email: originalSale.customer_email,
+      customer_phone: originalSale.customer_phone,
+      customer_address: originalSale.customer_address,
+      total_amount: -totalReturnAmount,
+      amount_paid: -totalReturnAmount,
+      payment_method: 'refund',
+      payment_status: 'completed',
+      notes: notes || 'Return for sale ' + originalSale.sale_number,
+      is_return: 1,
+      original_sale_id: original_sale_id,
+      sale_items: sanitizedItems
+    });
+    
+    await returnSale.save();
+
+    // Restock products (since return item quantities are negative, $inc with absolute values, or just subtract the negative)
+    for (const item of sanitizedItems) {
+      await Product.findByIdAndUpdate(item.product_id, {
+        $inc: { quantity_in_stock: Math.abs(item.quantity) }
+      });
+    }
+
+    res.json({
+      success: true,
+      data: returnSale
+    });
+
+  } catch (err) {
+    console.error('Return error:', err);
+    res.status(500).json({ success: false, error: err.message || 'Failed to process return' });
   }
 });
 

@@ -1,6 +1,6 @@
 const express = require('express');
 const crypto = require('crypto');
-let nodemailer; try { nodemailer = require('nodemailer'); } catch {}
+let nodemailer; try { nodemailer = require('nodemailer'); } catch (err) {}
 
 const router = express.Router();
 

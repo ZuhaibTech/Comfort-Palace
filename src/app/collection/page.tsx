@@ -42,7 +42,7 @@ const collectionData = [
       {
         name: 'Chest Drawers',
         items: [
-          { id: 'lr-cd-main', item_code: 'LR-CD-001', name: 'Chest Drawers Main', description: 'Spacious main chest drawers.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/Chest Drawers main.webp', quantity_in_stock: 5, isMain: true },
+          { id: 'lr-cd-main', item_code: 'LR-CD-001', name: 'Chest of Drawers Main', description: 'Spacious main chest drawers.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/Chest Drawers main.webp', quantity_in_stock: 5, isMain: true },
           { id: 'lr-cd-1', item_code: 'LR-CD-002', name: 'Chest Drawers - 1', description: 'Classic chest of drawers.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/Chest Drawers -1.webp', quantity_in_stock: 5 },
           { id: 'lr-cd-2', item_code: 'LR-CD-003', name: 'Chest Drawers - 2', description: 'Modern storage solution.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/Chest Drawers -2.webp', quantity_in_stock: 5 },
           { id: 'lr-cd-3', item_code: 'LR-CD-004', name: 'Chest Drawers - 3', description: 'Elegant chest for your living area.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/Chest Drawers -3.webp', quantity_in_stock: 5 },
@@ -51,10 +51,10 @@ const collectionData = [
       {
         name: 'Consoles',
         items: [
-          { id: 'lr-con-main', item_code: 'LR-CON-001', name: 'Wall Console Main', description: 'Sophisticated main console table.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/wall console table Main.webp', quantity_in_stock: 5, isMain: true },
-          { id: 'lr-con-1', item_code: 'LR-CON-002', name: 'Wall Console - 1', description: 'Sleek wall console table.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/wall console table -1.webp', quantity_in_stock: 5 },
-          { id: 'lr-con-2', item_code: 'LR-CON-003', name: 'Wall Console - 2', description: 'Functional and stylish console.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/wall console table -2.webp', quantity_in_stock: 5 },
-          { id: 'lr-con-3', item_code: 'LR-CON-004', name: 'Wall Console - 3', description: 'Artistic console for your hallway.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/wall console table -3.webp', quantity_in_stock: 5 },
+          { id: 'lr-con-main', item_code: 'LR-CON-001', name: 'Console Main', description: 'Sophisticated main console table.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/wall console table Main.webp', quantity_in_stock: 5, isMain: true },
+          { id: 'lr-con-1', item_code: 'LR-CON-002', name: 'Console - 1', description: 'Sleek wall console table.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/wall console table -1.webp', quantity_in_stock: 5 },
+          { id: 'lr-con-2', item_code: 'LR-CON-003', name: 'Console - 2', description: 'Functional and stylish console.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/wall console table -4.webp', quantity_in_stock: 5 },
+          { id: 'lr-con-3', item_code: 'LR-CON-004', name: 'Console - 3', description: 'Artistic console for your hallway.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/wall console table -3.webp', quantity_in_stock: 5 },
         ]
       },
       {
@@ -94,7 +94,7 @@ const collectionData = [
         items: [
           { id: 'br-wd-main', item_code: 'BR-WD-001', name: 'Wardrobe Main', description: 'Spacious main wardrobe.', price: 0, category: 'Bed Room', image_url: '/Collection Furnitures/Bed Wardrobe Main.webp', quantity_in_stock: 5, isMain: true },
           { id: 'br-wd-1', item_code: 'BR-WD-002', name: 'Wardrobe - 1', description: 'Modern wardrobe solution.', price: 0, category: 'Bed Room', image_url: '/Collection Furnitures/Bed Wardrobe -1.webp', quantity_in_stock: 5 },
-          { id: 'br-wd-2', item_code: 'BR-WD-003', name: 'Wardrobe - 2', description: 'Elegant storage for your clothes.', price: 0, category: 'Bed Room', image_url: '/Collection Furnitures/Bed Wardrobe -2.webp', quantity_in_stock: 5 },
+          { id: 'br-wd-2', item_code: 'BR-WD-003', name: 'Wardrobe - 2', description: 'Elegant storage for your clothes.', price: 0, category: 'Bed Room', image_url: '/Collection Furnitures/Bed Wardrobe -4.webp', quantity_in_stock: 5 },
           { id: 'br-wd-3', item_code: 'BR-WD-004', name: 'Wardrobe - 3', description: 'Premium wardrobe design.', price: 0, category: 'Bed Room', image_url: '/Collection Furnitures/Bed Wardrobe -3.webp', quantity_in_stock: 5 },
         ]
       },
@@ -183,7 +183,7 @@ const collectionData = [
       {
         name: 'Wall Mirrors',
         items: [
-          { id: 'af-wm-main', item_code: 'AF-WM-001', name: 'Architectural Wall Mirror', description: 'Grand statement wall mirror.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Wall Mirror Mirror.webp', quantity_in_stock: 5, isMain: true },
+          { id: 'af-wm-main', item_code: 'AF-WM-001', name: 'Wall Mirror Main', description: 'Grand statement wall mirror.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Wall Mirror Mirror.webp', quantity_in_stock: 5, isMain: true },
           { id: 'af-wm-1', item_code: 'AF-WM-002', name: 'Wall Mirror - 1', description: 'Elegant framed wall mirror.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Wall Mirror -1.webp', quantity_in_stock: 5 },
           { id: 'af-wm-2', item_code: 'AF-WM-003', name: 'Wall Mirror - 2', description: 'Contemporary wall mirror design.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Wall Mirror -2.webp', quantity_in_stock: 5 },
           { id: 'af-wm-3', item_code: 'AF-WM-004', name: 'Wall Mirror - 3', description: 'Minimalist wall mirror for any room.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Wall Mirror -3.webp', quantity_in_stock: 5 },
@@ -256,9 +256,20 @@ export default function CollectionPage() {
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
+  const getAbsoluteIndex = (sectionIdx: number, subIdx: number, itemIdx: number) => {
+    let count = 0;
+    for (let i = 0; i < sectionIdx; i++) {
+      collectionData[i].subcategories.forEach(sub => count += sub.items.length);
+    }
+    for (let i = 0; i < subIdx; i++) {
+      count += collectionData[sectionIdx].subcategories[i].items.length;
+    }
+    return count + itemIdx + 1;
+  };
+
   return (
     <div className="flex flex-col w-full bg-surface-50 min-h-screen font-sans selection:bg-primary-900 selection:text-white">
-      
+
       {/* Extreme Luxury Background Layer */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] bg-primary-100/20 blur-[150px] rounded-full animate-[spin_30s_linear_infinite]" />
@@ -275,8 +286,8 @@ export default function CollectionPage() {
                 <div className="w-16 h-px bg-surface-900/40" />
                 <span className="text-[10px] font-black tracking-[0.5em] text-surface-900 uppercase">Est. 2026 / Global Archive</span>
               </div>
-              <h1 className="font-display text-8xl lg:text-[9.5rem] text-surface-900 font-light tracking-[-0.04em] leading-[0.8]">
-                The Master <br /> 
+              <h1 className="font-display text-8xl lg:text-[9.5rem] text-surface-900 font-light tracking-[-0.04em] leading-[0.8] whitespace-nowrap">
+                The Master <br />
                 <span className="relative inline-block overflow-hidden">
                   <span className="italic font-serif opacity-10 hover:opacity-100 transition-all duration-[2s] cursor-default">Collection.</span>
                 </span>
@@ -287,13 +298,13 @@ export default function CollectionPage() {
           <Reveal direction="left" once={true} delay={0.4} distance="100px">
             <div className="flex flex-col items-start lg:items-end w-full lg:w-[480px] shrink-0">
               <div className="relative mb-6">
-                 <p className="text-surface-500 text-base lg:text-lg font-light leading-relaxed text-center lg:text-right">
-                   A curated selection of timeless pieces.<br className="hidden lg:block" />
-                   Each form follows function, creating<br className="hidden lg:block" />
-                   harmony in your modern living spaces.
-                 </p>
+                <p className="text-surface-500 text-base lg:text-lg font-light leading-relaxed text-center lg:text-right">
+                  A curated selection of timeless pieces.<br className="hidden lg:block" />
+                  Each form follows function, creating<br className="hidden lg:block" />
+                  harmony in your modern living spaces.
+                </p>
               </div>
-              
+
               {/* Main Navigation - Extreme Glassmorphism */}
               <div className="flex flex-wrap items-center justify-center lg:justify-end gap-3 mb-10 w-full lg:w-[420px]">
                 <button
@@ -301,11 +312,10 @@ export default function CollectionPage() {
                     setActiveCategory(null);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  className={`group relative px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${
-                    !activeCategory 
-                      ? 'bg-surface-900 text-surface-50 shadow-[0_15px_30px_-10px_rgba(0,0,0,0.3)]' 
-                      : 'bg-surface-100 text-surface-900 border border-surface-200 hover:bg-surface-200'
-                  }`}
+                  className={`group relative px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${!activeCategory
+                    ? 'bg-surface-900 text-surface-50 shadow-[0_15px_30px_-10px_rgba(0,0,0,0.3)]'
+                    : 'bg-surface-100 text-surface-900 border border-surface-200 hover:bg-surface-200'
+                    }`}
                 >
                   <span className="relative z-10">All</span>
                   {!activeCategory && <div className="absolute inset-0 bg-primary-900 rounded-full scale-0 group-hover:scale-100 transition-transform duration-700" />}
@@ -316,11 +326,10 @@ export default function CollectionPage() {
                     onClick={() => {
                       setActiveCategory(section.category);
                     }}
-                    className={`px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${
-                      activeCategory === section.category
-                        ? 'bg-surface-900 text-surface-50 shadow-[0_15px_30px_-10px_rgba(0,0,0,0.3)]'
-                        : 'bg-surface-100 text-surface-900 border border-surface-200 hover:bg-surface-200'
-                    }`}
+                    className={`px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${activeCategory === section.category
+                      ? 'bg-surface-900 text-surface-50 shadow-[0_15px_30px_-10px_rgba(0,0,0,0.3)]'
+                      : 'bg-surface-100 text-surface-900 border border-surface-200 hover:bg-surface-200'
+                      }`}
                   >
                     {section.category}
                   </button>
@@ -351,8 +360,8 @@ export default function CollectionPage() {
       {/* Categorized Product Sections */}
       <div className="relative flex flex-col gap-56 pb-64 z-10">
         {collectionData.map((section, sectionIdx) => (
-          <section 
-            key={section.category} 
+          <section
+            key={section.category}
             id={section.category.toLowerCase().replace(/\s+/g, '-')}
             className="w-full px-4 lg:px-24 scroll-mt-32"
           >
@@ -370,27 +379,27 @@ export default function CollectionPage() {
 
               <div className="flex flex-col gap-48">
                 {section.subcategories.map((sub, subIdx) => (
-                  <div 
-                    key={sub.name} 
+                  <div
+                    key={sub.name}
                     id={`${section.category}-${sub.name}`.toLowerCase().replace(/\s+/g, '-')}
                     className="flex flex-col gap-16 scroll-mt-24 group/sub"
                   >
                     <div className="flex items-center justify-between">
-                       <div className="flex items-center gap-6">
-                         <div className="w-2 h-2 rounded-full bg-surface-900/20 group-hover/sub:bg-primary-900 transition-colors duration-700" />
-                         <h3 className="text-surface-900 text-[12px] tracking-[0.4em] uppercase font-black">
-                           {sub.name}
-                         </h3>
-                       </div>
-                       <span className="text-[10px] text-surface-900/20 font-mono tracking-widest">SUB-SECTION_{subIdx + 1}</span>
+                      <div className="flex items-center gap-6">
+                        <div className="w-2 h-2 rounded-full bg-surface-900/20 group-hover/sub:bg-primary-900 transition-colors duration-700" />
+                        <h3 className="text-surface-900 text-[12px] tracking-[0.4em] uppercase font-black">
+                          {sub.name}
+                        </h3>
+                      </div>
+                      <span className="text-[10px] text-surface-900/20 font-mono tracking-widest">SUB-SECTION_{subIdx + 1}</span>
                     </div>
-                    
+
                     {sub.items.length === 0 ? (
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
                         {[1, 2, 3].map((n) => (
                           <div key={n} className="aspect-square bg-[#f5f5f5] rounded-[4rem] border border-black/[0.03] flex flex-col items-center justify-center gap-6 group/placeholder transition-all duration-1000 hover:bg-white hover:shadow-2xl">
-                             <div className="w-12 h-[1px] bg-black/10 group-hover/placeholder:w-20 group-hover/placeholder:bg-primary-900 transition-all duration-1000" />
-                             <span className="text-[10px] tracking-[0.4em] uppercase font-black text-black/20 group-hover/placeholder:text-black transition-colors duration-700">Coming Soon</span>
+                            <div className="w-12 h-[1px] bg-black/10 group-hover/placeholder:w-20 group-hover/placeholder:bg-primary-900 transition-all duration-1000" />
+                            <span className="text-[10px] tracking-[0.4em] uppercase font-black text-black/20 group-hover/placeholder:text-black transition-colors duration-700">Coming Soon</span>
                           </div>
                         ))}
                       </div>
@@ -402,13 +411,13 @@ export default function CollectionPage() {
                           const isMain = product.isMain;
                           const spanClass = isMain ? 'md:col-span-12' : 'md:col-span-4';
                           const aspectClass = isMain ? 'aspect-video' : 'aspect-square';
-                          const displayIndex = String((sectionIdx * 5) + (subIdx * 4) + idx + 1).padStart(2, '0');
+                          const displayIndex = String(getAbsoluteIndex(sectionIdx, subIdx, idx)).padStart(2, '0');
 
                           return (
-                            <Reveal 
-                              key={product.id} 
-                              delay={idx * 0.1} 
-                              distance="80px" 
+                            <Reveal
+                              key={product.id}
+                              delay={idx * 0.1}
+                              distance="80px"
                               className={spanClass}
                             >
                               <button
@@ -417,13 +426,12 @@ export default function CollectionPage() {
                               >
                                 {/* Extreme Product Container */}
                                 <div className={`relative w-full ${aspectClass} ${bg} ${isMain ? 'rounded-[4rem] lg:rounded-[5rem]' : 'rounded-[1.5rem] lg:rounded-[2rem]'} overflow-hidden transition-all duration-[1.5s] cubic-bezier(0.16, 1, 0.3, 1) group-hover:shadow-[0_60px_100px_-30px_rgba(0,0,0,0.2)] group-hover:-translate-y-6`}>
-                                  
+
                                   {/* Apex Floating Badge */}
-                                  <div className={`absolute z-30 bg-[#111] rounded-full font-black uppercase tracking-[0.2em] text-white shadow-xl transition-all duration-700 group-hover:scale-110 group-hover:bg-white group-hover:text-black ${
-                                    isMain 
-                                      ? 'top-6 right-6 lg:top-8 lg:right-8 px-4 py-1.5 text-[8px]'
-                                      : 'top-2 right-3 lg:top-3 lg:right-4 px-3 py-1 text-[6px] lg:text-[7px]'
-                                  }`}>
+                                  <div className={`absolute z-30 bg-[#111] rounded-full font-black uppercase tracking-[0.2em] text-white shadow-xl transition-all duration-700 group-hover:scale-110 group-hover:bg-white group-hover:text-black ${isMain
+                                    ? 'top-6 right-6 lg:top-8 lg:right-8 px-4 py-1.5 text-[8px]'
+                                    : 'top-2 right-3 lg:top-3 lg:right-4 px-3 py-1 text-[6px] lg:text-[7px]'
+                                    }`}>
                                     {section.category === 'Dining' ? 'TABLES' : section.category.toUpperCase()}
                                   </div>
 
@@ -443,12 +451,10 @@ export default function CollectionPage() {
                                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent z-20 pointer-events-none transition-opacity duration-1000 group-hover:opacity-70" />
 
                                   {/* Floating Number */}
-                                  <div className={`absolute z-40 transition-all duration-700 ${
-                                    isMain ? 'bottom-8 left-8 lg:bottom-10 lg:left-10' : 'bottom-6 left-6 lg:bottom-8 lg:left-8'
-                                  }`}>
-                                    <span className={`font-display font-light tracking-tighter text-white drop-shadow-md opacity-90 group-hover:opacity-100 transition-all duration-1000 group-hover:scale-110 ${
-                                      isMain ? 'text-5xl lg:text-6xl' : 'text-3xl lg:text-4xl'
+                                  <div className={`absolute z-40 transition-all duration-700 ${isMain ? 'bottom-8 left-8 lg:bottom-10 lg:left-10' : 'bottom-6 left-6 lg:bottom-8 lg:left-8'
                                     }`}>
+                                    <span className={`font-display font-light tracking-tighter text-white drop-shadow-md opacity-90 group-hover:opacity-100 transition-all duration-1000 group-hover:scale-110 ${isMain ? 'text-4xl lg:text-5xl' : 'text-2xl lg:text-3xl'
+                                      }`}>
                                       {displayIndex}
                                     </span>
                                   </div>
@@ -484,26 +490,25 @@ export default function CollectionPage() {
       </div>
 
       {/* Extreme Floating Navigation Anchor */}
-      <div className={`fixed bottom-8 right-8 lg:bottom-12 lg:right-12 z-[9999] transition-all duration-[1.2s] cubic-bezier(0.16, 1, 0.3, 1) ${
-          showScrollTop ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-32 scale-50 pointer-events-none'
+      <div className={`fixed bottom-8 right-8 lg:bottom-12 lg:right-12 z-[9999] transition-all duration-[1.2s] cubic-bezier(0.16, 1, 0.3, 1) ${showScrollTop ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-32 scale-50 pointer-events-none'
         }`}>
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           className="group relative w-14 h-14 rounded-full bg-transparent border border-surface-900 text-surface-900 flex items-center justify-center transition-all duration-700 hover:scale-110 active:scale-90 hover:bg-surface-900 hover:text-surface-50"
           aria-label="Back to Top"
         >
-          <svg 
-            width="24" 
-            height="24" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="1" 
-            strokeLinecap="round" 
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1"
+            strokeLinecap="round"
             strokeLinejoin="round"
             className="transition-transform duration-500 group-hover:-translate-y-1"
           >
-            <path d="M12 19V5M5 12l7-7 7 7"/>
+            <path d="M12 19V5M5 12l7-7 7 7" />
           </svg>
         </button>
       </div>
