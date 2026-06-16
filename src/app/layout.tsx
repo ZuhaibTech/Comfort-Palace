@@ -43,11 +43,15 @@ export default function RootLayout({
         />
       </head>
       <body className="flex flex-col min-h-[100dvh] bg-surface-50 text-surface-800 font-sans antialiased">
-        <Header />
+        <div className="print:hidden">
+          <Header />
+        </div>
         <main className="flex-1 flex flex-col">
           {children}
         </main>
-        <Footer />
+        <div className="print:hidden">
+          <Footer />
+        </div>
       </body>
     </html>
   );

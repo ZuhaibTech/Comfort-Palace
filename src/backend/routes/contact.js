@@ -1,7 +1,8 @@
 const express = require('express');
-const router = express.Router();
-const { getDb, saveDatabase } = require('../database');
+const ContactForm = require('../models/ContactForm');
 const nodemailer = require('nodemailer');
+
+const router = express.Router();
 
 // Create contact form submission
 router.post('/', async (req, res) => {
@@ -16,18 +17,9 @@ router.post('/', async (req, res) => {
       });
     }
 
-    const db = getDb();
-    const now = new Date().toISOString();
-
-    // Insert contact form submission into database
-    const stmt = db.prepare(`
-      INSERT INTO contact_forms (id, name, phone, email, requirement, created_at, updated_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `);
-    
-    const contactId = require('uuid').v4();
-    stmt.run([contactId, name, phone, email, requirement, now, now]);
-    stmt.free();
+    // Create and save to DB
+    const contact = new ContactForm({ name, phone, email, requirement });
+    await contact.save();
 
     // Send email notification
     try {
@@ -61,12 +53,10 @@ router.post('/', async (req, res) => {
       // Don't fail the request if email fails
     }
 
-    saveDatabase();
-    
     res.status(201).json({
       success: true,
       message: 'Contact form submitted successfully',
-      data: { id: contactId }
+      data: contact
     });
   } catch (err) {
     console.error('Error creating contact form:', err);
@@ -78,17 +68,9 @@ router.post('/', async (req, res) => {
 });
 
 // Get all contact form submissions
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const db = getDb();
-    const rows = db.exec('SELECT * FROM contact_forms ORDER BY created_at DESC');
-    const contacts = rows[0] ? rows[0].values.map(row => {
-      const obj = {};
-      rows[0].columns.forEach((col, index) => {
-        obj[col] = row[index];
-      });
-      return obj;
-    }) : [];
+    const contacts = await ContactForm.find().sort({ created_at: -1 });
 
     res.json({
       success: true,
@@ -104,13 +86,10 @@ router.get('/', (req, res) => {
 });
 
 // Get single contact form submission
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const db = getDb();
-    const stmt = db.prepare('SELECT * FROM contact_forms WHERE id = ?');
-    const contact = stmt.get([id]);
-    stmt.free();
+    const contact = await ContactForm.findById(id);
 
     if (!contact) {
       return res.status(404).json({
@@ -133,22 +112,18 @@ router.get('/:id', (req, res) => {
 });
 
 // Delete contact form submission
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const db = getDb();
-    const stmt = db.prepare('DELETE FROM contact_forms WHERE id = ?');
-    const result = stmt.run([id]);
-    stmt.free();
+    const contact = await ContactForm.findByIdAndDelete(id);
 
-    if (result.changes === 0) {
+    if (!contact) {
       return res.status(404).json({
         success: false,
         error: 'Contact form not found'
       });
     }
 
-    saveDatabase();
     res.json({
       success: true,
       message: 'Contact form deleted successfully'

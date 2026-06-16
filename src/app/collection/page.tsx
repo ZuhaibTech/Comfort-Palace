@@ -42,7 +42,7 @@ const collectionData = [
       {
         name: 'Chest Drawers',
         items: [
-          { id: 'lr-cd-main', item_code: 'LR-CD-001', name: 'Chest Drawers Main', description: 'Spacious main chest drawers.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/Chest Drawers main.webp', quantity_in_stock: 5, isMain: true },
+          { id: 'lr-cd-main', item_code: 'LR-CD-001', name: 'Chest of Drawers Main', description: 'Spacious main chest drawers.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/Chest Drawers main.webp', quantity_in_stock: 5, isMain: true },
           { id: 'lr-cd-1', item_code: 'LR-CD-002', name: 'Chest Drawers - 1', description: 'Classic chest of drawers.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/Chest Drawers -1.webp', quantity_in_stock: 5 },
           { id: 'lr-cd-2', item_code: 'LR-CD-003', name: 'Chest Drawers - 2', description: 'Modern storage solution.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/Chest Drawers -2.webp', quantity_in_stock: 5 },
           { id: 'lr-cd-3', item_code: 'LR-CD-004', name: 'Chest Drawers - 3', description: 'Elegant chest for your living area.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/Chest Drawers -3.webp', quantity_in_stock: 5 },
@@ -51,10 +51,10 @@ const collectionData = [
       {
         name: 'Consoles',
         items: [
-          { id: 'lr-con-main', item_code: 'LR-CON-001', name: 'Wall Console Main', description: 'Sophisticated main console table.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/wall console table Main.webp', quantity_in_stock: 5, isMain: true },
-          { id: 'lr-con-1', item_code: 'LR-CON-002', name: 'Wall Console - 1', description: 'Sleek wall console table.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/wall console table -1.webp', quantity_in_stock: 5 },
-          { id: 'lr-con-2', item_code: 'LR-CON-003', name: 'Wall Console - 2', description: 'Functional and stylish console.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/wall console table -2.webp', quantity_in_stock: 5 },
-          { id: 'lr-con-3', item_code: 'LR-CON-004', name: 'Wall Console - 3', description: 'Artistic console for your hallway.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/wall console table -3.webp', quantity_in_stock: 5 },
+          { id: 'lr-con-main', item_code: 'LR-CON-001', name: 'Console Main', description: 'Sophisticated main console table.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/wall console table Main.webp', quantity_in_stock: 5, isMain: true },
+          { id: 'lr-con-1', item_code: 'LR-CON-002', name: 'Console - 1', description: 'Sleek wall console table.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/wall console table -1.webp', quantity_in_stock: 5 },
+          { id: 'lr-con-2', item_code: 'LR-CON-003', name: 'Console - 2', description: 'Functional and stylish console.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/wall console table -2.webp', quantity_in_stock: 5 },
+          { id: 'lr-con-3', item_code: 'LR-CON-004', name: 'Console - 3', description: 'Artistic console for your hallway.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/wall console table -3.webp', quantity_in_stock: 5 },
         ]
       },
       {
@@ -183,7 +183,7 @@ const collectionData = [
       {
         name: 'Wall Mirrors',
         items: [
-          { id: 'af-wm-main', item_code: 'AF-WM-001', name: 'Architectural Wall Mirror', description: 'Grand statement wall mirror.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Wall Mirror Mirror.webp', quantity_in_stock: 5, isMain: true },
+          { id: 'af-wm-main', item_code: 'AF-WM-001', name: 'Wall Mirror Main', description: 'Grand statement wall mirror.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Wall Mirror Mirror.webp', quantity_in_stock: 5, isMain: true },
           { id: 'af-wm-1', item_code: 'AF-WM-002', name: 'Wall Mirror - 1', description: 'Elegant framed wall mirror.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Wall Mirror -1.webp', quantity_in_stock: 5 },
           { id: 'af-wm-2', item_code: 'AF-WM-003', name: 'Wall Mirror - 2', description: 'Contemporary wall mirror design.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Wall Mirror -2.webp', quantity_in_stock: 5 },
           { id: 'af-wm-3', item_code: 'AF-WM-004', name: 'Wall Mirror - 3', description: 'Minimalist wall mirror for any room.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Wall Mirror -3.webp', quantity_in_stock: 5 },
@@ -256,6 +256,17 @@ export default function CollectionPage() {
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
+  const getAbsoluteIndex = (sectionIdx: number, subIdx: number, itemIdx: number) => {
+    let count = 0;
+    for (let i = 0; i < sectionIdx; i++) {
+      collectionData[i].subcategories.forEach(sub => count += sub.items.length);
+    }
+    for (let i = 0; i < subIdx; i++) {
+      count += collectionData[sectionIdx].subcategories[i].items.length;
+    }
+    return count + itemIdx + 1;
+  };
+
   return (
     <div className="flex flex-col w-full bg-surface-50 min-h-screen font-sans selection:bg-primary-900 selection:text-white">
       
@@ -275,7 +286,7 @@ export default function CollectionPage() {
                 <div className="w-16 h-px bg-surface-900/40" />
                 <span className="text-[10px] font-black tracking-[0.5em] text-surface-900 uppercase">Est. 2026 / Global Archive</span>
               </div>
-              <h1 className="font-display text-8xl lg:text-[9.5rem] text-surface-900 font-light tracking-[-0.04em] leading-[0.8]">
+              <h1 className="font-display text-8xl lg:text-[9.5rem] text-surface-900 font-light tracking-[-0.04em] leading-[0.8] whitespace-nowrap">
                 The Master <br /> 
                 <span className="relative inline-block overflow-hidden">
                   <span className="italic font-serif opacity-10 hover:opacity-100 transition-all duration-[2s] cursor-default">Collection.</span>
@@ -402,7 +413,7 @@ export default function CollectionPage() {
                           const isMain = product.isMain;
                           const spanClass = isMain ? 'md:col-span-12' : 'md:col-span-4';
                           const aspectClass = isMain ? 'aspect-video' : 'aspect-square';
-                          const displayIndex = String((sectionIdx * 5) + (subIdx * 4) + idx + 1).padStart(2, '0');
+                          const displayIndex = String(getAbsoluteIndex(sectionIdx, subIdx, idx)).padStart(2, '0');
 
                           return (
                             <Reveal 
@@ -447,7 +458,7 @@ export default function CollectionPage() {
                                     isMain ? 'bottom-8 left-8 lg:bottom-10 lg:left-10' : 'bottom-6 left-6 lg:bottom-8 lg:left-8'
                                   }`}>
                                     <span className={`font-display font-light tracking-tighter text-white drop-shadow-md opacity-90 group-hover:opacity-100 transition-all duration-1000 group-hover:scale-110 ${
-                                      isMain ? 'text-5xl lg:text-6xl' : 'text-3xl lg:text-4xl'
+                                      isMain ? 'text-4xl lg:text-5xl' : 'text-2xl lg:text-3xl'
                                     }`}>
                                       {displayIndex}
                                     </span>
