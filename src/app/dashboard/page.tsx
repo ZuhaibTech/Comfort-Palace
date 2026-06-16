@@ -1768,7 +1768,7 @@ export default function DashboardPage() {
                      <Image src="/Logo/LOGO main.svg" alt="Comfort Palace" fill className="object-contain object-left print:grayscale" priority />
                   </div>
                   <p className="text-sm text-surface-500 leading-relaxed font-light">
-                    123 Furniture Street<br/>Metropolis, NY 10001<br/>contact@comfortpalace.com<br/>+1 (555) 019-8273
+                    2HCR+7XJ, 6, Rabindranath Tagore Nagar Main Rd,<br/>Giddappa Block, Ganganagar, Bengaluru, Karnataka 560032<br/>contact@comfortpalace.com<br/>+91 95914 88660
                   </p>
                 </div>
                 <div className="text-right">
