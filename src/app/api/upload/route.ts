@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import path from 'path';
+
 
 export async function POST(request: Request) {
   try {
@@ -25,29 +24,13 @@ export async function POST(request: Request) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Generate unique filename
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const ext = path.extname(file.name) || '.' + file.type.split('/')[1];
-    const filename = `product-${uniqueSuffix}${ext}`;
-    
-    // Save locally
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads');
-    
-    try {
-      await mkdir(uploadDir, { recursive: true });
-    } catch (e) {
-      // Ignore if exists
-    }
-    
-    const filepath = path.join(uploadDir, filename);
-    await writeFile(filepath, buffer);
-
-    const fileUrl = `/uploads/${filename}`;
+    const base64Data = buffer.toString('base64');
+    const fileUrl = `data:${file.type};base64,${base64Data}`;
 
     return NextResponse.json({
       success: true,
       data: {
-        filename: filename,
+        filename: file.name,
         url: fileUrl,
         originalName: file.name,
         size: file.size
