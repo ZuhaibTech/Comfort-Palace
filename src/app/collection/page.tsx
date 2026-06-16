@@ -94,7 +94,7 @@ const collectionData = [
         items: [
           { id: 'br-wd-main', item_code: 'BR-WD-001', name: 'Wardrobe Main', description: 'Spacious main wardrobe.', price: 0, category: 'Bed Room', image_url: '/Collection Furnitures/Bed Wardrobe Main.webp', quantity_in_stock: 5, isMain: true },
           { id: 'br-wd-1', item_code: 'BR-WD-002', name: 'Wardrobe - 1', description: 'Modern wardrobe solution.', price: 0, category: 'Bed Room', image_url: '/Collection Furnitures/Bed Wardrobe -1.webp', quantity_in_stock: 5 },
-          { id: 'br-wd-2', item_code: 'BR-WD-003', name: 'Wardrobe - 2', description: 'Elegant storage for your clothes.', price: 0, category: 'Bed Room', image_url: '/Collection Furnitures/Bed Wardrobe -2.webp', quantity_in_stock: 5 },
+          { id: 'br-wd-2', item_code: 'BR-WD-003', name: 'Wardrobe - 2', description: 'Elegant storage for your clothes.', price: 0, category: 'Bed Room', image_url: '/Collection Furnitures/Bed Wardrobe -4.webp', quantity_in_stock: 5 },
           { id: 'br-wd-3', item_code: 'BR-WD-004', name: 'Wardrobe - 3', description: 'Premium wardrobe design.', price: 0, category: 'Bed Room', image_url: '/Collection Furnitures/Bed Wardrobe -3.webp', quantity_in_stock: 5 },
         ]
       },
@@ -269,7 +269,7 @@ export default function CollectionPage() {
 
   return (
     <div className="flex flex-col w-full bg-surface-50 min-h-screen font-sans selection:bg-primary-900 selection:text-white">
-      
+
       {/* Extreme Luxury Background Layer */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] bg-primary-100/20 blur-[150px] rounded-full animate-[spin_30s_linear_infinite]" />
@@ -298,13 +298,13 @@ export default function CollectionPage() {
           <Reveal direction="left" once={true} delay={0.4} distance="100px">
             <div className="flex flex-col items-start lg:items-end w-full lg:w-[480px] shrink-0">
               <div className="relative mb-6">
-                 <p className="text-surface-500 text-base lg:text-lg font-light leading-relaxed text-center lg:text-right">
-                   A curated selection of timeless pieces.<br className="hidden lg:block" />
-                   Each form follows function, creating<br className="hidden lg:block" />
-                   harmony in your modern living spaces.
-                 </p>
+                <p className="text-surface-500 text-base lg:text-lg font-light leading-relaxed text-center lg:text-right">
+                  A curated selection of timeless pieces.<br className="hidden lg:block" />
+                  Each form follows function, creating<br className="hidden lg:block" />
+                  harmony in your modern living spaces.
+                </p>
               </div>
-              
+
               {/* Main Navigation - Extreme Glassmorphism */}
               <div className="flex flex-wrap items-center justify-center lg:justify-end gap-3 mb-10 w-full lg:w-[420px]">
                 <button
@@ -312,11 +312,10 @@ export default function CollectionPage() {
                     setActiveCategory(null);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  className={`group relative px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${
-                    !activeCategory 
-                      ? 'bg-surface-900 text-surface-50 shadow-[0_15px_30px_-10px_rgba(0,0,0,0.3)]' 
-                      : 'bg-surface-100 text-surface-900 border border-surface-200 hover:bg-surface-200'
-                  }`}
+                  className={`group relative px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${!activeCategory
+                    ? 'bg-surface-900 text-surface-50 shadow-[0_15px_30px_-10px_rgba(0,0,0,0.3)]'
+                    : 'bg-surface-100 text-surface-900 border border-surface-200 hover:bg-surface-200'
+                    }`}
                 >
                   <span className="relative z-10">All</span>
                   {!activeCategory && <div className="absolute inset-0 bg-primary-900 rounded-full scale-0 group-hover:scale-100 transition-transform duration-700" />}
@@ -327,11 +326,10 @@ export default function CollectionPage() {
                     onClick={() => {
                       setActiveCategory(section.category);
                     }}
-                    className={`px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${
-                      activeCategory === section.category
-                        ? 'bg-surface-900 text-surface-50 shadow-[0_15px_30px_-10px_rgba(0,0,0,0.3)]'
-                        : 'bg-surface-100 text-surface-900 border border-surface-200 hover:bg-surface-200'
-                    }`}
+                    className={`px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${activeCategory === section.category
+                      ? 'bg-surface-900 text-surface-50 shadow-[0_15px_30px_-10px_rgba(0,0,0,0.3)]'
+                      : 'bg-surface-100 text-surface-900 border border-surface-200 hover:bg-surface-200'
+                      }`}
                   >
                     {section.category}
                   </button>
@@ -362,8 +360,8 @@ export default function CollectionPage() {
       {/* Categorized Product Sections */}
       <div className="relative flex flex-col gap-56 pb-64 z-10">
         {collectionData.map((section, sectionIdx) => (
-          <section 
-            key={section.category} 
+          <section
+            key={section.category}
             id={section.category.toLowerCase().replace(/\s+/g, '-')}
             className="w-full px-4 lg:px-24 scroll-mt-32"
           >
@@ -381,27 +379,27 @@ export default function CollectionPage() {
 
               <div className="flex flex-col gap-48">
                 {section.subcategories.map((sub, subIdx) => (
-                  <div 
-                    key={sub.name} 
+                  <div
+                    key={sub.name}
                     id={`${section.category}-${sub.name}`.toLowerCase().replace(/\s+/g, '-')}
                     className="flex flex-col gap-16 scroll-mt-24 group/sub"
                   >
                     <div className="flex items-center justify-between">
-                       <div className="flex items-center gap-6">
-                         <div className="w-2 h-2 rounded-full bg-surface-900/20 group-hover/sub:bg-primary-900 transition-colors duration-700" />
-                         <h3 className="text-surface-900 text-[12px] tracking-[0.4em] uppercase font-black">
-                           {sub.name}
-                         </h3>
-                       </div>
-                       <span className="text-[10px] text-surface-900/20 font-mono tracking-widest">SUB-SECTION_{subIdx + 1}</span>
+                      <div className="flex items-center gap-6">
+                        <div className="w-2 h-2 rounded-full bg-surface-900/20 group-hover/sub:bg-primary-900 transition-colors duration-700" />
+                        <h3 className="text-surface-900 text-[12px] tracking-[0.4em] uppercase font-black">
+                          {sub.name}
+                        </h3>
+                      </div>
+                      <span className="text-[10px] text-surface-900/20 font-mono tracking-widest">SUB-SECTION_{subIdx + 1}</span>
                     </div>
-                    
+
                     {sub.items.length === 0 ? (
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
                         {[1, 2, 3].map((n) => (
                           <div key={n} className="aspect-square bg-[#f5f5f5] rounded-[4rem] border border-black/[0.03] flex flex-col items-center justify-center gap-6 group/placeholder transition-all duration-1000 hover:bg-white hover:shadow-2xl">
-                             <div className="w-12 h-[1px] bg-black/10 group-hover/placeholder:w-20 group-hover/placeholder:bg-primary-900 transition-all duration-1000" />
-                             <span className="text-[10px] tracking-[0.4em] uppercase font-black text-black/20 group-hover/placeholder:text-black transition-colors duration-700">Coming Soon</span>
+                            <div className="w-12 h-[1px] bg-black/10 group-hover/placeholder:w-20 group-hover/placeholder:bg-primary-900 transition-all duration-1000" />
+                            <span className="text-[10px] tracking-[0.4em] uppercase font-black text-black/20 group-hover/placeholder:text-black transition-colors duration-700">Coming Soon</span>
                           </div>
                         ))}
                       </div>
@@ -416,10 +414,10 @@ export default function CollectionPage() {
                           const displayIndex = String(getAbsoluteIndex(sectionIdx, subIdx, idx)).padStart(2, '0');
 
                           return (
-                            <Reveal 
-                              key={product.id} 
-                              delay={idx * 0.1} 
-                              distance="80px" 
+                            <Reveal
+                              key={product.id}
+                              delay={idx * 0.1}
+                              distance="80px"
                               className={spanClass}
                             >
                               <button
@@ -428,13 +426,12 @@ export default function CollectionPage() {
                               >
                                 {/* Extreme Product Container */}
                                 <div className={`relative w-full ${aspectClass} ${bg} ${isMain ? 'rounded-[4rem] lg:rounded-[5rem]' : 'rounded-[1.5rem] lg:rounded-[2rem]'} overflow-hidden transition-all duration-[1.5s] cubic-bezier(0.16, 1, 0.3, 1) group-hover:shadow-[0_60px_100px_-30px_rgba(0,0,0,0.2)] group-hover:-translate-y-6`}>
-                                  
+
                                   {/* Apex Floating Badge */}
-                                  <div className={`absolute z-30 bg-[#111] rounded-full font-black uppercase tracking-[0.2em] text-white shadow-xl transition-all duration-700 group-hover:scale-110 group-hover:bg-white group-hover:text-black ${
-                                    isMain 
-                                      ? 'top-6 right-6 lg:top-8 lg:right-8 px-4 py-1.5 text-[8px]'
-                                      : 'top-2 right-3 lg:top-3 lg:right-4 px-3 py-1 text-[6px] lg:text-[7px]'
-                                  }`}>
+                                  <div className={`absolute z-30 bg-[#111] rounded-full font-black uppercase tracking-[0.2em] text-white shadow-xl transition-all duration-700 group-hover:scale-110 group-hover:bg-white group-hover:text-black ${isMain
+                                    ? 'top-6 right-6 lg:top-8 lg:right-8 px-4 py-1.5 text-[8px]'
+                                    : 'top-2 right-3 lg:top-3 lg:right-4 px-3 py-1 text-[6px] lg:text-[7px]'
+                                    }`}>
                                     {section.category === 'Dining' ? 'TABLES' : section.category.toUpperCase()}
                                   </div>
 
@@ -459,7 +456,7 @@ export default function CollectionPage() {
                                   }`}>
                                     <span className={`font-display font-light tracking-tighter text-white drop-shadow-md opacity-90 group-hover:opacity-100 transition-all duration-1000 group-hover:scale-110 ${
                                       isMain ? 'text-4xl lg:text-5xl' : 'text-2xl lg:text-3xl'
-                                    }`}>
+                                      }`}>
                                       {displayIndex}
                                     </span>
                                   </div>
@@ -495,26 +492,25 @@ export default function CollectionPage() {
       </div>
 
       {/* Extreme Floating Navigation Anchor */}
-      <div className={`fixed bottom-8 right-8 lg:bottom-12 lg:right-12 z-[9999] transition-all duration-[1.2s] cubic-bezier(0.16, 1, 0.3, 1) ${
-          showScrollTop ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-32 scale-50 pointer-events-none'
+      <div className={`fixed bottom-8 right-8 lg:bottom-12 lg:right-12 z-[9999] transition-all duration-[1.2s] cubic-bezier(0.16, 1, 0.3, 1) ${showScrollTop ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-32 scale-50 pointer-events-none'
         }`}>
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           className="group relative w-14 h-14 rounded-full bg-transparent border border-surface-900 text-surface-900 flex items-center justify-center transition-all duration-700 hover:scale-110 active:scale-90 hover:bg-surface-900 hover:text-surface-50"
           aria-label="Back to Top"
         >
-          <svg 
-            width="24" 
-            height="24" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="1" 
-            strokeLinecap="round" 
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1"
+            strokeLinecap="round"
             strokeLinejoin="round"
             className="transition-transform duration-500 group-hover:-translate-y-1"
           >
-            <path d="M12 19V5M5 12l7-7 7 7"/>
+            <path d="M12 19V5M5 12l7-7 7 7" />
           </svg>
         </button>
       </div>
