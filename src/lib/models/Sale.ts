@@ -30,6 +30,7 @@ const saleSchema = new mongoose.Schema({
   payment_status: { type: String, default: 'pending' },
   notes: { type: String, default: null },
   is_return: { type: Number, default: 0 },
+  is_demo: { type: Boolean, default: false },
   original_sale_id: { type: String, default: null },
   sale_items: [saleItemSchema]
 }, {
@@ -72,4 +73,10 @@ saleSchema.statics.generateSaleNumber = function () {
   return `SALE-${year}${month}${day}-${time}`;
 };
 
-export default mongoose.models.Sale || mongoose.model('Sale', saleSchema);
+// Clear the model cache in development if it exists, to ensure schema updates are applied
+if (mongoose.models.Sale) {
+  delete mongoose.models.Sale;
+}
+
+const Sale = mongoose.model('Sale', saleSchema);
+export default Sale;

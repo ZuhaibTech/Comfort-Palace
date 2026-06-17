@@ -99,6 +99,7 @@ export async function POST(request: Request) {
       payment_method,
       payment_status,
       notes,
+      is_demo,
       sale_items
     } = body;
 
@@ -116,7 +117,7 @@ export async function POST(request: Request) {
       }, { status: 400 });
     }
 
-    const sanitizedItems = sale_items.map(item => ({
+    const sanitizedItems = sale_items.map((item: any) => ({
       product_id: String(item.product_id),
       quantity: Number(item.quantity),
       unit_price: Number(item.unit_price),
@@ -157,6 +158,7 @@ export async function POST(request: Request) {
       payment_method: payment_method ? String(payment_method).trim() : 'cash',
       payment_status: payment_status ? String(payment_status).trim() : undefined,
       notes: notes ? String(notes).trim() : null,
+      is_demo: !!is_demo,
       sale_items: enrichedItems,
       sale_number: (Sale as any).generateSaleNumber()
     };

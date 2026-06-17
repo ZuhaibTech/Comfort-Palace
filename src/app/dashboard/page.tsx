@@ -3,6 +3,8 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import DemoSales from '@/components/Demo/DemoSales';
+import DemoDelete from '@/components/Demo/DemoDelete';
 
 type Tab = 'dashboard' | 'products' | 'archived' | 'sales' | 'testimonials' | 'forms';
 
@@ -52,6 +54,7 @@ export default function DashboardPage() {
 
   // New Sale modal state
   const [isNewSaleOpen, setIsNewSaleOpen] = useState(false);
+  const [isDemoSaleOpen, setIsDemoSaleOpen] = useState(false);
   const [saleStep, setSaleStep] = useState<'products' | 'cart'>('products');
   const [cart, setCart] = useState<any[]>([]);
   const [saleCustomer, setSaleCustomer] = useState({ name: '', email: '', phone: '', address: '', delivery_address: '', pan_number: '', payment_methods: ['Cash'], cash_amount: '', upi_amount: '', card_amount: '', bank_transfer_amount: '', discount: '0', transport_cost: '0', notes: '' });
@@ -863,6 +866,10 @@ export default function DashboardPage() {
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg>
                   New Sale
                 </button>
+                <button onClick={() => setIsDemoSaleOpen(true)} className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-800 flex items-center gap-2 transition-colors shadow-sm">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg>
+                  Demo Sale
+                </button>
               </div>
             </div>
 
@@ -914,8 +921,9 @@ export default function DashboardPage() {
                         <tr key={sale.id} className={`border-b border-surface-200/40 hover:bg-surface-50 ${sale.is_return ? 'bg-red-50/30' : ''}`}>
                           <td className="py-4 px-4 text-sm font-medium">
                             <div className="flex items-center gap-2">
-                              <span className={sale.is_return ? 'text-red-600' : 'text-surface-900'}>{sale.sale_number || `#${sale.id.slice(0,8)}`}</span>
+                              <span className={sale.is_return ? 'text-red-600' : (sale.is_demo ? 'text-blue-600' : 'text-surface-900')}>{sale.sale_number || `#${sale.id.slice(0,8)}`}</span>
                               {sale.is_return ? <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-600 uppercase tracking-wider">Return</span> : null}
+                              {sale.is_demo ? <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-600 uppercase tracking-wider">Demo</span> : null}
                             </div>
                           </td>
                           <td className="py-4 px-4 text-sm text-surface-500">{formatSaleDate(sale)}</td>
@@ -1417,6 +1425,19 @@ export default function DashboardPage() {
         </div>
       )}
 
+      {/* Demo Sale Modal */}
+      <DemoSales 
+        isOpen={isDemoSaleOpen} 
+        onClose={() => setIsDemoSaleOpen(false)} 
+        products={products} 
+        onSuccess={(sale: any) => { 
+          fetchData(); 
+          // Automatically open the invoice view for the new demo sale
+          // Wait a bit to let the list refresh or just use the returned sale directly
+          setViewInvoice(sale); 
+        }} 
+      />
+
       {/* Create New Sale Modal */}
       {isNewSaleOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-surface-900/60 backdrop-blur-md">
@@ -1770,10 +1791,13 @@ export default function DashboardPage() {
             <div className="px-8 py-5 border-b border-surface-200/40 flex justify-between items-center sticky top-0 bg-white/80 backdrop-blur-xl z-20 print:hidden rounded-t-3xl">
               <h2 className="text-xl font-display text-surface-900 flex items-center gap-2">Invoice <span className="italic text-[#C5A059]">Detail</span></h2>
               <div className="flex gap-3">
-                <button onClick={() => window.print()} className="px-5 py-2 bg-surface-900 text-white rounded-full text-sm font-semibold hover:bg-[#C5A059] transition-colors flex items-center gap-2 shadow-lg hover:shadow-xl">
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
-                  Export PDF
-                </button>
+                <DemoDelete 
+                  sale={viewInvoice} 
+                  onSuccess={() => { 
+                    fetchData(); 
+                    setViewInvoice(null); 
+                  }} 
+                />
                 <button onClick={() => setViewInvoice(null)} className="text-surface-400 hover:text-surface-900 p-2 bg-surface-100 hover:bg-surface-200 rounded-full transition-colors"><svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
               </div>
             </div>
