@@ -1779,16 +1779,16 @@ export default function DashboardPage() {
             </div>
 
             {/* Printable Area */}
-            <div className="p-10 md:p-14 print:p-0 print:m-0 print:pb-20" id="invoice-printable">
+            <div className="p-10 md:p-14 print:p-6 print:m-0" id="invoice-printable">
               
               {/* Brand & Document Header */}
-              <div className="flex justify-between items-start mb-12">
+              <div className="flex justify-between items-start mb-12 print:mb-5 border border-surface-200/60 print:border-surface-300 rounded-2xl print:rounded-lg p-6 print:p-4">
                 <div>
                   <div className="w-48 h-12 relative mb-4">
                      <Image src="/Logo/LOGO main.svg" alt="Comfort Palace" fill className="object-contain object-left print:grayscale" priority />
                   </div>
                   <p className="text-sm text-surface-500 leading-relaxed font-light">
-                    2HCR+7XJ, 6, Rabindranath Tagore Nagar Main Rd,<br/>Giddappa Block, Ganganagar, Bengaluru, Karnataka 560032<br/>thecomfortpalace123@gmail.com<br/>+91 95914 88660
+                    #6, R.T nagar Main Road, Opp R.T Nagar Post Office, Bangalore 560032<br/>thecomfortpalace123@gmail.com<br/>+91 95914 88660<br/><span className="font-semibold text-surface-700">GST: 29AADFC9976H1ZO</span>
                   </p>
                 </div>
                 <div className="text-right">
@@ -1802,10 +1802,11 @@ export default function DashboardPage() {
               </div>
 
 
+
               {/* Addresses */}
-              <div className="grid grid-cols-1 md:grid-cols-2 print:grid-cols-2 gap-8 mb-12 print:break-inside-avoid">
-                <div className="bg-surface-50/50 p-6 rounded-2xl border border-surface-200/40">
-                  <p className="text-[10px] font-bold text-surface-400 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 print:grid-cols-2 gap-8 print:gap-4 mb-12 print:mb-5 print:break-inside-avoid">
+                <div className="bg-surface-50/50 p-6 print:p-3 rounded-2xl border border-surface-200/40">
+                  <p className="text-[10px] font-bold text-surface-400 uppercase tracking-[0.2em] mb-4 print:mb-2 flex items-center gap-2">
                     <svg className="w-4 h-4 text-[#C5A059]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
                     Billed To
                   </p>
@@ -1817,11 +1818,11 @@ export default function DashboardPage() {
                     </div>
                   )}
                   {viewInvoice.customer_address && <p className="text-sm text-surface-600 mt-3 leading-relaxed">{viewInvoice.customer_address}</p>}
-                  {viewInvoice.pan_number && <p className="text-xs font-semibold text-surface-500 mt-4 uppercase">PAN: <span className="text-surface-900">{viewInvoice.pan_number}</span></p>}
+                  {viewInvoice.pan_number && viewInvoice.pan_number !== 'NULL' && viewInvoice.pan_number !== 'null' && <p className="text-xs font-semibold text-surface-500 mt-4 print:mt-2 uppercase">PAN: <span className="text-surface-900">{viewInvoice.pan_number}</span></p>}
                 </div>
 
-                <div className="bg-surface-50/50 p-6 rounded-2xl border border-surface-200/40">
-                  <p className="text-[10px] font-bold text-surface-400 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+                <div className="bg-surface-50/50 p-6 print:p-3 rounded-2xl border border-surface-200/40">
+                  <p className="text-[10px] font-bold text-surface-400 uppercase tracking-[0.2em] mb-4 print:mb-2 flex items-center gap-2">
                     <svg className="w-4 h-4 text-[#C5A059]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                     Delivery To
                   </p>
@@ -1834,14 +1835,14 @@ export default function DashboardPage() {
               </div>
 
               {/* Items Table */}
-              <div className="rounded-2xl border border-surface-200/60 overflow-hidden mb-12">
+              <div className="rounded-2xl border border-surface-200/60 overflow-hidden mb-12 print:mb-5">
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="bg-surface-50/80 border-b border-surface-200/60">
-                      <th className="py-4 px-6 text-[10px] font-bold text-surface-400 uppercase tracking-widest w-2/5">Product</th>
-                      <th className="py-4 px-6 text-[10px] font-bold text-surface-400 uppercase tracking-widest text-center">Qty</th>
-                      <th className="py-4 px-6 text-[10px] font-bold text-surface-400 uppercase tracking-widest text-right">Unit Price</th>
-                      <th className="py-4 px-6 text-[10px] font-bold text-surface-400 uppercase tracking-widest text-right">Total</th>
+                      <th className="py-4 print:py-2 px-6 print:px-3 text-[10px] font-bold text-surface-400 uppercase tracking-widest w-2/5">Product</th>
+                      <th className="py-4 print:py-2 px-6 print:px-3 text-[10px] font-bold text-surface-400 uppercase tracking-widest text-center">Qty</th>
+                      <th className="py-4 print:py-2 px-6 print:px-3 text-[10px] font-bold text-surface-400 uppercase tracking-widest text-right">Unit Price</th>
+                      <th className="py-4 print:py-2 px-6 print:px-3 text-[10px] font-bold text-surface-400 uppercase tracking-widest text-right">Total</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1849,7 +1850,7 @@ export default function DashboardPage() {
                       const image = item.product_image_url ? getFirstImage(item.product_image_url) : null;
                       return (
                         <tr key={idx} className="border-b border-surface-100 last:border-0 hover:bg-surface-50/30 transition-colors">
-                          <td className="py-5 px-6">
+                          <td className="py-5 print:py-2 px-6 print:px-3">
                             <div className="flex items-center gap-4">
                               <div className="w-12 h-12 rounded-lg border border-surface-200 overflow-hidden bg-white shrink-0 flex items-center justify-center print:hidden">
                                 {image ? <img src={image} alt={item.product_name} className="w-full h-full object-cover" /> : <div className="w-6 h-6 bg-surface-200 rounded-sm"></div>}
@@ -1860,9 +1861,9 @@ export default function DashboardPage() {
                               </div>
                             </div>
                           </td>
-                          <td className="py-5 px-6 text-sm text-surface-600 font-semibold text-center">{item.quantity}</td>
-                          <td className="py-5 px-6 text-sm text-surface-600 text-right">₹{item.unit_price?.toLocaleString()}</td>
-                          <td className="py-5 px-6 text-sm text-surface-900 font-bold text-right">₹{item.total_price?.toLocaleString()}</td>
+                          <td className="py-5 print:py-2 px-6 print:px-3 text-sm text-surface-600 font-semibold text-center">{item.quantity}</td>
+                          <td className="py-5 print:py-2 px-6 print:px-3 text-sm text-surface-600 text-right">₹{item.unit_price?.toLocaleString()}</td>
+                          <td className="py-5 print:py-2 px-6 print:px-3 text-sm text-surface-900 font-bold text-right">₹{item.total_price?.toLocaleString()}</td>
                         </tr>
                       );
                     })}
@@ -1871,11 +1872,11 @@ export default function DashboardPage() {
               </div>
 
               {/* Footer Summary area */}
-              <div className="grid grid-cols-1 md:grid-cols-2 print:grid-cols-2 gap-12 print:break-inside-avoid">
+              <div className="grid grid-cols-1 md:grid-cols-2 print:grid-cols-2 gap-12 print:gap-6 print:break-inside-avoid">
                 
                 {/* Notes and Payment Splitting */}
                 <div className="space-y-8">
-                  <div className="bg-surface-50/50 p-6 rounded-2xl border border-surface-200/40">
+                  <div className="bg-surface-50/50 p-6 print:p-3 rounded-2xl border border-surface-200/40">
                     <p className="text-[10px] font-bold text-surface-400 uppercase tracking-[0.2em] mb-4">Payment Summary</p>
                     <div className="space-y-2 text-sm text-surface-600">
                       <div className="flex justify-between items-center pb-2 border-b border-surface-200/40">
@@ -1914,7 +1915,7 @@ export default function DashboardPage() {
                     </div>
                   </div>
 
-                  {viewInvoice.notes && (
+                  {viewInvoice.notes && viewInvoice.notes !== 'null' && viewInvoice.notes !== 'NULL' && (
                     <div>
                       <p className="text-[10px] font-bold text-surface-400 uppercase tracking-[0.2em] mb-2">Remarks</p>
                       <p className="text-sm text-surface-600 leading-relaxed italic border-l-2 border-[#C5A059] pl-4 py-1">{viewInvoice.notes}</p>
@@ -1925,7 +1926,7 @@ export default function DashboardPage() {
                 {/* Grand Total Breakdown */}
                 <div className="flex justify-end">
                   <div className="w-full max-w-sm">
-                    <div className="bg-surface-900 text-white rounded-3xl p-8 shadow-2xl relative overflow-hidden print:bg-white print:text-surface-900 print:shadow-none print:border print:border-surface-300">
+                    <div className="bg-surface-900 text-white rounded-3xl p-8 print:p-4 shadow-2xl relative overflow-hidden print:bg-white print:text-surface-900 print:shadow-none print:border print:border-surface-300">
                       <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-2xl -mr-16 -mt-16 print:hidden"></div>
                       
                       <div className="space-y-4 relative z-10">
@@ -1970,7 +1971,7 @@ export default function DashboardPage() {
               </div>
               
               {/* Footer */}
-              <div className="mt-16 pt-8 border-t border-surface-200/40 text-center print:fixed print:bottom-0 print:left-0 print:w-full print:bg-white print:py-4 print:mt-0 print:border-none print:z-50">
+              <div className="mt-10 print:mt-5 pt-6 print:pt-3 border-t border-surface-200/40 text-center">
                 <p className="text-xs text-surface-400">Thank you for your business. For any queries regarding this invoice, please contact support.</p>
               </div>
 

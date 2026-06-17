@@ -9,11 +9,11 @@ export default function Privacy() {
     },
     {
       title: "2. How We Use Your Information",
-      content: "We use your personal data to execute our service contract: managing logistics with white-glove transport partners, tailoring ergonomic specifications, providing personalized CAD layouts, verifying security and identity at delivery points, and maintaining customer relation support. We do not use automated profiling for marketing."
+      content: "We use your personal data to execute our service contract: managing logistics with transport partners, tailoring ergonomic specifications, providing personalized CAD layouts, verifying security and identity at delivery points, and maintaining customer relation support. We do not use automated profiling for marketing."
     },
     {
       title: "3. Concierge & Logistics Sharing",
-      content: "To guarantee that your luxury pieces are delivered and assembled in flawless condition, we share necessary shipping coordinates and identity details with certified third-party white-glove logistics companies, custom artisans. All logistical partners are legally bound by strict confidentiality contracts."
+      content: "To guarantee that your luxury pieces are delivered and assembled in flawless condition, we share necessary shipping coordinates and identity details with certified third-party logistics companies, custom artisans. All logistical partners are legally bound by strict confidentiality contracts."
     },
     {
       title: "4. Premium Data Security",
@@ -25,7 +25,7 @@ export default function Privacy() {
     },
     {
       title: "6. Data Retention Guidelines",
-      content: "Comfort Palace retains personal details, mathematical dimensions, and custom design records only as long as necessary to fulfill the operational purpose for which they were gathered, or to comply with archival tax laws and white-glove liability terms."
+      content: "Comfort Palace retains personal details, mathematical dimensions, and custom design records only as long as necessary to fulfill the operational purpose for which they were gathered, or to comply with archival tax laws and liability terms."
     },
     {
       title: "7. Policy updates",
