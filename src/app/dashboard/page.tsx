@@ -131,7 +131,7 @@ export default function DashboardPage() {
     if (existing) {
       setCart(cart.map(c => c.product_id === product.id ? { ...c, quantity: c.quantity + 1, total_price: (c.quantity + 1) * c.unit_price } : c));
     } else {
-      setCart([...cart, { product_id: product.id, product_name: product.name, item_code: product.item_code, unit_price: product.price, quantity: 1, total_price: product.price, max_stock: product.quantity_in_stock }]);
+      setCart([...cart, { product_id: product.id, product_name: product.name, item_code: product.item_code, unit_price: product.price, quantity: 1, total_price: product.price, max_stock: product.quantity_in_stock, gst_percentage: product.gst_percentage ?? null }]);
     }
   };
 
@@ -170,7 +170,7 @@ export default function DashboardPage() {
         bank_transfer_amount: Number(saleCustomer.bank_transfer_amount) || 0,
         payment_status: 'completed',
         notes: saleCustomer.notes || null,
-        sale_items: cart.map(c => ({ product_id: c.product_id, quantity: c.quantity, unit_price: c.unit_price, total_price: c.total_price }))
+        sale_items: cart.map(c => ({ product_id: c.product_id, quantity: c.quantity, unit_price: c.unit_price, total_price: c.total_price, gst_percentage: c.gst_percentage ?? null }))
       };
       
       const url = editSaleId ? `/api/sales/${editSaleId}` : '/api/sales';
@@ -1787,9 +1787,32 @@ export default function DashboardPage() {
                   <div className="w-48 h-12 relative mb-4">
                      <Image src="/Logo/LOGO main.svg" alt="Comfort Palace" fill className="object-contain object-left print:grayscale" priority />
                   </div>
-                  <p className="text-sm text-surface-500 leading-relaxed font-light">
-                    #6, R.T nagar Main Road, Opp R.T Nagar Post Office, Bangalore 560032<br/>thecomfortpalace123@gmail.com<br/>+91 95914 88660<br/><span className="font-semibold text-surface-700">GST: 29AADFC9976H1ZO</span>
-                  </p>
+                  <div className="mt-2 space-y-1.5">
+                    {/* GST */}
+                    <p className="text-sm font-semibold text-surface-700">GST: 29AADFC9976H1ZO</p>
+                    {/* Email */}
+                    <div className="flex items-center gap-1.5">
+                      <svg className="w-3.5 h-3.5 text-[#C5A059] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                      <span className="text-sm text-surface-500 font-light">thecomfortpalace123@gmail.com</span>
+                    </div>
+                    {/* Phone */}
+                    <div className="flex items-center gap-1.5">
+                      <svg className="w-3.5 h-3.5 text-[#C5A059] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                      </svg>
+                      <span className="text-sm text-surface-500 font-light">+91 95914 88660</span>
+                    </div>
+                    {/* Address */}
+                    <div className="flex items-start gap-1.5">
+                      <svg className="w-3.5 h-3.5 text-[#C5A059] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      <span className="text-xs text-surface-500 font-light leading-snug">#6, R.T nagar Main Road,<br/>Opp R.T Nagar Post Office, Bangalore 560032</span>
+                    </div>
+                  </div>
                 </div>
                 <div className="text-right">
                   <h1 className="text-4xl font-display font-light text-surface-900 tracking-tight uppercase">Invoice</h1>
@@ -1804,66 +1827,119 @@ export default function DashboardPage() {
 
 
               {/* Addresses */}
-              <div className="grid grid-cols-1 md:grid-cols-2 print:grid-cols-2 gap-8 print:gap-4 mb-12 print:mb-5 print:break-inside-avoid">
-                <div className="bg-surface-50/50 p-6 print:p-3 rounded-2xl border border-surface-200/40">
-                  <p className="text-[10px] font-bold text-surface-400 uppercase tracking-[0.2em] mb-4 print:mb-2 flex items-center gap-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 print:grid-cols-2 gap-4 print:gap-4 mb-6 print:mb-4 print:break-inside-avoid">
+                <div className="bg-surface-50/50 p-4 print:p-3 rounded-2xl border border-surface-200/40">
+                  <p className="text-[10px] font-bold text-surface-400 uppercase tracking-[0.2em] mb-2 print:mb-1.5 flex items-center gap-2">
                     <svg className="w-4 h-4 text-[#C5A059]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
                     Billed To
                   </p>
-                  <h3 className="text-xl font-display text-surface-900">{viewInvoice.customer_name || 'Walk-in Customer'}</h3>
-                  {(viewInvoice.customer_phone || viewInvoice.customer_email) && (
-                    <div className="mt-3 space-y-1">
-                      {viewInvoice.customer_phone && <p className="text-sm text-surface-600 font-mono">{viewInvoice.customer_phone}</p>}
-                      {viewInvoice.customer_email && <p className="text-sm text-surface-600">{viewInvoice.customer_email}</p>}
+                  <div className="grid grid-cols-2 gap-4 print:gap-2">
+                    <div>
+                      <h3 className="text-lg print:text-base font-display text-surface-900">{viewInvoice.customer_name || 'Walk-in Customer'}</h3>
+                      {viewInvoice.customer_phone && <p className="text-sm print:text-xs text-surface-600 font-mono mt-1">{viewInvoice.customer_phone}</p>}
                     </div>
-                  )}
-                  {viewInvoice.customer_address && <p className="text-sm text-surface-600 mt-3 leading-relaxed">{viewInvoice.customer_address}</p>}
-                  {viewInvoice.pan_number && viewInvoice.pan_number !== 'NULL' && viewInvoice.pan_number !== 'null' && <p className="text-xs font-semibold text-surface-500 mt-4 print:mt-2 uppercase">PAN: <span className="text-surface-900">{viewInvoice.pan_number}</span></p>}
+                    <div>
+                      {viewInvoice.customer_email && <p className="text-sm print:text-xs text-surface-600 truncate" title={viewInvoice.customer_email}>{viewInvoice.customer_email}</p>}
+                      {viewInvoice.customer_address && <p className="text-sm print:text-xs text-surface-600 mt-1 leading-relaxed">{viewInvoice.customer_address}</p>}
+                    </div>
+                  </div>
+                  {viewInvoice.pan_number && viewInvoice.pan_number !== 'NULL' && viewInvoice.pan_number !== 'null' && <p className="text-xs print:text-[10px] font-semibold text-surface-500 mt-2 print:mt-1 uppercase">PAN: <span className="text-surface-900">{viewInvoice.pan_number}</span></p>}
                 </div>
 
-                <div className="bg-surface-50/50 p-6 print:p-3 rounded-2xl border border-surface-200/40">
-                  <p className="text-[10px] font-bold text-surface-400 uppercase tracking-[0.2em] mb-4 print:mb-2 flex items-center gap-2">
+                <div className="bg-surface-50/50 p-4 print:p-3 rounded-2xl border border-surface-200/40">
+                  <p className="text-[10px] font-bold text-surface-400 uppercase tracking-[0.2em] mb-2 print:mb-1.5 flex items-center gap-2">
                     <svg className="w-4 h-4 text-[#C5A059]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                     Delivery To
                   </p>
                   {viewInvoice.delivery_address ? (
-                    <p className="text-sm text-surface-600 leading-relaxed whitespace-pre-wrap">{viewInvoice.delivery_address}</p>
+                    <p className="text-sm print:text-xs text-surface-600 leading-relaxed whitespace-pre-wrap">{viewInvoice.delivery_address}</p>
                   ) : (
-                    <p className="text-sm text-surface-400 italic">Same as billing address</p>
+                    <p className="text-sm print:text-xs text-surface-400 italic">Same as billing address</p>
                   )}
                 </div>
               </div>
 
               {/* Items Table */}
-              <div className="rounded-2xl border border-surface-200/60 overflow-hidden mb-12 print:mb-5">
-                <table className="w-full text-left border-collapse">
+              <div className="rounded-2xl border border-surface-200/60 overflow-x-auto mb-12 print:mb-5">
+                <table className="w-full text-left border-collapse min-w-[750px] print:min-w-0">
                   <thead>
                     <tr className="bg-surface-50/80 border-b border-surface-200/60">
-                      <th className="py-4 print:py-2 px-6 print:px-3 text-[10px] font-bold text-surface-400 uppercase tracking-widest w-2/5">Product</th>
-                      <th className="py-4 print:py-2 px-6 print:px-3 text-[10px] font-bold text-surface-400 uppercase tracking-widest text-center">Qty</th>
-                      <th className="py-4 print:py-2 px-6 print:px-3 text-[10px] font-bold text-surface-400 uppercase tracking-widest text-right">Unit Price</th>
-                      <th className="py-4 print:py-2 px-6 print:px-3 text-[10px] font-bold text-surface-400 uppercase tracking-widest text-right">Total</th>
+                      <th className="py-4 print:py-1.5 px-3 print:px-1.5 text-[10px] print:text-[8px] font-bold text-surface-400 uppercase tracking-widest text-center w-10 print:w-6">Sl.No</th>
+                      <th className="py-4 print:py-1.5 px-4 print:px-1.5 text-[10px] print:text-[8px] font-bold text-surface-400 uppercase tracking-widest">Product</th>
+                      <th className="py-4 print:py-1.5 px-4 print:px-1.5 text-[10px] print:text-[8px] font-bold text-surface-400 uppercase tracking-widest text-center">Qty</th>
+                      <th className="py-4 print:py-1.5 px-4 print:px-1.5 text-[10px] print:text-[8px] font-bold text-surface-400 uppercase tracking-widest text-right">
+                        Unit Price<br/><span className="font-normal normal-case text-[9px] print:text-[7px]">(excl. GST)</span>
+                      </th>
+                      <th className="py-4 print:py-1.5 px-4 print:px-1.5 text-[10px] print:text-[8px] font-bold text-surface-400 uppercase tracking-widest text-right">
+                        GST<br/><span className="font-normal normal-case text-[9px] print:text-[7px]">(GST%/2)</span>
+                      </th>
+                      <th className="py-4 print:py-1.5 px-4 print:px-1.5 text-[10px] print:text-[8px] font-bold text-surface-400 uppercase tracking-widest text-right">
+                        CGST<br/><span className="font-normal normal-case text-[9px] print:text-[7px]">(GST%/2)</span>
+                      </th>
+                      <th className="py-4 print:py-1.5 px-4 print:px-1.5 text-[10px] print:text-[8px] font-bold text-surface-400 uppercase tracking-widest text-right">Total</th>
                     </tr>
                   </thead>
                   <tbody>
                     {(viewInvoice.sale_items || []).map((item: any, idx: number) => {
                       const image = item.product_image_url ? getFirstImage(item.product_image_url) : null;
+                      const gstPct = Number(item.gst_percentage || item.product_gst_percentage || 0);
+                      const qty = Number(item.quantity) || 1;
+                      const spPerUnit = Number(item.unit_price) || 0; // SP = CP + GST + Profit
+                      const lineTotal = Number(item.total_price) || spPerUnit * qty;
+
+                      // Taxable value (CP + Profit, pre-GST) per line:
+                      // SP = taxable * (1 + gst%/100)  =>  taxable = SP / (1 + gst%/100)
+                      const lineTaxable = gstPct > 0 ? lineTotal / (1 + gstPct / 100) : lineTotal;
+                      const unitPriceExGST = lineTaxable / qty; // per-unit pre-GST price
+                      const totalGstAmt = lineTotal - lineTaxable;  // total GST on this line
+                      const halfGst = totalGstAmt / 2; // GST col = CGST col = half each
+
                       return (
                         <tr key={idx} className="border-b border-surface-100 last:border-0 hover:bg-surface-50/30 transition-colors">
-                          <td className="py-5 print:py-2 px-6 print:px-3">
-                            <div className="flex items-center gap-4">
+                          {/* Sl.No */}
+                          <td className="py-5 print:py-2 px-3 print:px-1.5 text-sm print:text-[10px] text-surface-400 font-mono text-center">{idx + 1}</td>
+                          {/* Product */}
+                          <td className="py-5 print:py-2 px-4 print:px-1.5">
+                            <div className="flex items-center gap-3 print:gap-1.5">
                               <div className="w-12 h-12 rounded-lg border border-surface-200 overflow-hidden bg-white shrink-0 flex items-center justify-center print:hidden">
                                 {image ? <img src={image} alt={item.product_name} className="w-full h-full object-cover" /> : <div className="w-6 h-6 bg-surface-200 rounded-sm"></div>}
                               </div>
                               <div>
-                                <p className="text-sm font-bold text-surface-900">{item.product_name || `Product ID: ${item.product_id.slice(0,8)}`}</p>
-                                {item.product_item_code && <p className="text-[10px] text-surface-400 font-mono mt-0.5">{item.product_item_code}</p>}
+                                <p className="text-sm print:text-[10px] font-bold text-surface-900">{item.product_name || `Product ID: ${item.product_id.slice(0,8)}`}</p>
+                                {item.product_item_code && <p className="text-[10px] print:text-[8px] text-surface-400 font-mono mt-0.5">{item.product_item_code}</p>}
                               </div>
                             </div>
                           </td>
-                          <td className="py-5 print:py-2 px-6 print:px-3 text-sm text-surface-600 font-semibold text-center">{item.quantity}</td>
-                          <td className="py-5 print:py-2 px-6 print:px-3 text-sm text-surface-600 text-right">₹{item.unit_price?.toLocaleString()}</td>
-                          <td className="py-5 print:py-2 px-6 print:px-3 text-sm text-surface-900 font-bold text-right">₹{item.total_price?.toLocaleString()}</td>
+                          {/* Qty */}
+                          <td className="py-5 print:py-2 px-4 print:px-1.5 text-sm print:text-[10px] text-surface-600 font-semibold text-center">{item.quantity}</td>
+                          {/* Unit Price (excl. GST) */}
+                          <td className="py-5 print:py-2 px-4 print:px-1.5 text-sm print:text-[10px] text-surface-600 text-right whitespace-nowrap">
+                            ₹{unitPriceExGST.toFixed(2)}
+                          </td>
+                          {/* GST (half) */}
+                          <td className="py-5 print:py-2 px-4 print:px-1.5 text-right whitespace-nowrap">
+                            {gstPct > 0 ? (
+                              <div>
+                                <p className="text-sm print:text-[10px] text-surface-600">₹{halfGst.toFixed(2)}</p>
+                                <p className="text-[9px] print:text-[7px] text-surface-400">{gstPct / 2}%</p>
+                              </div>
+                            ) : (
+                              <span className="text-sm print:text-[10px] text-surface-400">—</span>
+                            )}
+                          </td>
+                          {/* CGST (half) */}
+                          <td className="py-5 print:py-2 px-4 print:px-1.5 text-right whitespace-nowrap">
+                            {gstPct > 0 ? (
+                              <div>
+                                <p className="text-sm print:text-[10px] text-surface-600">₹{halfGst.toFixed(2)}</p>
+                                <p className="text-[9px] print:text-[7px] text-surface-400">{gstPct / 2}%</p>
+                              </div>
+                            ) : (
+                              <span className="text-sm print:text-[10px] text-surface-400">—</span>
+                            )}
+                          </td>
+                          {/* Total (inclusive of GST) */}
+                          <td className="py-5 print:py-2 px-4 print:px-1.5 text-sm print:text-[10px] text-surface-900 font-bold text-right whitespace-nowrap">₹{lineTotal.toLocaleString()}</td>
                         </tr>
                       );
                     })}

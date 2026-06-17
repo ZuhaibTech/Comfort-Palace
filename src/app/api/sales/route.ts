@@ -8,10 +8,39 @@ export async function GET() {
     await connectDB();
     const sales = await Sale.find().sort({ created_at: -1 });
 
+    // Build a product-id → gst_percentage lookup to back-fill old sale items
+    const allProductIds = new Set<string>();
+    sales.forEach(saleDoc => {
+      saleDoc.toJSON().sale_items?.forEach((item: any) => {
+        if (item.gst_percentage == null && item.product_id) {
+          allProductIds.add(String(item.product_id));
+        }
+      });
+    });
+
+    const productGstMap: Record<string, number | null> = {};
+    if (allProductIds.size > 0) {
+      const products = await Product.find(
+        { _id: { $in: Array.from(allProductIds) } },
+        { _id: 1, gst_percentage: 1 }
+      );
+      products.forEach((p: any) => {
+        productGstMap[p._id.toString()] = p.gst_percentage ?? null;
+      });
+    }
+
     const salesWithItems = sales.map(saleDoc => {
       const sale = saleDoc.toJSON();
-      
-      const recalculatedTotal = sale.sale_items.reduce((sum: number, item: any) => {
+
+      // Back-fill gst_percentage on items where it is missing
+      const enrichedItems = (sale.sale_items || []).map((item: any) => {
+        if (item.gst_percentage == null && item.product_id) {
+          return { ...item, gst_percentage: productGstMap[String(item.product_id)] ?? null };
+        }
+        return item;
+      });
+
+      const recalculatedTotal = enrichedItems.reduce((sum: number, item: any) => {
         const unitPrice = Number(item.unit_price) || 0;
         const quantity = Number(item.quantity) || 0;
         const totalPrice = Number(item.total_price);
@@ -30,6 +59,7 @@ export async function GET() {
 
       return {
         ...sale,
+        sale_items: enrichedItems,
         total_amount: normalizedTotal,
         amount_paid: normalizedAmountPaid,
         payment_status: normalizedStatus
@@ -90,7 +120,8 @@ export async function POST(request: Request) {
       product_id: String(item.product_id),
       quantity: Number(item.quantity),
       unit_price: Number(item.unit_price),
-      total_price: Number(item.total_price)
+      total_price: Number(item.total_price),
+      gst_percentage: item.gst_percentage != null ? Number(item.gst_percentage) : null
     }));
     
     const enrichedItems = await Promise.all(sanitizedItems.map(async (item) => {
@@ -101,7 +132,9 @@ export async function POST(request: Request) {
              ...item,
              product_name: product.name,
              product_item_code: product.item_code,
-             product_image_url: product.image_url
+             product_image_url: product.image_url,
+             // Use gst_percentage from frontend payload; fall back to product record
+             gst_percentage: item.gst_percentage != null ? item.gst_percentage : (product.gst_percentage ?? null)
            };
          }
       } catch(e) {}
