@@ -54,7 +54,7 @@ export default function DashboardPage() {
   const [isNewSaleOpen, setIsNewSaleOpen] = useState(false);
   const [saleStep, setSaleStep] = useState<'products' | 'cart'>('products');
   const [cart, setCart] = useState<any[]>([]);
-  const [saleCustomer, setSaleCustomer] = useState({ name: '', email: '', phone: '', address: '', delivery_address: '', pan_number: '', payment_methods: ['Cash'], cash_amount: '', upi_amount: '', discount: '0', transport_cost: '0', notes: '' });
+  const [saleCustomer, setSaleCustomer] = useState({ name: '', email: '', phone: '', address: '', delivery_address: '', pan_number: '', payment_methods: ['Cash'], cash_amount: '', upi_amount: '', card_amount: '', bank_transfer_amount: '', discount: '0', transport_cost: '0', notes: '' });
   const [saleSubmitting, setSaleSubmitting] = useState(false);
   const [editSaleId, setEditSaleId] = useState<string | null>(null);
   const [viewInvoice, setViewInvoice] = useState<any>(null);
@@ -166,6 +166,8 @@ export default function DashboardPage() {
         payment_method: saleCustomer.payment_methods.join(', '),
         cash_amount: Number(saleCustomer.cash_amount) || 0,
         upi_amount: Number(saleCustomer.upi_amount) || 0,
+        card_amount: Number(saleCustomer.card_amount) || 0,
+        bank_transfer_amount: Number(saleCustomer.bank_transfer_amount) || 0,
         payment_status: 'completed',
         notes: saleCustomer.notes || null,
         sale_items: cart.map(c => ({ product_id: c.product_id, quantity: c.quantity, unit_price: c.unit_price, total_price: c.total_price }))
@@ -180,7 +182,7 @@ export default function DashboardPage() {
         setIsNewSaleOpen(false);
         setEditSaleId(null);
         setCart([]);
-        setSaleCustomer({ name: '', email: '', phone: '', address: '', delivery_address: '', pan_number: '', payment_methods: ['Cash'], cash_amount: '', upi_amount: '', discount: '0', transport_cost: '0', notes: '' });
+        setSaleCustomer({ name: '', email: '', phone: '', address: '', delivery_address: '', pan_number: '', payment_methods: ['Cash'], cash_amount: '', upi_amount: '', card_amount: '', bank_transfer_amount: '', discount: '0', transport_cost: '0', notes: '' });
         setSaleStep('products');
         fetchData();
       } else { alert('Failed: ' + result.error); }
@@ -212,6 +214,8 @@ export default function DashboardPage() {
       payment_methods: sale.payment_method ? sale.payment_method.split(',').map((s: string) => s.trim()) : ['Cash'],
       cash_amount: sale.cash_amount ? String(sale.cash_amount) : '',
       upi_amount: sale.upi_amount ? String(sale.upi_amount) : '',
+      card_amount: sale.card_amount ? String(sale.card_amount) : '',
+      bank_transfer_amount: sale.bank_transfer_amount ? String(sale.bank_transfer_amount) : '',
       discount: discountPct,
       transport_cost: sale.tax_amount ? String(sale.tax_amount) : '0',
       notes: sale.notes || ''
@@ -1579,50 +1583,66 @@ export default function DashboardPage() {
                         </div>
                         <div><label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">Discount %</label><input value={saleCustomer.discount} onChange={e => setSaleCustomer({...saleCustomer, discount: e.target.value})} type="number" className="mt-1 w-full px-3 py-2 border border-surface-200/60 rounded-lg text-sm focus:outline-none focus:border-primary-800" /></div>
                       </div>
-                      {saleCustomer.payment_methods.length > 1 && (saleCustomer.payment_methods.includes('Cash') || saleCustomer.payment_methods.includes('UPI')) && (
-                        <div className="grid grid-cols-2 gap-3 p-3 bg-surface-100/50 rounded-lg border border-surface-200/60 mt-1">
-                          {saleCustomer.payment_methods.includes('Cash') && (
-                            <div>
-                              <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">Cash Amount (₹)</label>
-                              <input 
-                                value={saleCustomer.cash_amount} 
-                                onChange={e => {
-                                  const cashVal = parseFloat(e.target.value) || 0;
-                                  const upiVal = cartTotal - cashVal;
-                                  setSaleCustomer({
-                                    ...saleCustomer, 
-                                    cash_amount: e.target.value,
-                                    ...(saleCustomer.payment_methods.includes('UPI') ? { upi_amount: e.target.value !== '' && upiVal >= 0 ? upiVal.toString() : '' } : {})
-                                  });
-                                }} 
-                                type="number" 
-                                className="mt-1 w-full px-3 py-2 border border-surface-200/60 rounded-lg text-sm focus:outline-none focus:border-primary-800 bg-white" 
-                                placeholder="Amount paid in Cash" 
-                              />
-                            </div>
-                          )}
-                          {saleCustomer.payment_methods.includes('UPI') && (
-                            <div>
-                              <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">UPI Amount (₹)</label>
-                              <input 
-                                value={saleCustomer.upi_amount} 
-                                onChange={e => {
-                                  const upiVal = parseFloat(e.target.value) || 0;
-                                  const cashVal = cartTotal - upiVal;
-                                  setSaleCustomer({
-                                    ...saleCustomer, 
-                                    upi_amount: e.target.value,
-                                    ...(saleCustomer.payment_methods.includes('Cash') ? { cash_amount: e.target.value !== '' && cashVal >= 0 ? cashVal.toString() : '' } : {})
-                                  });
-                                }} 
-                                type="number" 
-                                className="mt-1 w-full px-3 py-2 border border-surface-200/60 rounded-lg text-sm focus:outline-none focus:border-primary-800 bg-white" 
-                                placeholder="Amount paid via UPI" 
-                              />
-                            </div>
-                          )}
-                        </div>
-                      )}
+                      {saleCustomer.payment_methods.length > 1 && (() => {
+                        // Smart auto-fill: when typing in any field, remaining balance goes to the last field
+                        const methods = saleCustomer.payment_methods;
+                        const fieldMap: Record<string, { key: keyof typeof saleCustomer; label: string; placeholder: string }> = {
+                          'Cash':          { key: 'cash_amount',           label: 'Cash Amount (₹)',          placeholder: 'Amount paid in Cash' },
+                          'UPI':           { key: 'upi_amount',            label: 'UPI Amount (₹)',            placeholder: 'Amount paid via UPI' },
+                          'Card':          { key: 'card_amount',           label: 'Card Amount (₹)',           placeholder: 'Amount paid via Card' },
+                          'Bank Transfer': { key: 'bank_transfer_amount',  label: 'Bank Transfer Amount (₹)', placeholder: 'Amount paid via Bank Transfer' },
+                        };
+                        const lastMethod = methods[methods.length - 1];
+
+                        const handleAmountChange = (changedMethod: string, rawValue: string) => {
+                          const enteredAmt = parseFloat(rawValue) || 0;
+                          const otherMethods = methods.filter(m => m !== changedMethod);
+                          const amountUpdates: Record<string, string> = { [fieldMap[changedMethod].key]: rawValue };
+
+                          if (methods.length === 2) {
+                            const other = otherMethods[0];
+                            const otherRemaining = cartTotal - enteredAmt;
+                            amountUpdates[fieldMap[other].key] = rawValue !== '' && otherRemaining >= 0 ? String(otherRemaining) : '';
+                          } else {
+                            if (changedMethod !== lastMethod) {
+                              const sumOthers = methods
+                                .filter(m => m !== lastMethod && m !== changedMethod)
+                                .reduce((s, m) => s + (parseFloat(saleCustomer[fieldMap[m].key] as string) || 0), 0);
+                              const leftover = cartTotal - enteredAmt - sumOthers;
+                              amountUpdates[fieldMap[lastMethod].key] = rawValue !== '' ? String(Math.max(0, leftover)) : '';
+                            }
+                          }
+                          setSaleCustomer({ ...saleCustomer, ...amountUpdates } as typeof saleCustomer);
+                        };
+
+
+
+                        return (
+                          <div className="grid grid-cols-2 gap-3 p-3 bg-surface-100/50 rounded-lg border border-surface-200/60 mt-1">
+                            {methods.map(method => {
+                              const field = fieldMap[method];
+                              const isLastField = method === lastMethod && methods.length > 2;
+                              return (
+                                <div key={method}>
+                                  <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">
+                                    {field.label}
+                                    {isLastField && <span className="ml-1 text-[#C5A059] normal-case font-normal">(auto)</span>}
+                                  </label>
+                                  <input
+                                    value={saleCustomer[field.key] as string}
+                                    onChange={e => handleAmountChange(method, e.target.value)}
+                                    readOnly={isLastField}
+                                    type="number"
+                                    className={`mt-1 w-full px-3 py-2 border rounded-lg text-sm focus:outline-none bg-white ${isLastField ? 'border-amber-300 bg-amber-50/50 text-amber-800 cursor-not-allowed' : 'border-surface-200/60 focus:border-primary-800'}`}
+                                    placeholder={field.placeholder}
+                                  />
+                                </div>
+                              );
+                            })}
+                          </div>
+                        );
+                      })()}
+
                       <div><label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">Transport Cost</label><input value={saleCustomer.transport_cost} onChange={e => setSaleCustomer({...saleCustomer, transport_cost: e.target.value})} type="number" className="mt-1 w-full px-3 py-2 border border-surface-200/60 rounded-lg text-sm focus:outline-none focus:border-primary-800" /></div>
                       <div><label className="text-[10px] font-bold uppercase tracking-widest text-surface-400 mb-1">Notes (Optional)</label><textarea value={saleCustomer.notes} onChange={e => setSaleCustomer({...saleCustomer, notes: e.target.value})} rows={3} placeholder="Add any additional notes for this sale..." className="mt-1 w-full px-3 py-2 border border-surface-200/60 rounded-lg text-sm focus:outline-none focus:border-primary-800 resize-none"></textarea></div>
                     </div>
@@ -1768,7 +1788,7 @@ export default function DashboardPage() {
                      <Image src="/Logo/LOGO main.svg" alt="Comfort Palace" fill className="object-contain object-left print:grayscale" priority />
                   </div>
                   <p className="text-sm text-surface-500 leading-relaxed font-light">
-                    2HCR+7XJ, 6, Rabindranath Tagore Nagar Main Rd,<br/>Giddappa Block, Ganganagar, Bengaluru, Karnataka 560032<br/>contact@comfortpalace.com<br/>+91 95914 88660
+                    2HCR+7XJ, 6, Rabindranath Tagore Nagar Main Rd,<br/>Giddappa Block, Ganganagar, Bengaluru, Karnataka 560032<br/>thecomfortpalace123@gmail.com<br/>+91 95914 88660
                   </p>
                 </div>
                 <div className="text-right">
@@ -1831,7 +1851,7 @@ export default function DashboardPage() {
                         <tr key={idx} className="border-b border-surface-100 last:border-0 hover:bg-surface-50/30 transition-colors">
                           <td className="py-5 px-6">
                             <div className="flex items-center gap-4">
-                              <div className="w-12 h-12 rounded-lg border border-surface-200 overflow-hidden bg-white shrink-0 flex items-center justify-center">
+                              <div className="w-12 h-12 rounded-lg border border-surface-200 overflow-hidden bg-white shrink-0 flex items-center justify-center print:hidden">
                                 {image ? <img src={image} alt={item.product_name} className="w-full h-full object-cover" /> : <div className="w-6 h-6 bg-surface-200 rounded-sm"></div>}
                               </div>
                               <div>
@@ -1863,7 +1883,7 @@ export default function DashboardPage() {
                         <span className="font-semibold text-surface-900">{viewInvoice.payment_method || 'Cash'}</span>
                       </div>
                       
-                      {(viewInvoice.cash_amount > 0 || viewInvoice.upi_amount > 0) && (
+                      {(viewInvoice.cash_amount > 0 || viewInvoice.upi_amount > 0 || viewInvoice.card_amount > 0 || viewInvoice.bank_transfer_amount > 0) && (
                         <div className="pt-2 space-y-2">
                           {viewInvoice.cash_amount > 0 && (
                             <div className="flex justify-between items-center text-xs">
@@ -1875,6 +1895,18 @@ export default function DashboardPage() {
                             <div className="flex justify-between items-center text-xs">
                               <span>UPI Portion</span>
                               <span className="font-mono">₹{viewInvoice.upi_amount.toLocaleString()}</span>
+                            </div>
+                          )}
+                          {viewInvoice.card_amount > 0 && (
+                            <div className="flex justify-between items-center text-xs">
+                              <span>Card Portion</span>
+                              <span className="font-mono">₹{viewInvoice.card_amount.toLocaleString()}</span>
+                            </div>
+                          )}
+                          {viewInvoice.bank_transfer_amount > 0 && (
+                            <div className="flex justify-between items-center text-xs">
+                              <span>Bank Transfer Portion</span>
+                              <span className="font-mono">₹{viewInvoice.bank_transfer_amount.toLocaleString()}</span>
                             </div>
                           )}
                         </div>

@@ -46,7 +46,7 @@ export default function AboutPage() {
               <div className="max-w-3xl">
                 <div className="flex items-center gap-4 mb-8">
                   <span className="w-12 h-[1px] bg-primary-800"></span>
-                  <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-surface-500">The Comfort Palace / Est. 1992</span>
+                  <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-surface-500">Comfort Palace / Est. 1992</span>
                 </div>
                 <h1 className="font-display text-[clamp(3rem,6vw,6rem)] text-surface-900 font-light tracking-tighter leading-[0.9] mb-8">
                   Redefining the <br />

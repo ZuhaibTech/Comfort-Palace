@@ -54,7 +54,7 @@ const collectionData = [
           { id: 'lr-con-main', item_code: 'LR-CON-001', name: 'Console Main', description: 'Sophisticated main console table.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/wall console table Main.webp', quantity_in_stock: 5, isMain: true },
           { id: 'lr-con-1', item_code: 'LR-CON-002', name: 'Console - 1', description: 'Sleek wall console table.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/wall console table -1.webp', quantity_in_stock: 5 },
           { id: 'lr-con-2', item_code: 'LR-CON-003', name: 'Console - 2', description: 'Functional and stylish console.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/wall console table -2.webp', quantity_in_stock: 5 },
-          { id: 'lr-con-3', item_code: 'LR-CON-004', name: 'Console - 3', description: 'Artistic console for your hallway.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/wall console table -3.webp', quantity_in_stock: 5 },
+          { id: 'lr-con-3', item_code: 'LR-CON-004', name: 'Console - 3', description: 'Artistic console for your hallway.', price: 0, category: 'Living Room', image_url: '/Collection Furnitures/wall console table -4.webp', quantity_in_stock: 5 },
         ]
       },
       {
@@ -189,15 +189,7 @@ const collectionData = [
           { id: 'af-wm-3', item_code: 'AF-WM-004', name: 'Wall Mirror - 3', description: 'Minimalist wall mirror for any room.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Wall Mirror -3.webp', quantity_in_stock: 5 },
         ]
       },
-      {
-        name: 'Waave Stands',
-        items: [
-          { id: 'af-ws-main', item_code: 'AF-WS-001', name: 'Waave Stand Main', description: 'Sculptural waave stand for your accents.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Waave Stands Main.webp', quantity_in_stock: 5, isMain: true },
-          { id: 'af-ws-1', item_code: 'AF-WS-002', name: 'Waave Stand - 1', description: 'Modern waave stand design.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Waave Stands -1.webp', quantity_in_stock: 5 },
-          { id: 'af-ws-2', item_code: 'AF-WS-003', name: 'Waave Stand - 2', description: 'Elegant waave stand for display.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Waave Stands -2.webp', quantity_in_stock: 5 },
-          { id: 'af-ws-3', item_code: 'AF-WS-004', name: 'Waave Stand - 3', description: 'Minimalist waave stand accent.', price: 0, category: 'Accent Furniture', image_url: '/Collection Furnitures/A Waave Stands -3.webp', quantity_in_stock: 5 },
-        ]
-      },
+
       {
         name: 'Corner Stands',
         items: [
@@ -359,7 +351,10 @@ export default function CollectionPage() {
 
       {/* Categorized Product Sections */}
       <div className="relative flex flex-col gap-56 pb-64 z-10">
-        {collectionData.map((section, sectionIdx) => (
+        {collectionData.map((section, sectionIdx) => {
+          if (activeCategory && section.category !== activeCategory) return null;
+          
+          return (
           <section
             key={section.category}
             id={section.category.toLowerCase().replace(/\s+/g, '-')}
@@ -427,14 +422,6 @@ export default function CollectionPage() {
                                 {/* Extreme Product Container */}
                                 <div className={`relative w-full ${aspectClass} ${bg} ${isMain ? 'rounded-[4rem] lg:rounded-[5rem]' : 'rounded-[1.5rem] lg:rounded-[2rem]'} overflow-hidden transition-all duration-[1.5s] cubic-bezier(0.16, 1, 0.3, 1) group-hover:shadow-[0_60px_100px_-30px_rgba(0,0,0,0.2)] group-hover:-translate-y-6`}>
 
-                                  {/* Apex Floating Badge */}
-                                  <div className={`absolute z-30 bg-[#111] rounded-full font-black uppercase tracking-[0.2em] text-white shadow-xl transition-all duration-700 group-hover:scale-110 group-hover:bg-white group-hover:text-black ${isMain
-                                    ? 'top-6 right-6 lg:top-8 lg:right-8 px-4 py-1.5 text-[8px]'
-                                    : 'top-2 right-3 lg:top-3 lg:right-4 px-3 py-1 text-[6px] lg:text-[7px]'
-                                    }`}>
-                                    {section.category === 'Dining' ? 'TABLES' : section.category.toUpperCase()}
-                                  </div>
-
                                   {/* Fluid Product Image */}
                                   <div className="absolute inset-0">
                                     <div className="relative w-full h-full transition-transform duration-[3s] cubic-bezier(0.16, 1, 0.3, 1) group-hover:scale-[1.18]">
@@ -455,7 +442,7 @@ export default function CollectionPage() {
                                     isMain ? 'bottom-8 left-8 lg:bottom-10 lg:left-10' : 'bottom-6 left-6 lg:bottom-8 lg:left-8'
                                   }`}>
                                     <span className={`font-display font-light tracking-tighter text-white drop-shadow-md opacity-90 group-hover:opacity-100 transition-all duration-1000 group-hover:scale-110 ${
-                                      isMain ? 'text-4xl lg:text-5xl' : 'text-2xl lg:text-3xl'
+                                      isMain ? 'text-3xl lg:text-4xl' : 'text-xl lg:text-2xl'
                                       }`}>
                                       {displayIndex}
                                     </span>
@@ -488,7 +475,8 @@ export default function CollectionPage() {
               </div>
             </div>
           </section>
-        ))}
+        );
+        })}
       </div>
 
       {/* Extreme Floating Navigation Anchor */}

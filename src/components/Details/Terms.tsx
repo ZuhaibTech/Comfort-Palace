@@ -21,11 +21,11 @@ export default function Terms() {
     },
     {
       title: "4. Pricing & Payment Policies",
-      content: "All pricing listed on the Comfort Palace platform is quoted in GBP/USD/EUR (as applicable) and is subject to change without notice. Full payment is required at the time of order placement for all catalog collections. For high-end custom orders, a formal deposit contract may be arranged by our executive concierge desk."
+      content: "All pricing listed on the Comfort Palace platform is quoted in Indian Rupees (INR) and is subject to change without notice. Full payment is required at the time of order placement for all catalog collections. For high-end custom orders, a formal deposit contract may be arranged by our executive concierge desk."
     },
     {
       title: "5. Shipping, Logistics & Delivery",
-      content: "Comfort Palace uses specialized white-glove logistics services to ensure that your luxury furniture arrives in pristine condition. Delivery windows are estimates and may vary based on customs clearances, material supply chains, or shipping coordinates. It is the customer's sole responsibility to ensure that the delivered items can fit through doorways, hallways, stairwells, and elevators."
+      content: "Comfort Palace manages and coordinates the delivery of all furniture orders to ensure safe and secure transportation. Customers are responsible for verifying that the ordered furniture can be moved easily through entrances, hallways, staircases, elevators, and the designated installation area.In cases where the customer chooses to arrange their own shipping, transportation, unloading, or handling services, Comfort Palace shall not be responsible for any loss, damage, delays, or related issues arising from such arrangements.While every effort is made to deliver and install furniture with utmost care, minor marks, scuffs, or handling-related imperfections may occasionally occur during movement through restricted spaces, narrow access points, staircases, or elevators. Comfort Palace shall not be liable for such minor cosmetic issues resulting from space limitations at the delivery location. Customers are advised to ensure adequate access and clearance prior to delivery and installation."
     },
     {
       title: "6. Limitation of Liability",
@@ -38,6 +38,10 @@ export default function Terms() {
     {
       title: "8. Governing Law",
       content: "These Terms of Service and any separate agreements whereby we provide you services or products shall be governed by and construed in accordance with the local jurisdiction laws where Comfort Palace operates, without regard to conflict of law principles."
+    },
+    {
+      title: "9. Cancellation & Refund Policy",
+      content: "All furniture products are custom-made and manufactured according to the customer's specifications. Therefore, once an order is confirmed, cancellations, returns, or refunds are not permitted.Customers are solely responsible for ensuring that the ordered furniture can fit through all access points, including doorways, hallways, staircases, elevators, and the intended installation area. If the furniture cannot be moved into or installed at the customer's location due to space limitations or access restrictions, the order will not be eligible for cancellation, return, or refund."
     }
   ];
 

@@ -3,11 +3,20 @@
 import { useState } from 'react';
 import Reveal from '@/components/motion/Reveal';
 
+const categories = [
+  { name: 'Living Room', subcategories: ['Sofa', 'Coffee Table', 'Chest Drawers', 'Consoles', 'Side Tables'] },
+  { name: 'Bed Room', subcategories: ['Beds', 'Side Tables', 'Wardrobe', 'Bed Bench', 'Dressing table'] },
+  { name: 'Dining', subcategories: ['Dining Table', 'Dining Chairs', 'Dining Sideboard', 'Dining Hutch'] },
+  { name: 'Accent Furniture', subcategories: ['Diwan', 'Maharaja Diwan', 'Wall Mirrors', 'Corner Stands'] }
+];
+
 export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
+    category: '',
+    subcategory: '',
     requirement: ''
   });
 
@@ -20,6 +29,10 @@ export default function ContactPage() {
     setErrorMsg('');
 
     try {
+      const combinedRequirement = formData.category 
+        ? `Category: ${formData.category}${formData.subcategory ? ` > ${formData.subcategory}` : ''}\n\n${formData.requirement}`
+        : formData.requirement;
+
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -27,7 +40,7 @@ export default function ContactPage() {
           name: formData.name,
           phone: formData.phone,
           email: formData.email,
-          requirement: formData.requirement
+          requirement: combinedRequirement
         })
       });
 
@@ -38,7 +51,7 @@ export default function ContactPage() {
       }
 
       setStatus('success');
-      setFormData({ name: '', email: '', phone: '', requirement: '' });
+      setFormData({ name: '', email: '', phone: '', category: '', subcategory: '', requirement: '' });
     } catch (err: any) {
       setStatus('error');
       setErrorMsg(err.message || 'Something went wrong. Please try again.');
@@ -188,6 +201,50 @@ export default function ContactPage() {
                         onChange={e => setFormData({...formData, phone: e.target.value})}
                       />
                     </div>
+
+                    <div className="space-y-4">
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400">Category Selection (Optional)</label>
+                      <div className="flex flex-wrap gap-2">
+                        {categories.map(cat => (
+                          <button
+                            key={cat.name}
+                            type="button"
+                            onClick={() => {
+                              setFormData({ ...formData, category: cat.name, subcategory: '' });
+                            }}
+                            className={`px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 ${
+                              formData.category === cat.name
+                                ? 'bg-surface-900 text-surface-50'
+                                : 'bg-surface-100 text-surface-900 border border-surface-200 hover:bg-surface-200'
+                            }`}
+                          >
+                            {cat.name}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {formData.category && (
+                      <div className="space-y-4 animate-[revealUp_0.4s_ease-out]">
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400">Select Specific Item</label>
+                        <div className="flex flex-wrap gap-2">
+                          {categories.find(c => c.name === formData.category)?.subcategories.map(sub => (
+                            <button
+                              key={sub}
+                              type="button"
+                              onClick={() => setFormData({ ...formData, subcategory: sub })}
+                              className={`px-5 py-2 rounded-full text-[9px] font-bold uppercase tracking-[0.25em] transition-all duration-300 ${
+                                formData.subcategory === sub
+                                  ? 'bg-surface-900 text-surface-50'
+                                  : 'bg-surface-100 text-surface-900 border border-surface-200 hover:bg-surface-200'
+                              }`}
+                            >
+                              {sub}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
 
                     <div className="space-y-2">
                       <label className="text-[10px] font-bold uppercase tracking-widest text-surface-400">Your Requirement</label>

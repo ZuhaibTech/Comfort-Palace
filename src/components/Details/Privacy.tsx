@@ -5,7 +5,7 @@ export default function Privacy() {
   const sections = [
     {
       title: "1. Information We Collect",
-      content: "Comfort Palace collects information to provide mathematical precision, bespoke tailoring, and executive-level delivery services. We collect identity data (such as name, signature, and title), contact data (such as billing address, white-glove shipping coordinates, phone number, and email), and custom design metrics (such as floor plans, CAD drawings, room scale dimensions, and material choices)."
+      content: "Comfort Palace collects information to provide mathematical precision, bespoke tailoring, and executive-level delivery services. We collect identity data (such as name, signature, and title), contact data (such as billing address, phone number, and email), and custom design metrics (such as floor plans, CAD drawings, room scale dimensions, and material choices)."
     },
     {
       title: "2. How We Use Your Information",
@@ -13,7 +13,7 @@ export default function Privacy() {
     },
     {
       title: "3. Concierge & Logistics Sharing",
-      content: "To guarantee that your luxury pieces are delivered and assembled in flawless condition, we share necessary shipping coordinates and identity details with certified third-party white-glove logistics companies, custom artisans, and custom clearing brokers for international freight. All logistical partners are legally bound by strict confidentiality contracts."
+      content: "To guarantee that your luxury pieces are delivered and assembled in flawless condition, we share necessary shipping coordinates and identity details with certified third-party white-glove logistics companies, custom artisans. All logistical partners are legally bound by strict confidentiality contracts."
     },
     {
       title: "4. Premium Data Security",
@@ -24,15 +24,11 @@ export default function Privacy() {
       content: "We utilize cookies and tracking technologies to optimize performance and elevate the digital showroom experience. You may control cookies via your browser settings; however, disabling cookies may impact interactive collection viewing and fluid navigation."
     },
     {
-      title: "6. Your Rights & Access",
-      content: "Under applicable global privacy regulations (such as GDPR, CCPA, and similar local statutes), you have the right to inspect, correct, delete, restrict, or obtain a clean portable copy of the personal metrics we hold on file. Please submit structural deletion requests directly to our concierge team."
-    },
-    {
-      title: "7. Data Retention Guidelines",
+      title: "6. Data Retention Guidelines",
       content: "Comfort Palace retains personal details, mathematical dimensions, and custom design records only as long as necessary to fulfill the operational purpose for which they were gathered, or to comply with archival tax laws and white-glove liability terms."
     },
     {
-      title: "8. Policy updates",
+      title: "7. Policy updates",
       content: "We may periodically adjust this privacy model to align with new logistics partners, privacy protocols, or statutory changes. Any changes will be published here with an updated revision date."
     }
   ];

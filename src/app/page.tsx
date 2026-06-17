@@ -68,7 +68,7 @@ export default function Home() {
             {[
               { id: '01', name: 'Sofa', img: '/images/Sofa.jpeg' },
               { id: '02', name: 'Bed', img: '/images/Bed.jpeg' },
-              { id: '03', name: 'Chest Drawer', img: '/images/Chest-Drawer.png' },
+              { id: '03', name: 'Chest of Drawer', img: '/images/Chest-Drawer.png' },
               { id: '04', name: 'Dining Table', img: '/Collection Furnitures/Dinning Table -2.webp' },
               { id: '05', name: 'Center Table', img: '/images/Center-Table.jpeg' },
               { id: '06', name: 'Consoles', img: '/images/Console.jpeg' },
