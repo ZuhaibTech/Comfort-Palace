@@ -31,13 +31,14 @@ export default function DemoSales({ isOpen, onClose, products, onSuccess }: any)
       setCart(cart.map(c => c.product_id === product.id ? { ...c, quantity: c.quantity + 1, total_price: (c.quantity + 1) * c.unit_price } : c));
     } else {
       // In Demo Sale, we don't apply GST
+      const roundedPrice = Math.round(product.price);
       setCart([...cart, { 
         product_id: product.id, 
         product_name: product.name, 
         item_code: product.item_code, 
-        unit_price: product.price, 
+        unit_price: roundedPrice, 
         quantity: 1, 
-        total_price: product.price, 
+        total_price: roundedPrice, 
         max_stock: product.quantity_in_stock, 
         gst_percentage: null // No GST for demo sale
       }]);

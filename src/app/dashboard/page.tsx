@@ -1892,14 +1892,18 @@ export default function DashboardPage() {
                       <th className="py-4 print:py-1.5 px-4 print:px-1.5 text-[10px] print:text-[8px] font-bold text-surface-400 uppercase tracking-widest">Product</th>
                       <th className="py-4 print:py-1.5 px-4 print:px-1.5 text-[10px] print:text-[8px] font-bold text-surface-400 uppercase tracking-widest text-center">Qty</th>
                       <th className="py-4 print:py-1.5 px-4 print:px-1.5 text-[10px] print:text-[8px] font-bold text-surface-400 uppercase tracking-widest text-right">
-                        Unit Price<br/><span className="font-normal normal-case text-[9px] print:text-[7px]">(excl. GST)</span>
+                        Unit Price{!viewInvoice.is_demo && <><br/><span className="font-normal normal-case text-[9px] print:text-[7px]">(excl. GST)</span></>}
                       </th>
-                      <th className="py-4 print:py-1.5 px-4 print:px-1.5 text-[10px] print:text-[8px] font-bold text-surface-400 uppercase tracking-widest text-right">
-                        GST<br/><span className="font-normal normal-case text-[9px] print:text-[7px]">(GST%/2)</span>
-                      </th>
-                      <th className="py-4 print:py-1.5 px-4 print:px-1.5 text-[10px] print:text-[8px] font-bold text-surface-400 uppercase tracking-widest text-right">
-                        CGST<br/><span className="font-normal normal-case text-[9px] print:text-[7px]">(GST%/2)</span>
-                      </th>
+                      {!viewInvoice.is_demo && (
+                        <>
+                          <th className="py-4 print:py-1.5 px-4 print:px-1.5 text-[10px] print:text-[8px] font-bold text-surface-400 uppercase tracking-widest text-right">
+                            GST<br/><span className="font-normal normal-case text-[9px] print:text-[7px]">(GST%/2)</span>
+                          </th>
+                          <th className="py-4 print:py-1.5 px-4 print:px-1.5 text-[10px] print:text-[8px] font-bold text-surface-400 uppercase tracking-widest text-right">
+                            CGST<br/><span className="font-normal normal-case text-[9px] print:text-[7px]">(GST%/2)</span>
+                          </th>
+                        </>
+                      )}
                       <th className="py-4 print:py-1.5 px-4 print:px-1.5 text-[10px] print:text-[8px] font-bold text-surface-400 uppercase tracking-widest text-right">Total</th>
                     </tr>
                   </thead>
@@ -1938,30 +1942,34 @@ export default function DashboardPage() {
                           <td className="py-5 print:py-2 px-4 print:px-1.5 text-sm print:text-[10px] text-surface-600 font-semibold text-center">{item.quantity}</td>
                           {/* Unit Price (excl. GST) */}
                           <td className="py-5 print:py-2 px-4 print:px-1.5 text-sm print:text-[10px] text-surface-600 text-right whitespace-nowrap">
-                            ₹{unitPriceExGST.toFixed(2)}
+                            ₹{viewInvoice.is_demo ? Math.round(unitPriceExGST).toLocaleString() : unitPriceExGST.toFixed(2)}
                           </td>
-                          {/* GST (half) */}
-                          <td className="py-5 print:py-2 px-4 print:px-1.5 text-right whitespace-nowrap">
-                            {gstPct > 0 ? (
-                              <div>
-                                <p className="text-sm print:text-[10px] text-surface-600">₹{halfGst.toFixed(2)}</p>
-                                <p className="text-[9px] print:text-[7px] text-surface-400">{gstPct / 2}%</p>
-                              </div>
-                            ) : (
-                              <span className="text-sm print:text-[10px] text-surface-400">—</span>
-                            )}
-                          </td>
-                          {/* CGST (half) */}
-                          <td className="py-5 print:py-2 px-4 print:px-1.5 text-right whitespace-nowrap">
-                            {gstPct > 0 ? (
-                              <div>
-                                <p className="text-sm print:text-[10px] text-surface-600">₹{halfGst.toFixed(2)}</p>
-                                <p className="text-[9px] print:text-[7px] text-surface-400">{gstPct / 2}%</p>
-                              </div>
-                            ) : (
-                              <span className="text-sm print:text-[10px] text-surface-400">—</span>
-                            )}
-                          </td>
+                          {!viewInvoice.is_demo && (
+                            <>
+                              {/* GST (half) */}
+                              <td className="py-5 print:py-2 px-4 print:px-1.5 text-right whitespace-nowrap">
+                                {gstPct > 0 ? (
+                                  <div>
+                                    <p className="text-sm print:text-[10px] text-surface-600">₹{halfGst.toFixed(2)}</p>
+                                    <p className="text-[9px] print:text-[7px] text-surface-400">{gstPct / 2}%</p>
+                                  </div>
+                                ) : (
+                                  <span className="text-sm print:text-[10px] text-surface-400">—</span>
+                                )}
+                              </td>
+                              {/* CGST (half) */}
+                              <td className="py-5 print:py-2 px-4 print:px-1.5 text-right whitespace-nowrap">
+                                {gstPct > 0 ? (
+                                  <div>
+                                    <p className="text-sm print:text-[10px] text-surface-600">₹{halfGst.toFixed(2)}</p>
+                                    <p className="text-[9px] print:text-[7px] text-surface-400">{gstPct / 2}%</p>
+                                  </div>
+                                ) : (
+                                  <span className="text-sm print:text-[10px] text-surface-400">—</span>
+                                )}
+                              </td>
+                            </>
+                          )}
                           {/* Total (inclusive of GST) */}
                           <td className="py-5 print:py-2 px-4 print:px-1.5 text-sm print:text-[10px] text-surface-900 font-bold text-right whitespace-nowrap">₹{lineTotal.toLocaleString()}</td>
                         </tr>

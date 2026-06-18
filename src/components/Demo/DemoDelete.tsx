@@ -10,21 +10,23 @@ export default function DemoDelete({ sale, onSuccess }: DemoDeleteProps) {
     // 1. Trigger the browser's native print/PDF download window
     window.print();
     
-    // 2. If this is a demo sale, we auto-delete it immediately after the print dialog closes
+    // 2. If this is a demo sale, we auto-delete it after a 25-second delay
     if (sale?.is_demo) {
-      try {
-        const response = await fetch(`/api/sales/${sale.id}`, { 
-          method: 'DELETE' 
-        });
-        
-        if (response.ok) {
-          console.log(`Demo sale ${sale.sale_number} automatically deleted after download.`);
-          // 3. Trigger the callback to refresh the UI and close the modal
-          onSuccess();
+      setTimeout(async () => {
+        try {
+          const response = await fetch(`/api/sales/${sale.id}`, { 
+            method: 'DELETE' 
+          });
+          
+          if (response.ok) {
+            console.log(`Demo sale ${sale.sale_number} automatically deleted after 25s delay.`);
+            // 3. Trigger the callback to refresh the UI and close the modal
+            onSuccess();
+          }
+        } catch (error) {
+          console.error('Failed to auto-delete demo sale:', error);
         }
-      } catch (error) {
-        console.error('Failed to auto-delete demo sale:', error);
-      }
+      }, 25000); // 25 seconds delay
     }
   };
 
