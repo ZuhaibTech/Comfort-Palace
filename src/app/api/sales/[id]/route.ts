@@ -6,7 +6,7 @@ import Product from '@/lib/models/Product';
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
     await connectDB();
-    const sale = await Sale.findById(params.id);
+    const sale = await Sale.findById(params.id) as any;
 
     if (!sale) {
       return NextResponse.json({
@@ -51,7 +51,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
       sale_items
     } = body;
 
-    const existingSale = await Sale.findById(params.id);
+    const existingSale = await Sale.findById(params.id) as any;
 
     if (!existingSale) {
       return NextResponse.json({
@@ -140,7 +140,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
   try {
     await connectDB();
-    const sale = await Sale.findById(params.id);
+    const sale = await Sale.findById(params.id) as any;
 
     if (!sale) {
       return NextResponse.json({

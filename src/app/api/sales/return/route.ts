@@ -13,7 +13,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: 'Original sale ID and return items are required' }, { status: 400 });
     }
 
-    const originalSale = await Sale.findById(original_sale_id);
+    const originalSale = await Sale.findById(original_sale_id) as any;
     if (!originalSale) {
       return NextResponse.json({ success: false, error: 'Original sale not found' }, { status: 404 });
     }
